@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+		{% block title %}
+		Управление расширениями - "{{extension.Name}}"
+		{% endblock %} 
+{% block speedbar %}
+<li>
+	<a href="/admin/application/{{application.alias}}/entity/{{extension.TableName}}/edit/" class="act_link">Редактировать метаданные</a>
+</li>
+{% endblock %}
+{% block breadcrumb %}
+<li>
+	<a title="" href="/admin/application/{{application.alias}}/edit/">Приложение - "{{application.name|truncatewords:2}}"</a>
+</li>
+<li class="active">
+	Управление расширениями - "{{extension.Name}}"
+</li>
+{% endblock %}
+{% block center_content %}
+<div class="grid">
+	<div class="grid-title">
+		<div class="pull-left">
+			Содержание сущности 
+		</div>
+		<a href="/admin/application/{{application.alias}}/extension/{{extension.TableName}}/create/" class="pull-right btn">Создание записи</a>
+	</div>
+	<div class="grid-content">
+		<div id="property_list">
+
+		</div>
+	</div>
+</div>
+
+<script type="text/x-kendo-tmpl" id="template">
+	<tr>
+	{% for field in extension_fields %}
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	<a href="/admin/application/{{application.alias}}/extension/{{extension.TableName}}/${ {{key_field}} }/edit/" style="color: inherit;text-decoration: inherit;">
+	{% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
+	<img src="/media/${ {{field.name}} }" style="max-height: 70px; max-width: 200px"/>
+	{% else %}
+	${ {{field.name}} }
+	{% endif %}
+	</a>
+	</td>
+	{% endfor %}
+	</tr>
+</script>
+
+<script type="text/x-kendo-template" id="detail_template">
+	<div class="orders"></div>
+
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+var dataSource = new kendo.data.DataSource({
+transport: {
+read: {
+url: "/admin/data/extension/{{application.alias}}/{{extension.TableName}}",
+dataType: "jsonp"
+}
+}
+});
+
+$("#property_list").kendoGrid({
+dataSource: dataSource,
+{% if detail.extension and not preext %}
+detailTemplate: kendo.template($("#detail_template").html()),
+detailInit: detailInit,
+{% endif %}
+groupable: true,
+filterable: true,
+sortable: true,
+scrollable: false,
+columnMenu: true,
+columns: [
+{% for field in extension_fields %}
+{% if field.visible %}
+{
+field: "{{field.name}}",
+title: "{{field.verbose_name}}{{field.label}}",
+template: '<a href="/admin/application/{{application.alias}}/extension/{{extension.TableName}}/${ {{key_field}} }/edit/" style="color: inherit;text-decoration: inherit;">	            {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}<img src="/media/${ {{field.name}} }" style="max-height: 70px; max-width: 200px"/>{% else %}${ {{field.name}} }{% endif %}</a>'
+},
+{% endif %}
+{% endfor %}
+],
+{% if preext %}
+rowTemplate: kendo.template($("#template").html())
+{% endif %}
+})
+
+function detailInit(e) {
+var detailRow = e.detailRow;
+
+detailRow.find(".tabstrip").kendoTabStrip({
+animation: {
+open: { effects: "fadeIn" }
+}
+});
+
+detailRow.find(".orders").kendoGrid({
+dataSource: {
+transport: {
+read: {
+url: "/admin/data/extension/{{application.alias}}/{{detail.extension}}",
+dataType: "jsonp"
+}
+
+},
+serverFiltering: true,
+pageSize:6,
+filter: { value: e.data.id, field:  "{{detail.field}}", model:  "{{detail.model}}"}
+},
+scrollable: false,
+sortable: true,
+pageable: true,
+columns: [
+{% for field in detail.fields %}
+{% if field.name != detail.field and field.visible %}
+{ field: "{{field.name}}", title: "{{field.verbose_name}}",
+template: '<a href="/admin/application/{{application.alias}}/extension/{{detail.extension}}/${ {{key_field}} }/edit/" style="color: inherit;text-decoration: inherit;">	            {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}<img src="/media/${ {{field.name}} }" style="max-height: 70px; max-width: 200px"/>{% else %}${ {{field.name}} }{% endif %}</a>'
+},
+{% endif %}
+{% endfor %}
+],
+});
+}
+});
+
+</script>
+
+{% endblock %}

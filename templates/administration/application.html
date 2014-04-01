@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+		{% block title %}
+		Приложения
+		{% endblock %} 	
+	
+	{% block without_breadcrumb %}
+	{% endblock %}
+	      {%block speedbar%}
+	      <li><a href="/admin/application/create/" class="act_link">Создание приложения</a></li>
+       {%endblock%}
+{% block left_footer %}
+
+<div class="span4">
+<div id="pager" class="" style="border-style: none;background-color:transparent;color: #ABABAB;background-image: none; width:300px"></div>
+</div>
+{% endblock %}
+{% block center_content %}
+<div id="listView" style="background-color:transparent;border:0;min-height: 600px;"></div>
+
+<script type="text/x-kendo-tmpl" id="template">
+	<a href="/admin/application/${TableName}/edit/" style="color: inherit;text-decoration: inherit;">
+	<div class="admin_entity" style="max-width: 200px;">
+
+	<img src="/media/${Image}" alt="${Name}" style="height:96px"/>
+	<h4>${Name}</h4>
+	</div>
+	</a>
+</script>
+
+<script>
+	$(document).ready(function() {
+		var dataSource = new kendo.data.DataSource({
+			transport : {
+				read : {
+					url : "/admin/data/application/",
+					dataType : "jsonp"
+				}
+			},
+			pageSize : 12
+		});
+
+		$("#pager").kendoPager({
+			dataSource : dataSource
+		});
+
+		$("#listView").kendoListView({
+			dataSource : dataSource,
+			template : kendo.template($("#template").html())
+		});
+		$("#menu").kendoMenu({
+		})
+	}); 
+</script>
+
+{% endblock %}

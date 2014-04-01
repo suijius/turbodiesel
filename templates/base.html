@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- start styles -->
+    <link href="/media/themes/sweet-dreams/css/style.css" rel="stylesheet">
+    <link href="/media/themes/sweet-dreams/css/bootstrap.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/fullcalendar.css" media="screen"  />
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/chosen.css" media="screen"  />
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/datepicker.css" >
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/colorpicker.css">
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/glisse.css?1.css">
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/jquery.jgrowl.css">
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/js/elfinder/css/elfinder.css" media="screen" />
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/jquery.tagsinput.css" />
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/demo_table.css" >
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/js/export/css/TableTools.css" >
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/jquery.stepy.css" />
+	<link rel="stylesheet" href="/media/themes/sweet-dreams/css/icon/font-awesome.css">    
+	<link rel="stylesheet" href="/media/themes/sweet-dreams/css/bootstrap-responsive.css">
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="green-theme" href="/media/themes/sweet-dreams/css/color/green.css" />
+	<link rel="alternate stylesheet" type="text/css" media="screen" title="red-theme" href="/media/themes/sweet-dreams/css/color/red.css" />
+	<link rel="alternate stylesheet" type="text/css" media="screen" title="black-theme" href="/media/themes/sweet-dreams/css/color/black.css" />
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="orange-theme" href="/media/themes/sweet-dreams/css/color/orange.css" />
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="purple-theme" href="/media/themes/sweet-dreams/css/color/purple.css" />
+    <link rel="stylesheet" type="text/css" media="screen" title="silver-theme" href="/media/themes/sweet-dreams/css/color/silver.css" />
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="metro-theme" href="/media/themes/sweet-dreams/css/color/metro.css" />
+
+	<link rel="stylesheet" href="/media/kendo/styles/kendo.common.css">
+	<link type="text/css" href="/media/turbodiesel/css/base.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="/media/kendo/styles/kendo.default.min.css">
+	<!-- end styles -->
+
+    <!-- start javascript -->
+    <script src="/media/themes/sweet-dreams/js/jquery.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery-ui.min.js"></script>
+   
+    <script src="/media/themes/sweet-dreams/js/bootstrap.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/bootstrap-datepicker.js"></script>
+    <script src="/media/themes/sweet-dreams/js/bootstrap-colorpicker.js"></script>
+    <script src="/media/themes/sweet-dreams/js/google-code-prettify/prettify.js"></script>
+   
+    <script src="/media/themes/sweet-dreams/js/jquery.flot.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.flot.pie.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.flot.orderBars.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.flot.resize.js"></script>
+    <script src="/media/themes/sweet-dreams/js/graphtable.js"></script>
+    <script src="/media/themes/sweet-dreams/js/fullcalendar.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/chosen.jquery.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/autoresize.jquery.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.tagsinput.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.autotab.js"></script>
+    <script src="/media/themes/sweet-dreams/js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
+	<script src="/media/themes/sweet-dreams/js/tiny_mce/tiny_mce.js"></script>
+    <script src="/media/themes/sweet-dreams/js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+	<script src="/media/themes/sweet-dreams/js/validation/jquery.validationEngine.js" charset="utf-8"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.jgrowl_minimized.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.dataTables.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/export/ZeroClipboard/ZeroClipboard.js"></script>
+    <script src="/media/themes/sweet-dreams/js/export/js/TableTools.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.mousewheel.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.jscrollpane.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.stepy.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/jquery.validate.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/raphael.2.1.0.min.js"></script>
+    <script src="/media/themes/sweet-dreams/js/justgage.1.0.1.min.js"></script>
+	<script src="/media/themes/sweet-dreams/js/glisse.js"></script>
+	<script src="/media/themes/sweet-dreams/js/styleswitcher.js"></script>
+    
+	<script src="/media/themes/sweet-dreams/js/application.js"></script>
+
+	<script src="/media/kendo/js/kendo.all.min.js"></script>
+	<script src="/media/kendo/js/cultures/kendo.culture.ru-RU.min.js"></script>
+	<script src="/media/turbodiesel/js/base.js"></script>
+
+	<!-- end javascripts -->
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lte IE 8]><script type="text/javascript" src="/js/excanvas.min.js"></script><![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/media/themes/sweet-dreams/images/favicon.gif" type="image/gif">
+	{% block head %}{% endblock %}
+	<title> 
+		{% block title %}
+			
+		{% endblock %} 
+		/ TurboDiesel
+	</title>
+  </head>
+
+  <body>
+
+	<!--Header Start-->
+	<div class="header" >
+
+			<a href="/admin/" class="logo"><h1>TurboDiesel</h1></a>
+
+			<div class="pull-right">
+
+				<!--Button User Start-->
+				<div class="btn-group pull-right" >
+					{% if request.user.is_authenticated %}
+					<a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#"> <span class="name-user"><strong>Добро пожаловать</strong>, {{ request.user.first_name }} {{ request.user.last_name }}</span> <span class="avatar"><img src="/media/turbodiesel/images/user.png" alt="" ></span> <span class="caret"></span> </a>
+					<div class="dropdown-menu" id="prof_dropdown">
+						<div class="item_m">
+							<span class="caret"></span>
+						</div>
+						<ul class="clear_ul" >
+							<li>
+								<a href="#"><i class="icon-globe"></i> Home</a>
+							</li>
+							<li>
+								<a href="#"><i class="icon-comments"></i> Messages</a>
+							</li>
+							<li>
+								<a href="#"><i class="icon-cog"></i> Settings</a>
+							</li>
+							<li>
+								<a href="/logout/"><i class="icon-off"></i> Выйти</a>
+							</li>
+						</ul>
+					</div>
+					{% else %}
+					<a  class="btn" href="/login/"  style="background: none repeat scroll 0 0 transparent; border:none; box-shadow: none">Вход</a>
+					{% endif %}
+				</div>
+				<!--Button User END-->
+
+			</div>
+		</div>
+    <!--Header END-->
+
+    
+    <!--Sidebar Start--> 
+	<div id="sidebar">
+		<ul class="menu-sidebar">
+			{%block sidebar%}
+			{%endblock%}
+		</ul>
+	</div>
+    <!--Sidebar END-->
+    
+    <!--Content Start-->
+	<div id="content">
+    
+    	    
+	 <!--SpeedBar Start-->
+	<div class="speedbar">
+		<div class="speedbar-content">
+			<ul class="menu-speedbar">
+				{%block speedbar%}
+				{%endblock%}
+			</ul>
+		</div>
+	</div>
+     <!--SpeedBar END-->
+     
+     <!--Search Start-->   
+     <div class="search">
+     <form class="search-form">
+     	<input type="text" name="" value="" placeholder="Enter keywords">
+     </form>
+	 <div class="clear"></div>	
+     </div>
+     <!--Search END-->
+     
+     <!--CONTENT MAIN START-->
+	<div class="content">
+		<!-- Breadcrumb -->
+		{% block without_breadcrumb %}
+		<ul id="breadcrumb" class="breadcrumb">
+			<li class="you-here">
+				<a title="Home" href="/admin/" style="background-image: none; "> <img class="home" alt="Home" src="/media/turbodiesel/images/home.png" style="margin: -7px -10px -5px 10px;"> </a>
+			</li>
+			{% block breadcrumb %}
+			{% endblock %}
+		</ul>
+		{% endblock %}
+		<!-- Окончание breadcrumb -->
+
+		<!-- Верхний баннер -->
+		{% block banner %}
+		{% if messages %}
+		<div class="row-fluid">
+			<div class="span12">
+				{% for message in messages %}
+				<div style="padding: 0 .7em;height: 32px" class="message-{{ message.tags }} ui-corner-all">
+					<p style="margin: 7px">
+						<span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-alert"></span>
+						<strong>{{ message.tags }}:</strong> {{ message }}
+					</p>
+				</div>
+				{% endfor %}
+				<br/>
+			</div>
+		</div>
+		{% endif %}
+		{% endblock %}
+		<!-- Окончание верхнего баннера -->
+
+		{% block center_content %}
+		{% endblock %}
+
+		<div style="min-height: 30px"></div>
+	</div>
+     <!--CONTENT MAIN END-->
+
+    </div>
+    <!--Content END-->
+
+	<!-- Нижняя панель управления -->
+	<div class="navbar navbar-fixed-bottom navbar" >
+		<div class="navbar-inner header" style="min-height: 35px; height:35px;box-shadow: 0 0px 0 rgba(0, 0, 0, 0.1) inset, 0 -4px 20px rgba(0, 0, 0, 0.1);">
+			<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span8"><!-- style="padding-top: 5px;width: 70%;">-->
+					{% block left_footer %}{% endblock %}
+				</div>
+				<div class="span4">
+					<div class="pull-right">
+					{% block right_footer %} <a class="brand" style="padding-bottom: 0; padding-top: 5px;"> <img src="/media/turbodiesel/images/logo_white.gif" alt=""> © 2012 TurboDiesel </a> {% endblock %}
+					</div>
+				</div>
+				<!--<td style="width: 40%; text-align: center; padding: 0;border-bottom: 0;vertical-align:middle;"> {% block middle_footer %} <a href="/admin/" style="margin-right: 40px;color: #ababab; text-decoration:none" class="menu_item_passive">Администрирование</a><a href="/{{ request.user.username }}/" style="margin-right: 40px;color: #ababab; text-decoration:none " class="menu_item_passive">Портал</a> {% endblock %} </td>-->
+			</div>
+			</div>
+		</div>
+	</div>
+	<!-- Окончание нижней панели управления -->
+  </body>
+</html>
+

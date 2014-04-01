@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"  class="body-error">
+	<head>
+		<meta charset="utf-8">
+		<title>TurboDiesel - Вход</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Le styles -->
+		<link href="/media/themes/sweet-dreams/css/login.css" rel="stylesheet">
+		<link href="/media/themes/sweet-dreams/css/bootstrap.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="/media/themes/sweet-dreams/css/icon/font-awesome.css">
+		<link rel="stylesheet" href="/media/themes/sweet-dreams/css/bootstrap-responsive.css">
+
+		<link rel="alternate stylesheet" type="text/css" media="screen" title="green-theme" href="/media/themes/sweet-dreams/css/color/green.css" />
+		<link rel="alternate stylesheet" type="text/css" media="screen" title="red-theme" href="/media/themes/sweet-dreams/css/color/red.css" />
+		<link rel="alternate stylesheet" type="text/css" media="screen" title="black-theme" href="/media/themes/sweet-dreams/css/color/black.css" />
+		<link rel="alternate stylesheet" type="text/css" media="screen" title="orange-theme" href="/media/themes/sweet-dreams/css/color/orange.css" />
+		<link rel="alternate stylesheet" type="text/css" media="screen" title="purple-theme" href="/media/themes/sweet-dreams/css/color/purple.css" />
+		<link rel="alternate stylesheet" type="text/css" media="screen" title="silver-theme" href="/media/themes/sweet-dreams/css/color/silver.css" />
+		<link rel="alternate stylesheet" type="text/css" media="screen" title="metro-theme" href="/media/themes/sweet-dreams/css/color/metro.css" />
+
+		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<!--[if lte IE 8]><script type="text/javascript" src="/js/excanvas.min.js"></script><![endif]-->
+
+		<!-- Le fav and touch icons -->
+		<link rel="shortcut icon" href="/media/themes/sweet-dreams/images/icons/favicon.ico">
+
+	</head>
+
+	<body>
+
+		<div id="container_demo" >
+			<a class="hiddenanchor" id="toregister"></a>
+			<a class="hiddenanchor" id="tologin"></a>
+			<div id="wrapper">
+				<div id="login" class="animate form position">
+					<form method="POST" action="{% url django.contrib.auth.views.login %}" accept-charset="UTF-8" class="form-login">
+						{% csrf_token %}
+						{% if form.errors %}
+						<div class="alert alert-error">
+							<a class="close" data-dismiss="alert" href="#">x</a>Неверный логин или пароль!
+						</div>
+						{% endif %}
+						<div class="content-login">
+							<a href="#" class="logo" style="background-image: url("../images/logo_login.png");"></a>
+
+							<div class="inputs">
+								<i class="icon-user first-icon"></i>
+								<input type="text" class="first-input" placeholder="логин" id="id_username" name="username" />
+								<div class="clear"></div>
+								<i class="icon-key"></i>
+								<input type="password" class="last-input" placeholder="пароль" name="password" id="id_password" />
+							</div>
+
+							<!-- <div class="remember">
+							<input type="checkbox" id="c2" name="cc" checked="checked" />
+							<label for="c2"><span></span> Remember Me</label>
+							</div>-->
+							<div class="link">
+								<a href="#">Забыли пароль?</a>
+							</div>
+							<div class="clear"></div>
+							<div class="button-login">
+								<input type="submit" class="btn btn-large" value="Войти">
+							</div>
+						</div>
+
+						<div class="footer-login">
+							<div class="pull-left ">
+								Не зарегистрированы?
+							</div>
+							<div class="pull-right">
+								<a href="#toregister" class="to_register">Зарегистрироваться</a>
+							</div>
+							<div class="clear"></div>
+						</div>
+    <input name="next" value="{{ next }}" type="hidden">
+					</form>
+
+					<!--<div class="info-message">
+					<div class="alert alert-info">
+					Если у Вас нет профиля, нажмите "Зарегистрироваться"
+					</div>
+					</div>-->
+
+				</div>
+
+				<div id="register" class="animate form position">
+					<form action="dashboard.html" class="form-login">
+						<div class="content-login">
+							<a href="#" class="logo"></a>
+
+							<div class="inputs">
+								<i class="icon-user first-icon"></i>
+								<input name="" type="text" class="first-input" placeholder="username" />
+								<div class="clear"></div>
+								<i class="icon-envelope-alt"></i>
+								<input name="" type="text" class="intermediate-input" placeholder="email" />
+								<div class="clear"></div>
+								<i class="icon-key"></i>
+								<input name="" type="password" class="last-input" placeholder="password" />
+							</div>
+
+							<div class="button-login">
+								<input type="submit" class="btn btn-large" value="Create Account">
+							</div>
+
+							<div class="or">
+								<span>or</span>
+							</div>
+							<div class="buttons-soc">
+								<a href="#"><span><i class="icon-twitter"></i> Connect with Twitter</span></a>
+								<a href="#" class="facebook"><span><i class="icon-facebook"></i> Connect with Facebook</span></a>
+								<div class="clear"></div>
+							</div>
+
+						</div>
+
+						<div class="footer-login">
+							<div class="pull-left ">
+								Want login?
+							</div>
+							<div class="pull-right">
+								<a href="#tologin" class="to_register">Sign In</a>
+							</div>
+							<div class="clear"></div>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Le javascript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="/media/themes/sweet-dreams/js/jquery.min.js"></script>
+
+	</body>
+</html>
+

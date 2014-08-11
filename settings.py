@@ -1,9 +1,9 @@
-#coding=cp1251
+# coding=cp1251
 # Django settings for TurboDiesel project.
 
 
 import os.path
-#import djcelery
+# import djcelery
 
 #djcelery.setup_loader()
 
@@ -13,7 +13,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
- ('SuijiuS', 'suijius@gmail.com'),
+    ('SuijiuS', 'suijius@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -22,36 +22,38 @@ PROFILE_LOG_BASE = os.curdir + "/log"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'norveg', # Or path to database file if using sqlite3.
-        'USER': 'td', # Not used with sqlite3.
-        'PASSWORD': 'td', # Not used with sqlite3.
-        'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306', # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql',
+        # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'td',  # Or path to database file if using sqlite3.
+        'USER': 'td',  # Not used with sqlite3.
+        'PASSWORD': 'td',  # Not used with sqlite3.
+        'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
     },
-    'history': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'td_history', # Or path to database file if using sqlite3.
-        'USER': 'td', # Not used with sqlite3.
-        'PASSWORD': 'td', # Not used with sqlite3.
-        'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306', # Set to empty string for default. Not used with sqlite3.
-    },
-#    'delivery': {
-#        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME': 'delivery', # Or path to database file if using sqlite3.
-#        'USER': 'td', # Not used with sqlite3.
-#        'PASSWORD': 'td', # Not used with sqlite3.
-#        'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
-#        'PORT': '', # Set to empty string for default. Not used with sqlite3.
-#    },
+    #    'history': {
+    #        'ENGINE': 'django.db.backends.mysql',
+    #        'NAME': 'td_history', # Or path to database file if using sqlite3.
+    #        'USER': 'td', # Not used with sqlite3.
+    #        'PASSWORD': 'td', # Not used with sqlite3.
+    #        'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
+    #        'PORT': '3306', # Set to empty string for default. Not used with sqlite3.
+    #    },
+    #    'delivery': {
+    #        'ENGINE': 'django.db.backends.mysql',
+    #        'NAME': 'delivery', # Or path to database file if using sqlite3.
+    #        'USER': 'td', # Not used with sqlite3.
+    #        'PASSWORD': 'td', # Not used with sqlite3.
+    #        'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
+    #        'PORT': '', # Set to empty string for default. Not used with sqlite3.
+    #    },
     'metadata': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'information_schema', # Or path to database file if using sqlite3.
-        'USER': 'td', # Not used with sqlite3.
-        'PASSWORD': 'td', # Not used with sqlite3.
-        'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306', # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql',
+        # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'information_schema',  # Or path to database file if using sqlite3.
+        'USER': 'td',  # Not used with sqlite3.
+        'PASSWORD': 'td',  # Not used with sqlite3.
+        'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
     },
 
 
@@ -80,8 +82,8 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = os.path.join(ROOT_PATH, 'media').replace('\\', '/') + '/' 
-MEDIA_URL = 'media/' 
+MEDIA_ROOT = os.path.join(ROOT_PATH, 'media').replace('\\', '/') + '/'
+MEDIA_URL = 'media/'
 
 STATIC_ROOT = ''
 STATIC_URL = '/media/'
@@ -99,7 +101,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
     'dbtemplates.loader.Loader',
     #     'django.template.loaders.eggs.Loader',
-    )
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -110,7 +112,7 @@ MIDDLEWARE_CLASSES = (
     #    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     #'reversion.middleware.RevisionMiddleware',
-    )
+)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
@@ -118,7 +120,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     # required by django-admin-tools
     'django.core.context_processors.request',
-    )
+)
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.CookieStorage'
 
@@ -126,13 +128,13 @@ ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     os.path.join(ROOT_PATH, 'templates/').replace('\\', '/'),
-    )
+)
 
 INSTALLED_APPS = (
-#    'admin_tools',
-#    'admin_tools.theming',
-#    'admin_tools.menu',
-#    'admin_tools.dashboard',
+    #    'admin_tools',
+    #    'admin_tools.theming',
+    #    'admin_tools.menu',
+    #    'admin_tools.dashboard',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -143,12 +145,12 @@ INSTALLED_APPS = (
     'metamodel',
     'nature',
     'mptt',
-#    'djcelery',
+    #    'djcelery',
     'dbtemplates',
     #    'djkombu',
     #'lettuce.django',
     #'reversion'
-    )
+)
 
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
@@ -159,7 +161,7 @@ LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    )
+)
 
 APPEND_SLASH = True
 
@@ -225,15 +227,23 @@ DBTEMPLATES_USE_CODEMIRROR = True
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 EXTENSIONS = [
-                    {'Name':u'Изображения', 'Image':'turbodiesel/images/admin/image.png', 'TableName':'ext_image', 'ClassName': 'ExtImage', 'text':u'Системные расширения'},
-                    {'Name':u'Кодовые вставки', 'Image':'turbodiesel/images/admin/code.png', 'TableName':'ext_code', 'ClassName': 'ExtCode', 'text':''},
-                    {'Name':u'Фильтры', 'Image':'turbodiesel/images/admin/filter.png', 'TableName':'ext_filter', 'ClassName': 'ExtFilter', 'text':''},
-                    {'Name':u'Шаблоны', 'Image':'turbodiesel/images/admin/template.png', 'TableName':'ext_template', 'ClassName': 'dbTemplates', 'text':''},
-                    {'Name':u'Пользователи', 'Image':'turbodiesel/images/admin/user.png', 'TableName':'ext_user', 'ClassName': 'User', 'text':''},
-                    {'Name':u'Рабочие потоки', 'Image':'turbodiesel/images/admin/workflow.png', 'TableName':'ext_workflow', 'ClassName': 'ExtWorkflow', 'text':''},
-                    {'Name':u'Статусы', 'Image':'turbodiesel/images/admin/workflow.png', 'TableName':'ext_status', 'ClassName': 'ExtStatus', 'text':''},
-                    {'Name':u'Переходы', 'Image':'turbodiesel/images/admin/workflow.png', 'TableName':'ext_edge', 'ClassName': 'ExtEdge', 'text':''},
-              ]
+    {'Name': u'Изображения', 'Image': 'turbodiesel/images/admin/image.png', 'TableName': 'ext_image',
+     'ClassName': 'ExtImage', 'text': u'Системные расширения'},
+    {'Name': u'Кодовые вставки', 'Image': 'turbodiesel/images/admin/code.png', 'TableName': 'ext_code',
+     'ClassName': 'ExtCode', 'text': ''},
+    {'Name': u'Фильтры', 'Image': 'turbodiesel/images/admin/filter.png', 'TableName': 'ext_filter',
+     'ClassName': 'ExtFilter', 'text': ''},
+    {'Name': u'Шаблоны', 'Image': 'turbodiesel/images/admin/template.png', 'TableName': 'ext_template',
+     'ClassName': 'dbTemplates', 'text': ''},
+    {'Name': u'Пользователи', 'Image': 'turbodiesel/images/admin/user.png', 'TableName': 'ext_user',
+     'ClassName': 'User', 'text': ''},
+    {'Name': u'Рабочие потоки', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'ext_workflow',
+     'ClassName': 'ExtWorkflow', 'text': ''},
+    {'Name': u'Статусы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'ext_status',
+     'ClassName': 'ExtStatus', 'text': ''},
+    {'Name': u'Переходы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'ext_edge',
+     'ClassName': 'ExtEdge', 'text': ''},
+]
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'django.suijius@gmail.com'

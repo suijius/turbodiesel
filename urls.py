@@ -1,5 +1,5 @@
 # coding=cp1251
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, include, url
 from django.contrib import admin
 import settings
 #import administration
@@ -21,4 +21,7 @@ urlpatterns = patterns('',
     (r'^(.*)/$', 'application.view.home'),
     (r'^$', 'application.view.main_url'),
 )
+
+
+
 

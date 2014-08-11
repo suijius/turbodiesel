@@ -94,7 +94,7 @@ def home(request, application_path):
     return render_to_response(page_lst[0].template.name, {'logotype': application.logotype, 'title': application.title, 'page': page_lst[0], 'page_embeded': embeded[0], 'app_embeded': embeded[1], 'error':embeded[2], 'messages': messages.get_messages(request)})
 
 def main_url(request):
-    _application, default = get_application_instance('turbodiesel', request)
+    _application, default = get_application_instance('norveg', request)
     _page_lst = Page.objects.filter(application = _application, main = True)
     if len(_page_lst) == 0:
         return render_to_response('base_error.html', {'error_title':u'ƒл€ приложени€ "%s" не существует главной страницы' % path_split[0]})

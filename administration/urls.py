@@ -1,5 +1,5 @@
 # coding=cp1251
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, include, url
 from metadata_view import EntityCreate, EntityEdit, PropertyCreate, PropertyEdit
 from metamodel_view import CustomEntityUnitCreate, CustomEntityUnitEdit
 

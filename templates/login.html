@@ -40,7 +40,7 @@
 			<a class="hiddenanchor" id="tologin"></a>
 			<div id="wrapper">
 				<div id="login" class="animate form position">
-					<form method="POST" action="{% url django.contrib.auth.views.login %}" accept-charset="UTF-8" class="form-login">
+					<form method="POST" action="{% url 'django.contrib.auth.views.login' %}" accept-charset="UTF-8" class="form-login">
 						{% csrf_token %}
 						{% if form.errors %}
 						<div class="alert alert-error">
@@ -48,7 +48,7 @@
 						</div>
 						{% endif %}
 						<div class="content-login">
-							<a href="#" class="logo" style="background-image: url("../images/logo_login.png");"></a>
+							<a href="#" class="logo" style="background-image: url('../images/logo_login.png');"></a>
 
 							<div class="inputs">
 								<i class="icon-user first-icon"></i>

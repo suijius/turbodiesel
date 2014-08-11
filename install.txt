@@ -1,0 +1,5 @@
+pip install Django==1.6.5
+pip install django-dbtemplates
+pip install django-mptt
+http://sourceforge.net/projects/mysql-python/files/latest/download
+http://www.pythonware.com/products/pil/

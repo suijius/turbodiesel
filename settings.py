@@ -5,7 +5,7 @@
 import os.path
 # import djcelery
 
-#djcelery.setup_loader()
+# djcelery.setup_loader()
 
 ROOT_PATH = os.path.realpath(os.path.dirname(__file__))
 

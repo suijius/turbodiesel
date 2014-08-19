@@ -18,17 +18,18 @@
 
 {% block center_content %}
     <div class="row-fluid">
-    {% for application in applications %}
-        <div style="background-color:transparent;max-width: 130px;min-height: 180px;" class="grid span6">
-        <a href="/admin/application/{{application.TableName}}/edit/" style="color: inherit;text-decoration: inherit;">
-        <div class="admin_entity" style="max-width: 200px;">
+        {% for application in applications %}
+            <div style="background-color:transparent;max-width: 130px;min-height: 180px;" class="grid span6">
+                <a href="/admin/application/{{ application.TableName }}/edit/"
+                   style="color: inherit;text-decoration: inherit;">
+                    <div class="admin_entity" style="max-width: 200px;">
 
-        <img src="/media/{{application.Image}}" alt="{{application.Name}}" style="height:96px"/>
+                        <img src="/media/{{ application.Image }}" alt="{{ application.Name }}" style="height:96px"/>
 
-        <p style="margin-top: 20px;">{{application.Name}}</p>
-        </div>
-        </a>
-        </div>
-    {% endfor %}
+                        <p style="margin-top: 20px;">{{ application.Name }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

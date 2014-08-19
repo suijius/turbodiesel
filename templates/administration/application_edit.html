@@ -88,7 +88,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
-            <div class="clear"></div>
+                <div class="clear"></div>
             </div>
         </div>
 
@@ -114,9 +114,10 @@
                     <tbody>
                     {% for item in pages %}
                         <tr>
-                            <td><a href="/admin/application/{{ form.initial.alias }}/page/{{ item.alias }}/edit/" style="color: inherit;text-decoration: inherit;">
-	{{ item.name }}
-	</a></td>
+                            <td><a href="/admin/application/{{ form.initial.alias }}/page/{{ item.alias }}/edit/"
+                                   style="color: inherit;text-decoration: inherit;">
+                                {{ item.name }}
+                            </a></td>
                             <td>{{ item.title }}</td>
                             <td>{{ item.alias }}</td>
                             <td>{{ item.description }}</td>
@@ -125,7 +126,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
-            <div class="clear"></div>
+                <div class="clear"></div>
             </div>
         </div>
     </div>
@@ -170,6 +171,7 @@
 
 
 
+
     </script>
 
     <script type="text/x-kendo-tmpl" id="template_history">
@@ -197,10 +199,10 @@
 
 
 
+
     </script>
 
     <script>
-
 
 
         /*       $(document).ready(function () {

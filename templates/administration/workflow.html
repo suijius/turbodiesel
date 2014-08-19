@@ -1,126 +1,129 @@
 {% extends "base.html" %}
 {% block title %}
-{{action.string}}
+    {{ action.string }}
 {% endblock %}
 {% block breadcrumb %}
-{% if application %}
-<li>
-	<a title="" href="/admin/application/{{application.alias}}/edit">Приложение - "{{application|truncatewords:2}}"</a>
-</li>
-{% endif %}
-<li>
-	<a title="" href="/admin/application/{{application.alias}}/extension/ext_workflow/">Рабочие процессы</a>
-</li>
-<li class="active">
-	{{action.string}}
-</li>
+    {% if application %}
+        <li>
+            <a title="" href="/admin/application/{{ application.alias }}/edit">Приложение -
+                "{{ application|truncatewords:2 }}"</a>
+        </li>
+    {% endif %}
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/extension/ext_workflow/">Рабочие процессы</a>
+    </li>
+    <li class="active">
+        {{ action.string }}
+    </li>
 {% endblock %}
 
 {% block center_content %}
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left">
-			Свойства процесса
-		</div>
-	</div>
-	<div class="grid-content">
-		<form action="." method="post" enctype="multipart/form-data"  id="page" name="page">
-			{% csrf_token %}
-			{# Include the hidden fields #}
-			{% for hidden in form.hidden_fields %}
-			{{ hidden }}
-			{% endfor %}
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                Свойства процесса
+            </div>
+        </div>
+        <div class="grid-content">
+            <form action="." method="post" enctype="multipart/form-data" id="page" name="page">
+                {% csrf_token %}
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
 
-			{# Include the visible fields #}
-			<div class="row-fluid">
-				<label class="span4">{{form.visible_fields.0.label}}:</label>
-				{% if form.visible_fields.0.errors %}
-				<div class="span4">
-					{{ form.visible_fields.0 }}
-				</div>
-				<div class="span4">
-					<span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span class="k-icon k-warning"> </span> {{ form.visible_fields.0.errors.0 }} </span>
-				</div>
-				{% else %}
-				<div class="span8">
-					{{ form.visible_fields.0 }}
-				</div>
-				{% endif %}
-			</div>
-			<div class="row-fluid">
-				<label class="span4">{{form.visible_fields.1.label}}:</label>
-				{% if form.visible_fields.1.errors %}
-				<div class="span4">
-					{{ form.visible_fields.1 }}
-				</div>
-				<div class="span4">
-					<span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span class="k-icon k-warning"> </span> {{ form.visible_fields.1.errors.0 }} </span>
-				</div>
-				{% else %}
-				<div class="span8">
-					{{ form.visible_fields.1 }}
-				</div>
-				{% endif %}
-			</div>
-			<div style="display: none">
-				{{ form.visible_fields.2 }}
-				{{ form.visible_fields.3 }}
-				{{ form.visible_fields.4 }}
-			</div>
-			<br class="clear">
-		</form>
-	</div>
-</div>
-<script src="http://demos.kendoui.com/beta/content/shared/js/products.js"></script>
-<div class="row-fluid">
-<div class="grid span6">
-	<div class="grid-title">
-		<div class="pull-left">
-			Статусы
-		</div>
-	</div>
-	<div class="grid-content">
-		<div id="gridStatus"></div>
-	</div>
-</div>
-<div class="grid span6">
-	<div class="grid-title">
-		<div class="pull-left">
-			Переходы
-		</div>
-	</div>
-	<div class="grid-content">
-		<div id="gridEdge"></div>
-	</div>
-</div>
-</div>
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left">
-			Визуализация рабочего процесса
-		</div>
-	</div>
-	<div class="grid-content">
-		
-	</div>
-</div>
+                {# Include the visible fields #}
+                <div class="row-fluid">
+                    <label class="span4">{{ form.visible_fields.0.label }}:</label>
+                    {% if form.visible_fields.0.errors %}
+                        <div class="span4">
+                            {{ form.visible_fields.0 }}
+                        </div>
+                        <div class="span4">
+                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                    class="k-icon k-warning"> </span> {{ form.visible_fields.0.errors.0 }} </span>
+                        </div>
+                    {% else %}
+                        <div class="span8">
+                            {{ form.visible_fields.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="row-fluid">
+                    <label class="span4">{{ form.visible_fields.1.label }}:</label>
+                    {% if form.visible_fields.1.errors %}
+                        <div class="span4">
+                            {{ form.visible_fields.1 }}
+                        </div>
+                        <div class="span4">
+                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                    class="k-icon k-warning"> </span> {{ form.visible_fields.1.errors.0 }} </span>
+                        </div>
+                    {% else %}
+                        <div class="span8">
+                            {{ form.visible_fields.1 }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div style="display: none">
+                    {{ form.visible_fields.2 }}
+                    {{ form.visible_fields.3 }}
+                    {{ form.visible_fields.4 }}
+                </div>
+                <br class="clear">
+            </form>
+        </div>
+    </div>
+    <script src="http://demos.kendoui.com/beta/content/shared/js/products.js"></script>
+    <div class="row-fluid">
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Статусы
+                </div>
+            </div>
+            <div class="grid-content">
+                <div id="gridStatus"></div>
+            </div>
+        </div>
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Переходы
+                </div>
+            </div>
+            <div class="grid-content">
+                <div id="gridEdge"></div>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                Визуализация рабочего процесса
+            </div>
+        </div>
+        <div class="grid-content">
 
-            
+        </div>
+    </div>
 
 
 
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left">
-			История
-		</div>
-	</div>
-	<div class="grid-content">
-		<div id="history"></div>
-	</div>
-</div>
 
-<script type="text/x-kendo-tmpl" id="template_history">
+
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                История
+            </div>
+        </div>
+        <div class="grid-content">
+            <div id="history"></div>
+        </div>
+    </div>
+
+    <script type="text/x-kendo-tmpl" id="template_history">
 	<tr>
 	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
 	${revision}
@@ -135,112 +138,115 @@
 	${user}
 	</td>
 	</tr>
-</script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		kendo.culture("ru-RU");
-		var dataSourceHistory = new kendo.data.DataSource({
-			transport : {
-				read : {
-					url : "/admin/data/history/application/{{application.alias}}/ext_workflow/{{ form.initial.workflow_id }}",
-					dataType : "jsonp"
-				}
-			},
-		});
-		$("#history").kendoGrid({
-			dataSource: dataSourceHistory,
-			groupable: false,
-			filterable: true,
-			sortable: true,
-			rowTemplate: kendo.template($("#template_history").html()),
-			columns:[
-				{ field: "revision", title: "Версия", width:100 },
-				{ field: "data", title: "Данные" },
-				{ field: "date", title: "Дата" , width:140},
-				{ field: "user", title: "Пользователь" , width:120}
-			]
-		})
 
-        var dataSourceStatus = new kendo.data.DataSource({
-           pageSize: 20,
-			transport : {
-				read : {
-					url : "/admin/data/extension/{{application.alias}}/ext_status",
-					dataType : "jsonp"
-            	},
-				create : {
-					url : "/admin/application/{{application.alias}}/extension/ext_status/{{ form.initial.workflow_id }}/create/",
-					dataType : "jsonp",
-					type: "POST"
-            	},
-				update : {
-					url : "/admin/data/extension/{{application.alias}}/ext_status",
-					dataType : "jsonp"
-            	},
-				destroy : {
-					url : "/admin/data/extension/{{application.alias}}/ext_status",
-					dataType : "jsonp"
-            	}
-			},
-           autoSync: false,
-           schema: {
-               model: {
-                 id: "workflow_id",
-                 fields: {
-                    name: { validation: { required: true } },
-                    workflow : { defaultValue: {workflow:{{ form.initial.workflow_id }} }}
-                 }
-               }
-           }
-        });
-        $("#gridStatus").kendoGrid({
-            dataSource: dataSourceStatus,
-            pageable: true,
-            height: 430,
-            toolbar: ["create", "save"],
-            columns: [
-                { field:"name",title:"Статус" },
-                { command: "destroy", title: "&nbsp;", width: 110 }],
-            editable: true
-        });
-        $("#gridEdge").kendoGrid({
-            dataSource: dataSourceEdge,
-            pageable: true,
-            height: 430,
-            toolbar: ["create", "save"],
-            columns: [
-                { field:"previous",title:"Предыдущий статус" },
-                { field:"target",title:"Следующий статус" },
-                { field:"action",title:"Действие" },
-                { command: "destroy", title: "&nbsp;", width: 110 }],
-            editable: true
-        });        
-        dataSourceStatus.read({
-			workflow : "{{ form.initial.workflow_id }}"
-		});
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            kendo.culture("ru-RU");
+            var dataSourceHistory = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/admin/data/history/application/{{application.alias}}/ext_workflow/{{ form.initial.workflow_id }}",
+                        dataType: "jsonp"
+                    }
+                },
+            });
+            $("#history").kendoGrid({
+                dataSource: dataSourceHistory,
+                groupable: false,
+                filterable: true,
+                sortable: true,
+                rowTemplate: kendo.template($("#template_history").html()),
+                columns: [
+                    { field: "revision", title: "Версия", width: 100 },
+                    { field: "data", title: "Данные" },
+                    { field: "date", title: "Дата", width: 140},
+                    { field: "user", title: "Пользователь", width: 120}
+                ]
+            })
 
-    });
-
-    function categoryDropDownEditor(container, options) {
-        $('<input required data-text-field="CategoryName" data-value-field="CategoryID" data-bind="value:' + options.field + '"/>')
-            .appendTo(container)
-            .kendoDropDownList({
-                autoBind: false,
-                dataSource: {
-                    type: "odata",
-                    transport: {
-                        read: "http://demos.kendoui.com/service/Northwind.svc/Categories"
+            var dataSourceStatus = new kendo.data.DataSource({
+                pageSize: 20,
+                transport: {
+                    read: {
+                        url: "/admin/data/extension/{{application.alias}}/ext_status",
+                        dataType: "jsonp"
+                    },
+                    create: {
+                        url: "/admin/application/{{application.alias}}/extension/ext_status/{{ form.initial.workflow_id }}/create/",
+                        dataType: "jsonp",
+                        type: "POST"
+                    },
+                    update: {
+                        url: "/admin/data/extension/{{application.alias}}/ext_status",
+                        dataType: "jsonp"
+                    },
+                    destroy: {
+                        url: "/admin/data/extension/{{application.alias}}/ext_status",
+                        dataType: "jsonp"
+                    }
+                },
+                autoSync: false,
+                schema: {
+                    model: {
+                        id: "workflow_id",
+                        fields: {
+                            name: { validation: { required: true } },
+                            workflow: { defaultValue: {workflow:{{ form.initial.workflow_id }} }}
+                        }
                     }
                 }
             });
-    }
+            $("#gridStatus").kendoGrid({
+                dataSource: dataSourceStatus,
+                pageable: true,
+                height: 430,
+                toolbar: ["create", "save"],
+                columns: [
+                    { field: "name", title: "Статус" },
+                    { command: "destroy", title: "&nbsp;", width: 110 }
+                ],
+                editable: true
+            });
+            $("#gridEdge").kendoGrid({
+                dataSource: dataSourceEdge,
+                pageable: true,
+                height: 430,
+                toolbar: ["create", "save"],
+                columns: [
+                    { field: "previous", title: "Предыдущий статус" },
+                    { field: "target", title: "Следующий статус" },
+                    { field: "action", title: "Действие" },
+                    { command: "destroy", title: "&nbsp;", width: 110 }
+                ],
+                editable: true
+            });
+            dataSourceStatus.read({
+                workflow: "{{ form.initial.workflow_id }}"
+            });
 
-</script>
+        });
+
+        function categoryDropDownEditor(container, options) {
+            $('<input required data-text-field="CategoryName" data-value-field="CategoryID" data-bind="value:' + options.field + '"/>')
+                    .appendTo(container)
+                    .kendoDropDownList({
+                        autoBind: false,
+                        dataSource: {
+                            type: "odata",
+                            transport: {
+                                read: "http://demos.kendoui.com/service/Northwind.svc/Categories"
+                            }
+                        }
+                    });
+        }
+
+    </script>
 {% endblock %}
 {% block left_footer %}
-<div class="btn-group pull-right">
-	<input value="Сохранить без закрытия" type="submit" class="btn btn-primary submit b2" form="page" name="lazy">
-	<input value="Сохранить" type="submit" class="btn btn-primary submit b2" form="page">
-</div>
-<input value="Сохранить как новый" type="submit" class="btn btn-primary submit" form="page" name="new">
+    <div class="btn-group pull-right">
+        <input value="Сохранить без закрытия" type="submit" class="btn btn-primary submit b2" form="page" name="lazy">
+        <input value="Сохранить" type="submit" class="btn btn-primary submit b2" form="page">
+    </div>
+    <input value="Сохранить как новый" type="submit" class="btn btn-primary submit" form="page" name="new">
 {% endblock %}

@@ -2,5 +2,5 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-    (r'^$', 'turbodiesel.frontoffice.views.main'), # Dashboard, главная страница инструментария
+                       (r'^$', 'turbodiesel.frontoffice.views.main'),  # Dashboard, главная страница инструментария
 )

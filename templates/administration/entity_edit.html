@@ -1,112 +1,119 @@
 {% extends "base.html" %}
-		{% block title %}
-		{{action.string}} - "{{form.initial.name}}"
-		{% endblock %} 
+{% block title %}
+    {{ action.string }} - "{{ form.initial.name }}"
+{% endblock %}
 {% block breadcrumb %}
-<li>
-	<a title="" href="/admin/application/{{application.alias}}/edit/">Приложение - "{{application.name|truncatewords:2}}"</a>
-</li>
-<li>
-	<a href="/admin/application/{{application.alias}}/entity">Управление метаданными</a>
-</li>
-<li class="active">
-	{{action.string}} - "{{form.initial.name}}"
-</li>
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/edit/">Приложение -
+            "{{ application.name|truncatewords:2 }}"</a>
+    </li>
+    <li>
+        <a href="/admin/application/{{ application.alias }}/entity">Управление метаданными</a>
+    </li>
+    <li class="active">
+        {{ action.string }} - "{{ form.initial.name }}"
+    </li>
 {% endblock %}
 
 {% block center_content %}
-<div class="row-fluid">
-<div class="grid span6">
-	<div class="grid-title">
-		<div class="pull-left">
-			Свойства
-		</div>
-	</div>
-	<div class="grid-content">
-		<form action="./{{form.initial.alias}}" method="post" enctype="multipart/form-data" id="page" name="page">
-			{# Include the hidden fields #}
-			{% for hidden in form.hidden_fields %}
-			{{ hidden }}
-			{% endfor %}
-			{# Include the visible fields #}
-			<div id="window" style="min-width: 90px; min-height: 50px;">
-				<div id="content-main" style="">
-					{% csrf_token %}
+    <div class="row-fluid">
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Свойства
+                </div>
+            </div>
+            <div class="grid-content">
+                <form action="./{{ form.initial.alias }}" method="post" enctype="multipart/form-data" id="page"
+                      name="page">
+                    {# Include the hidden fields #}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                    {# Include the visible fields #}
+                    <div id="window" style="min-width: 90px; min-height: 50px;">
+                        <div id="content-main" style="">
+                            {% csrf_token %}
 
-					{% for field in form.visible_fields %}
-					<div class="row-fluid">
-						<label class="span4">{{ field.label }}:</label>
-						{% if field.errors %}
-						<div class="span4">
-							{{ field }}
-						</div>
-						<div class="span4">
-							<span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
-						</div>
-						{% else %}
-						<div class="span8">
-							{{ field }}
-						</div>
-						{% endif %}
-					</div>
-					{% endfor %}
-				</div>
-			</div>
+                            {% for field in form.visible_fields %}
+                                <div class="row-fluid">
+                                    <label class="span4">{{ field.label }}:</label>
+                                    {% if field.errors %}
+                                        <div class="span4">
+                                            {{ field }}
+                                        </div>
+                                        <div class="span4">
+                                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                                    class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
+                                        </div>
+                                    {% else %}
+                                        <div class="span8">
+                                            {{ field }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-		</form>
-	</div>
-</div>
-<div class="grid span6">
-	<div class="grid-title">
-		<div class="pull-left">
-			Аттрибуты 
-		</div>
-		<a href="/admin/application/{{application.alias}}/entity/{{form.initial.alias}}/property/create/" class="pull-right btn">Создание аттрибута</a>
-	</div>
-	<div class="grid-content">
-		<div id="properties" style="border:none; display: inline-block; background-color: transparent; float: none"></div>
-		<div id="pager" style="background-color:transparent;color: #ABABAB;display: inline-block; position: absolute;left:0; z-index: 100000"></div>
-	</div>
-</div>
-</div>
-<script type="text/x-kendo-tmpl" id="template">
+                </form>
+            </div>
+        </div>
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Аттрибуты
+                </div>
+                <a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/create/"
+                   class="pull-right btn">Создание аттрибута</a>
+            </div>
+            <div class="grid-content">
+                <div id="properties"
+                     style="border:none; display: inline-block; background-color: transparent; float: none"></div>
+                <div id="pager"
+                     style="background-color:transparent;color: #ABABAB;display: inline-block; position: absolute;left:0; z-index: 100000"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/x-kendo-tmpl" id="template">
 	<div class="admin_entity">
-	<a href="/admin/application/{{application.alias}}/entity/{{form.initial.alias}}/property/${TableName}/edit/" style="color: inherit;text-decoration: inherit;">
+	<a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/${TableName}/edit/" style="color: inherit;text-decoration: inherit;">
 	<img src="/media/turbodiesel/images/admin/property.png" alt="${Name}"/><br/>
 	${Name}
 	</a>
 	</div>
-</script>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		var dataSource = new kendo.data.DataSource({
-			transport : {
-				read : {
-					url : "/admin/data/property/{{application.alias}}/{{ form.initial.alias }}",
-					dataType : "jsonp"
-				}
-			}
-		});
-		$("#properties").kendoListView({
-			dataSource : dataSource,
-			template : kendo.template($("#template").html())
-		});
-	}); 
-</script>
+    </script>
 
-</div>
-</div>
-<!-- Окончание центрального блока -->
-</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/admin/data/property/{{application.alias}}/{{ form.initial.alias }}",
+                        dataType: "jsonp"
+                    }
+                }
+            });
+            $("#properties").kendoListView({
+                dataSource: dataSource,
+                template: kendo.template($("#template").html())
+            });
+        });
+    </script>
 
-</div>
-</div>
-<div id="tab_b" class="tab-pane"></div>
+    </div>
+    </div>
+    <!-- Окончание центрального блока -->
+    </div>
 
-</div>
+    </div>
+    </div>
+    <div id="tab_b" class="tab-pane"></div>
+
+    </div>
 {% endblock %}
 
 {% block left_footer %}
-<input value="Сохранить" type="submit" class="btn btn-primary pull-right" id="submit" form="page">
+    <input value="Сохранить" type="submit" class="btn btn-primary pull-right" id="submit" form="page">
 {% endblock %}

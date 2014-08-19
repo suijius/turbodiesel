@@ -1,10 +1,11 @@
-#coding=cp1251
+# coding=cp1251
 #from django.contrib.auth import logout
 #import django.contrib.auth 
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render_to_response#, render
+from django.shortcuts import render_to_response  #, render
 from django.contrib.auth.decorators import login_required
-from metamodel.models import Entity, Property, Application, Page, ExtImage, ExtWorkflow, ExtFilter, ExtCode, create_model, get_application_instance, get_entity_instance, UserProfile
+from metamodel.models import Entity, Property, Application, Page, ExtImage, ExtWorkflow, ExtFilter, ExtCode, \
+    create_model, get_application_instance, get_entity_instance, UserProfile
 from django.forms import ModelForm
 from django.forms.widgets import TextInput, Select, Textarea, DateTimeInput, CheckboxInput, DateInput
 from django.views.generic import CreateView, UpdateView
@@ -27,9 +28,11 @@ import application.data as app_data
 def home(request):
     if not request.user.is_superuser:
         raise PermissionDenied
-    apps = [{'Name': application.name,'Title': application.title, 'TableName': application.alias, 'Image': application.logotype.name} for application in Application.objects.all()]
+    apps = [{'Name': application.name, 'Title': application.title, 'TableName': application.alias,
+             'Image': application.logotype.name} for application in Application.objects.all()]
     return render_to_response('administration/application.html',
                               {'request': request, 'messages': messages.get_messages(request), 'applications': apps})
+
 
 #@login_required
 #def picture_insert(request, application_alias):
@@ -275,7 +278,7 @@ class CustomEntityUnitCreate(CreateView):
             parent = self.get_parent(request, parent_alias, parent_id, application_alias, extension_alias)
             post[parent['parent_field']] = parent_id
             form = self.createForm(application_alias, instance)(post, request.FILES)
-#            form.instance[parent['parent_field']] = parent['parent_instance']
+        #            form.instance[parent['parent_field']] = parent['parent_instance']
 
         if form.is_valid():
             form.save()

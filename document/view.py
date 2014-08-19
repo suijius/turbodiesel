@@ -5,8 +5,10 @@ from django.shortcuts import render_to_response
 from django.db import connections
 import json
 
+
 def default(request):
     return render_to_response('administration/couchdb.html', {})
+
 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
@@ -16,8 +18,8 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
-def mysql2couchdb(request):
 
+def mysql2couchdb(request):
     foo = couchdb.Couch('localhost', '5984')
     foo.createDb('nature')
 

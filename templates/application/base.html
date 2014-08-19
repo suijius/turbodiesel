@@ -1,32 +1,32 @@
 <html>
-	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=9">
-		<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-		<meta name="keywords" content="{% block keywords %}{{page.keywords}}{% endblock %}"/>
-		<meta name="description" content="{% block description %}{{page.description}}{% endblock %}"/>
-		{% block logotype %}
-			<link rel="shortcut icon" href="/media/{{logotype}}" type="image/png">
-		{% endblock %}
-<title>
-		{% block title %}
-			{{page.title}} | {{title}}
-		{% endblock %}
-</title>
-		{% block head_style %}
-			<link rel="stylesheet" href="/media/kendo/styles/kendo.common.css">
-			<link rel="stylesheet" href="/media/kendo/styles/kendo.default.min.css">
-		{% endblock %}
-		{% block head_script %}
-			<script src="/media/jquery/js/jquery.min.js" type="text/javascript"></script>
-			<script src="/media/kendo/js/kendo.all.min.js"></script>
-			<script src="/media/kendo/js/cultures/kendo.culture.ru-RU.min.js"></script>
-		{% endblock %}
-		{% block head_extend %}
-		{% endblock %}
-	</head>
-	<body>
-		{% block body %}
-		{{page.content}}
-		{% endblock %}
-	</body>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="keywords" content="{% block keywords %}{{ page.keywords }}{% endblock %}"/>
+    <meta name="description" content="{% block description %}{{ page.description }}{% endblock %}"/>
+    {% block logotype %}
+        <link rel="shortcut icon" href="/media/{{ logotype }}" type="image/png">
+    {% endblock %}
+    <title>
+        {% block title %}
+            {{ page.title }} | {{ title }}
+        {% endblock %}
+    </title>
+    {% block head_style %}
+        <link rel="stylesheet" href="/media/kendo/styles/kendo.common.css">
+        <link rel="stylesheet" href="/media/kendo/styles/kendo.default.min.css">
+    {% endblock %}
+    {% block head_script %}
+        <script src="/media/jquery/js/jquery.min.js" type="text/javascript"></script>
+        <script src="/media/kendo/js/kendo.all.min.js"></script>
+        <script src="/media/kendo/js/cultures/kendo.culture.ru-RU.min.js"></script>
+    {% endblock %}
+    {% block head_extend %}
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    {{ page.content }}
+{% endblock %}
+</body>
 </html>

@@ -189,7 +189,7 @@ class Application(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     telephone = models.TextField(verbose_name=u'Телефон', blank=True)
-    #    application = models.ManyToManyField(Application, verbose_name=u'Приложение')#, through='ApplicationUser')
+    # application = models.ManyToManyField(Application, verbose_name=u'Приложение')#, through='ApplicationUser')
     class Meta:
         db_table = u'auth_user_profile'
         verbose_name = u'профиль пользователя'
@@ -303,7 +303,7 @@ class PropertyType(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Имя')
     dbtype = models.CharField(choices=TYPE, max_length=50, verbose_name=u'Тип в базе данных')
     description = models.TextField(blank=True, verbose_name=u'Описание')
-    #    type_ui = models.ForeignKey(PropertyTypeUI, verbose_name=u'Тип пользовательского интерфейса')
+    # type_ui = models.ForeignKey(PropertyTypeUI, verbose_name=u'Тип пользовательского интерфейса')
     editor = models.ForeignKey(User, db_column='editor', null=True, blank=True)
     date_change = models.DateTimeField(null=True, blank=True)
 
@@ -332,7 +332,7 @@ class Property(models.Model):
     property_type = models.ForeignKey(PropertyType, verbose_name=u'Тип данных')
     link_entity = models.ForeignKey(Entity, verbose_name=u'Ссылка на сущность', blank=True, null=True,
                                     related_name='link_entity')
-    #    reference = models.CharField(choices=REF, max_length=50, verbose_name=u'Тип связи', blank=True, null=True)
+    # reference = models.CharField(choices=REF, max_length=50, verbose_name=u'Тип связи', blank=True, null=True)
     editor = models.ForeignKey(User, db_column='editor', null=True, blank=True)
     date_change = models.DateTimeField(null=True, blank=True)
     parent_entity = models.ForeignKey(Entity, verbose_name=u'Родительская сущность', related_name='parent_entity')
@@ -431,8 +431,8 @@ class ExtStatus(models.Model):
 class ExtEdge(models.Model):
     edge_id = models.AutoField(primary_key=True, verbose_name=u'ID')
     name = models.CharField(max_length=255, verbose_name=u'Имя')
-    previous = models.ManyToManyField(ExtStatus, verbose_name=u'Предыдущий статус')  #, through='PreviousStatus')
-    action = models.ManyToManyField(ExtCode, verbose_name=u'Выполняемые действия')  #, through='EdgeCode')
+    previous = models.ManyToManyField(ExtStatus, verbose_name=u'Предыдущий статус')  # , through='PreviousStatus')
+    action = models.ManyToManyField(ExtCode, verbose_name=u'Выполняемые действия')  # , through='EdgeCode')
     target = models.ForeignKey(ExtStatus, db_column='target_id', verbose_name=u'Следующий статус', blank=False,
                                null=False, related_name='target')
 
@@ -568,7 +568,7 @@ def collect_entity():
         list_display.append(list_display[0])
         list_display.remove(list_display[0])
 
-        #properties.append(properties[0])
+        # properties.append(properties[0])
         properties.remove(properties[0])
         properties = properties + [property.__dict__['name'] for property in
                                    cl.__dict__['_meta'].__dict__['local_many_to_many']]

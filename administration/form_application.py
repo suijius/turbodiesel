@@ -26,13 +26,13 @@ class ApplicationEdit(TurboDieselUpdateView):
         extension_list = settings.EXTENSIONS + data.get_custom_entity(application_alias, request)
 
         application, default = get_application_instance(application_alias, request)
-        pages = Page.objects.filter(application = application)
-#        data = []
-#        for field in pages:
-#            value = {}
-#            for meta in field._meta.fields:
-#                value[meta.name] = truncate(field.__dict__[str(meta.name if meta.attname is None else meta.attname)], meta.name)
-#            data.append(value)
+        pages = Page.objects.filter(application=application)
+        # data = []
+        #        for field in pages:
+        #            value = {}
+        #            for meta in field._meta.fields:
+        #                value[meta.name] = truncate(field.__dict__[str(meta.name if meta.attname is None else meta.attname)], meta.name)
+        #            data.append(value)
 
         context['pages'] = pages
         context['extension'] = extension_list

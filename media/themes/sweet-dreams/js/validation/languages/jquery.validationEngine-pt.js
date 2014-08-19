@@ -1,8 +1,8 @@
-(function($){
-    $.fn.validationEngineLanguage = function(){
+(function ($) {
+    $.fn.validationEngineLanguage = function () {
     };
     $.validationEngineLanguage = {
-        newLang: function(){
+        newLang: function () {
             $.validationEngineLanguage.allRules = {
                 "required": { // Add your regex rules here, you can take telephone as an example
                     "regex": "none",
@@ -10,8 +10,8 @@
                     "alertTextCheckboxMultiple": "* Selecione uma opção",
                     "alertTextCheckboxe": "* Campo obrigatório"
                 },
-                "requiredInFunction": { 
-                    "func": function(field, rules, i, options){
+                "requiredInFunction": {
+                    "func": function (field, rules, i, options) {
                         return (field.val() == "test") ? true : false;
                     },
                     "alertText": "* Field must equal test"
@@ -26,11 +26,11 @@
                     "alertText": "* Máximo ",
                     "alertText2": " carateres permitidos"
                 },
-				"groupRequired": {
+                "groupRequired": {
                     "regex": "none",
                     "alertText": "* You must fill one of the following fields"
                 },
-		        "min": {
+                "min": {
                     "regex": "none",
                     "alertText": "* O valor mínimo é "
                 },
@@ -38,14 +38,14 @@
                     "regex": "none",
                     "alertText": "* O valor máximo é "
                 },
-		        "past": {
+                "past": {
                     "regex": "none",
                     "alertText": "* Data anterior a "
                 },
                 "future": {
                     "regex": "none",
                     "alertText": "* Data posterior a "
-                },	
+                },
                 "maxCheckbox": {
                     "regex": "none",
                     "alertText": "* Foi ultrapassado o número máximo de escolhas"
@@ -87,7 +87,7 @@
                     "alertText": "* Data inválida, o formato deve de ser AAAA-MM-DD"
                 },
                 "ipv4": {
-                	"regex": /^((([01]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))[.]){3}(([0-1]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))$/,
+                    "regex": /^((([01]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))[.]){3}(([0-1]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))$/,
                     "alertText": "* Número IP inválido"
                 },
                 "url": {
@@ -98,7 +98,7 @@
                     "regex": /^[0-9\ ]+$/,
                     "alertText": "* Só é permitido números"
                 },
-			    "onlyLetterSp": {
+                "onlyLetterSp": {
                     "regex": /^[a-zA-Z\ \']+$/,
                     "alertText": "* Só é permitido letras"
                 },
@@ -106,29 +106,29 @@
                     "regex": /^[0-9a-zA-Z]+$/,
                     "alertText": "* Só é permitido letras e números"
                 },
-				// --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings
+                // --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings
                 "ajaxUserCall": {
                     "url": "ajaxValidateFieldUser",
-					// you may want to pass extra data on the ajax call
+                    // you may want to pass extra data on the ajax call
                     "extraData": "name=eric",
                     "alertText": "* Nome de utilizador não disponível",
                     "alertTextLoad": "* A validar, por favor aguarde"
                 },
                 "ajaxNameCall": {
-					// remote json service location
+                    // remote json service location
                     "url": "ajaxValidateFieldName",
-					// error
+                    // error
                     "alertText": "* Nome não disponível",
-					// if you provide an "alertTextOk", it will show as a green prompt when the field validates
+                    // if you provide an "alertTextOk", it will show as a green prompt when the field validates
                     "alertTextOk": "* Nome disponível",
-					// speaks by itself
+                    // speaks by itself
                     "alertTextLoad": "* A validar, por favor aguarde"
                 },
                 "validate2fields": {
                     "alertText": "* Escreva HELLO"
                 }
             };
-            
+
         }
     };
     $.validationEngineLanguage.newLang();

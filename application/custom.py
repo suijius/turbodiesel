@@ -10,4 +10,5 @@ from application import data
 
 
 def unitcard(request, application, custom_template):
-    return render_to_response('%s/%s.html' % (application.alias, custom_template), {'logotype': application.logotype, 'title': application.name})
+    return render_to_response('%s/%s.html' % (application.alias, custom_template),
+                              {'logotype': application.logotype, 'title': application.name})

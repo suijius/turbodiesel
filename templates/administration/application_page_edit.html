@@ -1,144 +1,150 @@
 {% extends "base.html" %}
-		{% block title %}
-		{{action.string}}{% if page %} - "{{form.initial.name|truncatewords:2}}" {% endif %}
-		{% endblock %} 
-{% block breadcrumb %}
-<li>
-	<a title="" href="/admin/application/{{application.alias}}/edit">Приложение - "{{application|truncatewords:2}}"</a>
-</li>
-<li class="active">
-	{{action.string}}{% if page %} - "{{form.initial.name|truncatewords:2}}" {% endif %}
-</li>
+{% block title %}
+    {{ action.string }}{% if page %} - "{{ form.initial.name|truncatewords:2 }}" {% endif %}
 {% endblock %}
-{%block sidebar%}
-<li>
-	<a href="#general"><i class="icon-edit"></i> <span>Свойства</span></a>
-</li>
-<li>
-	<a href="#content_edit"><i class="icon-book"></i> <span>Контент</span></a>
-</li>
-<li>
-	<a href="#template_edit"><i class="icon-th-large"></i> <span>Шаблон</span></a>
-</li>
-<li>
-	<a href="#code_edit"><i class="icon-beaker"></i> <span>Код</span></a>
-</li>
-{%endblock%}
+{% block breadcrumb %}
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/edit">Приложение -
+            "{{ application|truncatewords:2 }}"</a>
+    </li>
+    <li class="active">
+        {{ action.string }}{% if page %} - "{{ form.initial.name|truncatewords:2 }}" {% endif %}
+    </li>
+{% endblock %}
+{% block sidebar %}
+    <li>
+        <a href="#general"><i class="icon-edit"></i> <span>Свойства</span></a>
+    </li>
+    <li>
+        <a href="#content_edit"><i class="icon-book"></i> <span>Контент</span></a>
+    </li>
+    <li>
+        <a href="#template_edit"><i class="icon-th-large"></i> <span>Шаблон</span></a>
+    </li>
+    <li>
+        <a href="#code_edit"><i class="icon-beaker"></i> <span>Код</span></a>
+    </li>
+{% endblock %}
 {% block center_content %}
-<a name="general"></a>
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left">
-			Свойства страницы приложения
-		</div>
-	</div>
-	<div class="grid-content">
-		<form action="." method="post" enctype="multipart/form-data" id="page" name="page">
-			{# Include the hidden fields #}
-			{% for hidden in form.hidden_fields %}
-			{{ hidden }}
-			{% endfor %}
-			{# Include the visible fields #}
-			{% csrf_token %}
-			{% for field in form.visible_fields %}
-			{% if field.name != 'content' %}
-			<div class="row-fluid">
-				<label class="span4">{{ field.label }}:</label>
-				{% if field.errors %}
-				<div class="span4">
-					{{ field }}
-				</div>
-				<div class="span4">
-					<span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
-				</div>
-				{% else %}
-				<div class="span8">
-					{{ field }}
-				</div>
-				{% endif %}
-			</div>
-			{% endif %}
-			{% endfor %}
-		</form>
-	</div>
-</div>
-<textarea id="editor_miracle" style="display:none" form="page" name="template-content">
-	</textarea>
-<textarea id="code_editor_miracle" style="display:none" form="page" name="code-content">
-	</textarea>
+    <a name="general"></a>
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                Свойства страницы приложения
+            </div>
+        </div>
+        <div class="grid-content">
+            <form action="." method="post" enctype="multipart/form-data" id="page" name="page">
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {# Include the visible fields #}
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                    {% if field.name != 'content' %}
+                        <div class="row-fluid">
+                            <label class="span4">{{ field.label }}:</label>
+                            {% if field.errors %}
+                                <div class="span4">
+                                    {{ field }}
+                                </div>
+                                <div class="span4">
+                                    <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                            class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
+                                </div>
+                            {% else %}
+                                <div class="span8">
+                                    {{ field }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    <textarea id="editor_miracle" style="display:none" form="page" name="template-content">
+    </textarea>
+    <textarea id="code_editor_miracle" style="display:none" form="page" name="code-content">
+    </textarea>
 
- <a name="content_edit"></a>
-<div class="grid" style="height: 600px">
-	<div class="grid-title">
-		<div class="pull-left">
-			Основной контент
-		</div>
-	</div>
-	<div class="grid-content">
-		<textarea id="content"  form="page" class="textarea" name="content"  style="height: 520px; width:100%">{{ page.content }}
-			</textarea>
-	</div>
-</div>
+    <a name="content_edit"></a>
+    <div class="grid" style="height: 600px">
+        <div class="grid-title">
+            <div class="pull-left">
+                Основной контент
+            </div>
+        </div>
+        <div class="grid-content">
+            <textarea id="content" form="page" class="textarea" name="content"
+                      style="height: 520px; width:100%">{{ page.content }}
+            </textarea>
+        </div>
+    </div>
 
-<a name="template_edit"></a>
-<div class="grid" style="height: 600px">
-	<div class="grid-title">
-		<div class="pull-left">
-			Шаблон страницы приложения
-		</div>
-	</div>
-	<div class="grid-content">
-		<div id="editor" name="template-content" style="height:520px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ page.template.content }}
-		</div>
-	</div>
-</div>
+    <a name="template_edit"></a>
+    <div class="grid" style="height: 600px">
+        <div class="grid-title">
+            <div class="pull-left">
+                Шаблон страницы приложения
+            </div>
+        </div>
+        <div class="grid-content">
+            <div id="editor" name="template-content"
+                 style="height:520px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ page.template.content }}
+            </div>
+        </div>
+    </div>
 
-<a name="code_edit"></a>
-<div class="grid" style="height: 600px">
-	<div class="grid-title">
-		<div class="pull-left">
-			Кодовая вставка
-		</div>
-	</div>
-	<div class="grid-content">
-		<div id="code_editor" name="template-content" style="height:520px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ page.code.code }}
-		</div>
-	</div>
-</div>
-</div>
+    <a name="code_edit"></a>
+    <div class="grid" style="height: 600px">
+        <div class="grid-title">
+            <div class="pull-left">
+                Кодовая вставка
+            </div>
+        </div>
+        <div class="grid-content">
+            <div id="code_editor" name="template-content"
+                 style="height:520px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ page.code.code }}
+            </div>
+        </div>
+    </div>
+    </div>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		var editor = ace.edit("editor");
-		editor.setTheme("ace/theme/chrome");
-		editor.getSession().setMode("ace/mode/html");
-		editor.getSession().setUseWrapMode(false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/chrome");
+            editor.getSession().setMode("ace/mode/html");
+            editor.getSession().setUseWrapMode(false)
 
-		var code_editor = ace.edit("code_editor");
-		code_editor.setTheme("ace/theme/chrome");
-		code_editor.getSession().setMode("ace/mode/python");
-		code_editor.getSession().setUseWrapMode(false)
+            var code_editor = ace.edit("code_editor");
+            code_editor.setTheme("ace/theme/chrome");
+            code_editor.getSession().setMode("ace/mode/python");
+            code_editor.getSession().setUseWrapMode(false)
 
-		$('.submit').click(function() {
-			$('#editor_miracle').val(editor.getValue());
-			$('#code_editor_miracle').val(code_editor.getValue());
-		})
+            $('.submit').click(function () {
+                $('#editor_miracle').val(editor.getValue());
+                $('#code_editor_miracle').val(code_editor.getValue());
+            })
 
-		$('#id_template').change(function() {
-			$('#editor').css('display', 'none')
-		})
-		$('#id_code').change(function() {
-			$('#code_editor').css('display', 'none')
-		})
-	}); 
-</script>
-<script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+            $('#id_template').change(function () {
+                $('#editor').css('display', 'none')
+            })
+            $('#id_code').change(function () {
+                $('#code_editor').css('display', 'none')
+            })
+        });
+    </script>
+    <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript"
+            charset="utf-8"></script>
 {% endblock %}
 {% block left_footer %}
-<div class="btn-group pull-right">
-<input value="Сохранить без закрытия" type="submit" class="btn btn-primary submit b2" form="page" name="lazy">
-<input value="Сохранить" type="submit" class="btn btn-primary submit b2" id="submit" form="page">
-</div>
-<input value="Сохранить как новую" type="submit" class="btn btn-primary submit b1" form="page" name="new">
+    <div class="btn-group pull-right">
+        <input value="Сохранить без закрытия" type="submit" class="btn btn-primary submit b2" form="page" name="lazy">
+        <input value="Сохранить" type="submit" class="btn btn-primary submit b2" id="submit" form="page">
+    </div>
+    <input value="Сохранить как новую" type="submit" class="btn btn-primary submit b1" form="page" name="new">
 {% endblock %}
 

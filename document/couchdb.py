@@ -7,8 +7,9 @@ def prettyPrint(s):
     """Prettyprints the json response of an HTTPResponse object"""
 
     # HTTPResponse instance -> Python object -> str
-#    print json.dumps(json.loads(s.read()), sort_keys=True, indent=4)
+    # print json.dumps(json.loads(s.read()), sort_keys=True, indent=4)
     pass
+
 
 class Couch:
     """Basic wrapper class for operations on a couchDB"""
@@ -18,20 +19,20 @@ class Couch:
         self.port = port
 
     def connect(self):
-        return httplib.HTTPConnection(self.host, self.port) # No close()
+        return httplib.HTTPConnection(self.host, self.port)  # No close()
 
     # Database operations
 
     def createDb(self, dbName):
         """Creates a new database on the server"""
 
-        r = self.put(''.join(['/',dbName,'/']), "")
+        r = self.put(''.join(['/', dbName, '/']), "")
         prettyPrint(r)
 
     def deleteDb(self, dbName):
         """Deletes the database on the server"""
 
-        r = self.delete(''.join(['/',dbName,'/']))
+        r = self.delete(''.join(['/', dbName, '/']))
         prettyPrint(r)
 
     def listDb(self):
@@ -54,7 +55,7 @@ class Couch:
 
     def openDoc(self, dbName, docId):
         """Open a document in a given database"""
-        r = self.get(''.join(['/', dbName, '/', docId,]))
+        r = self.get(''.join(['/', dbName, '/', docId, ]))
         prettyPrint(r)
 
     def saveDoc(self, dbName, body, docId=None):
@@ -68,7 +69,7 @@ class Couch:
     def deleteDoc(self, dbName, docId, rev_id):
         # XXX Crashed if resource is non-existent; not so for DELETE on db. Bug?
         # XXX Does not work any more, on has to specify an revid
-        #     Either do html head to get the recten revid or provide it as parameter
+        # Either do html head to get the recten revid or provide it as parameter
         r = self.delete(''.join(['/', dbName, '/', docId, '?revid=', rev_id]))
         prettyPrint(r)
 

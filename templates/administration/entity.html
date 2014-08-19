@@ -1,36 +1,38 @@
 {% extends "base.html" %}
-		{% block title %}
-		Управление метаданными
-		{% endblock %} 
+{% block title %}
+    Управление метаданными
+{% endblock %}
 
 {% block speedbar %}
 
-	<li>
-		<a href="/admin/application/{{application.alias}}/entity/create/" class="act_link">Создание сущности</a>
-	</li>
+    <li>
+        <a href="/admin/application/{{ application.alias }}/entity/create/" class="act_link">Создание сущности</a>
+    </li>
 
 {% endblock %}
 {% block breadcrumb %}
-	<li>
-		<a title="" href="/admin/application/{{application.alias}}/edit/">Приложения - "{{application.name|truncatewords:2}}"</a>
-	</li>
-	<li class="active">
-		Управление метаданными
-	</li>
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/edit/">Приложения -
+            "{{ application.name|truncatewords:2 }}"</a>
+    </li>
+    <li class="active">
+        Управление метаданными
+    </li>
 {% endblock %}
 
 {% block left_footer %}
-<div id="pager" class="k-pager-wrap" style="border-style: none;background-color:transparent;color: #ABABAB;background-image: none; width:300px"></div>
+    <div id="pager" class="k-pager-wrap"
+         style="border-style: none;background-color:transparent;color: #ABABAB;background-image: none; width:300px"></div>
 {% endblock %}
 {% block center_content %}
 
-<div id="listView" style="background-color:transparent;border:0; min-height: 600px"></div>
+    <div id="listView" style="background-color:transparent;border:0; min-height: 600px"></div>
 
-<script type="text/x-kendo-tmpl" id="template">
-	{% if entity_type == 'system' %}
-	<a href="/admin/application/{{application.alias}}/entity/${TableName}/" style="color: inherit;text-decoration: inherit;">
+    <script type="text/x-kendo-tmpl" id="template">
+        {% if entity_type == 'system' %}
+	<a href="/admin/application/{{ application.alias }}/entity/${TableName}/" style="color: inherit;text-decoration: inherit;">
 	{% else %}
-	<a href="/admin/application/{{application.alias}}/entity/${TableName}/edit/" style="color: inherit;text-decoration: inherit;">
+	<a href="/admin/application/{{ application.alias }}/entity/${TableName}/edit/" style="color: inherit;text-decoration: inherit;">
 	{% endif %}
 	<div class="admin_entity">
 
@@ -38,33 +40,34 @@
 	<h4>${Name}</h4>
 	</div>
 	</a>
-</script>
 
-<script>
-	$(document).ready(function() {
-		var dataSource = new kendo.data.DataSource({
-			transport : {
-				read : {
-					url : "/admin/data/entity/{{application.alias}}/",
-					dataType : "jsonp"
-				}
-			},
-			pageSize : 12
-		});
+    </script>
 
-		$("#pager").kendoPager({
-			dataSource : dataSource
-		});
+    <script>
+        $(document).ready(function () {
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/admin/data/entity/{{application.alias}}/",
+                        dataType: "jsonp"
+                    }
+                },
+                pageSize: 12
+            });
 
-		$("#listView").kendoListView({
-			dataSource : dataSource,
-			template : kendo.template($("#template").html())
-		});
+            $("#pager").kendoPager({
+                dataSource: dataSource
+            });
 
-		$("#menu").kendoMenu({
-		})
+            $("#listView").kendoListView({
+                dataSource: dataSource,
+                template: kendo.template($("#template").html())
+            });
 
-	}); 
-</script>
+            $("#menu").kendoMenu({
+            })
+
+        });
+    </script>
 
 {% endblock %}

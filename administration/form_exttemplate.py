@@ -50,7 +50,7 @@ class ExtTemplateEdit(TurboDieselUpdateView):
         filter_instance = dbTemplates.Template.objects.filter(id = id, name__contains = application_alias)
         if len(filter_instance) > 0:
             form = ExtTemplateForm(request.POST, request.FILES, instance = filter_instance[0])
-            if request.POST.get('new', ''):
+            if request.POST.get('new'):
                 form = ExtTemplateForm(request.POST, request.FILES)
                 form.instance.application = application
             
@@ -58,7 +58,7 @@ class ExtTemplateEdit(TurboDieselUpdateView):
             form.instance.last_changed = filter_instance[0].last_changed
             if form.is_valid(): 
                 form.save()
-                if request.POST.get('lazy', ''):
+                if request.POST.get('lazy'):
                     return HttpResponse('', status=204) 
                 else:
                     return HttpResponseRedirect('../..') 

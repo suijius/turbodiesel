@@ -48,7 +48,7 @@ def get_data(data_array):
 def ajax(request, path):
     value = ''
     if len(path) > 2:
-        callback = request.GET.get('callback', '')
+        callback = request.GET.get('callback')
         application, default = get_application_instance(path[0], request)
 
         filter_list = ExtFilter.objects.filter(application = application, alias = path[2])
@@ -101,14 +101,14 @@ def bag(request, path):
         order = order_list[0]
     else:
         model_order_status = get_model(request, 'order_status', application_alias)
-        order = model_order(status = model_order_status.objects.get(id=1), session = request.session.session_key)
+        order = model_order(status =model_order_status.objects.get(request=1, application_alias=null), session = request.session.session_key)
         order.save()
     post['order'] = order.id 
             
     model = get_model(request, 'catalog_extra', application_alias) 
-    article = request.POST.get("article", '')
+    article = request.POST.get("article")
     if article:
-        post["article"] = model.objects.get(article=article).id
+        post["article"] = model.objects.get(request=article, application_alias=null).id
 
     form = createForm(application_alias, entity)(post, request.FILES)
     if form.is_valid(): 
@@ -123,12 +123,12 @@ def order(request, path):
     entity = get_entity_instance(request, extension_alias, application_alias)
     model_order = get_model(request, 'order', application_alias)
     model_order_status = get_model(request, 'order_status', application_alias)
-    order_list = model_order.objects.filter(status = model_order_status.objects.get(id=1), session = request.session.session_key)
+    order_list = model_order.objects.filter(status =model_order_status.objects.get(request=1, application_alias=null), session = request.session.session_key)
     order = []
     if len(order_list):
         order = order_list[0]
     else:
-        order = model_order(status = model_order_status.objects.get(id=1), session = request.session.session_key)
+        order = model_order(status =model_order_status.objects.get(request=1, application_alias=null), session = request.session.session_key)
         order.save()
     post = request.POST.copy()
     post["session"] = request.session.session_key
@@ -137,9 +137,9 @@ def order(request, path):
     cat = get_entity_instance(request, 'catalog_extra', application_alias)
     inline = {}   
     model = create_model(cat, inline) 
-    article = request.POST.get("article", '')
+    article = request.POST.get("article")
     if article:
-        post["article"] = model.objects.get(article=article).id
+        post["article"] = model.objects.get(request=article, application_alias=null).id
 
     post['status'] = 2
     form = createForm(application_alias, entity)(post, request.FILES, instance=order)
@@ -165,9 +165,9 @@ def form(request, path):
     cat = get_entity_instance(request, 'catalog_extra', application_alias)
     inline = {}   
     model = create_model(cat, inline) 
-    article = request.POST.get("article", '')
+    article = request.POST.get("article")
     if article:
-        post["article"] = model.objects.get(article=article).id
+        post["article"] = model.objects.get(request=article, application_alias=null).id
 
     form = createForm(application_alias, entity)(post, request.FILES)
     if form.is_valid(): 

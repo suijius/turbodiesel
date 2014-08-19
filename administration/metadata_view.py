@@ -45,7 +45,7 @@ class EntityCreate(CreateView):
         if not request.user.is_superuser:
             raise PermissionDenied
         if len(request.FILES) > 0:
-            request.FILES['image'].name = request.POST.get('alias', request.FILES['image'].name.split('.')[0]) + '.png'
+            request.FILES['image'].name = request.POST.get('alias') + '.png'
         application, default = get_application_instance(application_alias, request)
         form = EntityForm(request.POST, request.FILES) 
         form.instance.application = application
@@ -79,7 +79,7 @@ class EntityEdit(UpdateView):
         if not request.user.is_superuser:
             raise PermissionDenied
         if len(request.FILES) > 0:
-            request.FILES['image'].name = request.POST.get('alias', request.FILES['image'].name.split('.')[0]) + '.png'
+            request.FILES['image'].name = request.POST.get('alias') + '.png'
         
         entity = get_entity_instance(request, entity_alias, application_alias)
    
@@ -133,7 +133,7 @@ class PropertyCreate(CreateView):
         if not request.user.is_superuser:
             raise PermissionDenied
         if len(request.FILES) > 0:
-            request.FILES['image'].name = request.POST.get('alias', request.FILES['image'].name.split('.')[0]) + '.png'
+            request.FILES['image'].name = request.POST.get('alias') + '.png'
         form = PropertyForm(request.POST, request.FILES)
         entity = get_entity_instance(request, entity_alias, application_alias)
   
@@ -187,7 +187,7 @@ class PropertyEdit(UpdateView):
         if not request.user.is_superuser:
             raise PermissionDenied
         if len(request.FILES) > 0:
-            request.FILES['image'].name = request.POST.get('alias', request.FILES['image'].name.split('.')[0]) + '.png'
+            request.FILES['image'].name = request.POST.get('alias') + '.png'
         entity = get_entity_instance(request, entity_alias, application_alias)
         instance = Property.objects.filter(name = property_alias, parent_entity = entity)
         if len(instance) > 0:

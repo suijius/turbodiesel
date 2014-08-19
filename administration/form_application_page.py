@@ -85,7 +85,7 @@ class ApplicationPageEdit(TurboDieselUpdateView):
                 while request.POST[item].__contains__('&lt') or request.POST[item].__contains__('&gt') or request.POST[item].__contains__('&amp'):
                     request.POST[item] = request.POST[item].replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&').replace('&nbsp;', ' ')
             form = ApplicationPageForm(request.POST, request.FILES,instance = page_instance[0])
-            if request.POST.get('new', ''):
+            if request.POST.get('new'):
                 form = ApplicationPageForm(request.POST, request.FILES)
                 form.instance.application = application
             if form.is_valid(): 
@@ -99,7 +99,7 @@ class ApplicationPageEdit(TurboDieselUpdateView):
                     code.code = request.POST['code-content'].strip()
                     code.save()
                 
-                if request.POST.get('lazy', ''):
+                if request.POST.get('lazy'):
                     return HttpResponse('', status=204) 
                 else:
                     return HttpResponseRedirect('../../../edit') 

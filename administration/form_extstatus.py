@@ -47,13 +47,13 @@ class ExtStatusEdit(TurboDieselUpdateView):
         filter_instance = ExtWorkflow.objects.filter(workflow_id = id, application = application)
         if len(filter_instance) > 0:
             form = ExtStatusForm(request.POST, request.FILES, instance = filter_instance[0])
-            if request.POST.get('new', ''):
+            if request.POST.get('new'):
                 form = ExtStatusForm(request.POST, request.FILES)
                 form.instance.application = application
             
             if form.is_valid(): 
                 form.save()
-                if request.POST.get('lazy', ''):
+                if request.POST.get('lazy'):
                     return HttpResponse('', status=204) 
                 else:
                     return HttpResponseRedirect('../..') 

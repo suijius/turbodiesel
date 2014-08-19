@@ -27,8 +27,9 @@ import application.data as app_data
 def home(request):
     if not request.user.is_superuser:
         raise PermissionDenied
+    apps = [{'Name': application.name,'Title': application.title, 'TableName': application.alias, 'Image': application.logotype.name} for application in Application.objects.all()]
     return render_to_response('administration/application.html',
-                              {'request': request, 'messages': messages.get_messages(request)})
+                              {'request': request, 'messages': messages.get_messages(request), 'applications': apps})
 
 #@login_required
 #def picture_insert(request, application_alias):
@@ -155,11 +156,10 @@ class TurboDieselCreateView(CreateView):
 
     def prepost_raw(self, request):
         self.preget_raw(request)
-        if len(request.FILES) > 0 and request.FILES.get('image', 0) <> 0:
-            request.FILES['image'].name = request.POST.get('alias', request.FILES['image'].name.split('.')[0]) + '.png'
-        if len(request.FILES) > 0 and request.FILES.get('logotype', 0) <> 0:
-            request.FILES['logotype'].name = request.POST.get('alias',
-                                                              request.FILES['logotype'].name.split('.')[0]) + '.png'
+        if len(request.FILES) > 0 and request.FILES.get('image') <> 0:
+            request.FILES['image'].name = request.POST.get('alias') + '.png'
+        if len(request.FILES) > 0 and request.FILES.get('logotype') <> 0:
+            request.FILES['logotype'].name = request.POST.get('alias') + '.png'
 
     def prepost(self, request, application_alias=None):
         self.prepost_raw(request)
@@ -201,11 +201,10 @@ class TurboDieselUpdateView(UpdateView):
     def prepost(self, request, application_alias):
         if not request.user.is_superuser:
             raise PermissionDenied
-        if len(request.FILES) > 0 and request.FILES.get('image', 0) <> 0:
-            request.FILES['image'].name = request.POST.get('alias', request.FILES['image'].name.split('.')[0]) + '.png'
-        if len(request.FILES) > 0 and request.FILES.get('logotype', 0) <> 0:
-            request.FILES['logotype'].name = request.POST.get('alias',
-                                                              request.FILES['logotype'].name.split('.')[0]) + '.png'
+        if len(request.FILES) > 0 and request.FILES.get('image') <> 0:
+            request.FILES['image'].name = request.POST.get('alias') + '.png'
+        if len(request.FILES) > 0 and request.FILES.get('logotype') <> 0:
+            request.FILES['logotype'].name = request.POST.get('alias') + '.png'
         return get_application_instance(application_alias, request)[0]
 
     def preget(self, request, application_alias):

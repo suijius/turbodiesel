@@ -1,15 +1,19 @@
 $(document).ready(function() {
-	$(".select").kendoDropDownList();
-	$(".datetime").kendoDateTimePicker({
-    	format: "dd.MM.yyyy hh:mm:ss",
-    	culture: "ru-RU"
-	});
+	$(".select").chosen();
+	$(".datetime").datepicker({
+					inline: true
+				});
 	$('.tags_input').tagsInput();
-		$(".date").kendoDatePicker({
-    	format: "dd.MM.yyyy",
-    	culture: "ru-RU"
-	});
-	$(".textarea").kendoEditor({tools:[
+		$(".date").datepicker({
+					inline: true
+				});
+
+    $('.table').dataTable({
+        "sScrollX": "100%",
+        "sScrollXInner": "145%",
+        "bScrollCollapse": true
+    });
+/*	$(".textarea").kendoEditor({tools:[
          "bold",
          "italic",
          "underline",
@@ -32,6 +36,6 @@ $(document).ready(function() {
 "createLink",
                 "unlink"]
 
-         });
+         });*/
 
 })

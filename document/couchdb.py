@@ -7,7 +7,8 @@ def prettyPrint(s):
     """Prettyprints the json response of an HTTPResponse object"""
 
     # HTTPResponse instance -> Python object -> str
-    print json.dumps(json.loads(s.read()), sort_keys=True, indent=4)
+#    print json.dumps(json.loads(s.read()), sort_keys=True, indent=4)
+    pass
 
 class Couch:
     """Basic wrapper class for operations on a couchDB"""

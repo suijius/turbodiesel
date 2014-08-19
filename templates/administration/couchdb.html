@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="/media/bootstrap/3.2.0/css/bootstrap.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/media/bootstrap/3.2.0/js/bootstrap.js"></script>
+
+</head>
+<body>
+<button type="button" class="btn btn-default migrate">Default</button>
+<button type="button" class="btn btn-default">Default</button>
+<button type="button" class="btn btn-default">Default</button>
+<button type="button" class="btn btn-default">Default</button>
+<button type="button" class="btn btn-default">Default</button>
+
+
+<script>
+  $('.migrate').click(function () {
+    var btn = $(this)
+    $.ajax('/couchdb/migrate/').always(function () {
+
+    });
+  });
+</script>
+</body>
+</html>

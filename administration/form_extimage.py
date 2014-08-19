@@ -26,7 +26,7 @@ class ExtImageCreate(TurboDieselCreateView):
     def post(self, request, application_alias):
         application = self.prepost(request, application_alias)
         if len(request.FILES) > 0:
-            request.FILES['image'].name = request.POST.get('alias', request.FILES['image'].name.split('.')[0]) + '.' + request.FILES['image'].name.split('.')[-1]
+            request.FILES['image'].name = request.POST.get('alias') + '.' + request.FILES['image'].name.split('.')[-1]
         form = ExtImageForm(request.POST, request.FILES)
         form.instance.application = application
         if form.is_valid(): 

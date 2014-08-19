@@ -78,21 +78,11 @@ def entity(request, application_alias):
     return response
 
 
-def get_system_entity():
-    data = [{'Name': u'Сущности', 'TableName':'entity', 'Image':'turbodiesel/images/admin/entity.png'},
-            {'Name': u'Аттрибуты', 'TableName':'property', 'Image':'turbodiesel/images/admin/property.png'},
-            {'Name': u'Сущности-Аттрибуты', 'TableName':'entityproperty', 'Image':'turbodiesel/images/admin/entityproperty.png'},
-            {'Name': u'Типы аттрибутов', 'TableName':'propertytype', 'Image':'turbodiesel/images/admin/propertytype.png'},
-            {'Name': u'Типы аттрибутов интерфейса', 'TableName':'propertytypeui', 'Image':'turbodiesel/images/admin/propertytypeui.png'},
-            {'Name': u'Приложения', 'TableName':'application', 'Image':'turbodiesel/images/admin/application.png'},
-            ]
-    return data
-
 def get_custom_entity(application_alias, request):
     application, default = get_application_instance(application_alias, request)
     data = [{'Name': entity.name, 'TableName':entity.alias, 'Image' : entity.image.name, 'text':''} for entity in Entity.objects.filter(application = application)]
     if len(data):
-        data[0]['text'] = u'<br/>Пользовательские расширения'
+        data[0]['text'] = u'Пользовательские расширения'
     return data
 
 @login_required
@@ -109,7 +99,7 @@ def property(request, application_alias, entity_alias):
     
 @login_required
 def extension(request, application_alias, extension_alias):
-    callback = request.GET.get('callback', request.GET.get('$callback', '')) 
+    callback = request.GET.get('callback')
     model = get_model(request, extension_alias, application_alias)
   
     if model is not None:
@@ -118,7 +108,7 @@ def extension(request, application_alias, extension_alias):
         data_array = []
         if request.GET.__contains__('expression'):
             expression = request.GET['expression']
-            entity = Entity.objects.filter(entity_id = request.GET.get('entity', 0), application = application)
+            entity = Entity.objects.filter(entity_id =request.GET.get('entity'), application = application)
             if len(entity):
                 entity_model = get_model(request, entity[0].alias, application_alias)
                 expression_list = expression.split('|')
@@ -131,7 +121,8 @@ def extension(request, application_alias, extension_alias):
         elif request.GET.__contains__('filter[filters][0][value]'):
             value = request.GET['filter[filters][0][value]']
             detail_model = get_model(request, request.GET['filter[filters][0][model]'], application_alias)
-            kwargs = {request.GET['filter[filters][0][field]']:detail_model.objects.get(id=value)}
+            kwargs = {request.GET['filter[filters][0][field]']: detail_model.objects.get(request=value,
+                                                                                         application_alias=null)}
             if len(data_array):
                 data_array = data_array.__or__(model.objects.filter(**kwargs))
             else:
@@ -144,7 +135,7 @@ def extension(request, application_alias, extension_alias):
             elif extension_alias == 'ext_image' or extension_alias == 'ext_filter' or extension_alias == 'ext_code'  or extension_alias == 'ext_workflow' :
                 data_array = model.objects.filter(application = application)
             elif extension_alias == 'ext_status' or extension_alias == 'ext_edge':
-                workflow_id = request.GET.get('workflow', 0)
+                workflow_id = request.GET.get('workflow')
                 wf_list = ExtWorkflow.objects.filter(workflow_id = workflow_id)
                 if len(wf_list):
                     data_array = model.objects.filter(workflow = wf_list[0])

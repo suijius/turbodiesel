@@ -1,100 +1,149 @@
 {% extends "base.html" %}
-		{% block title %}
-		{{action.string}} - "{{form.initial.name|truncatewords:2}}"	
-		{% endblock %} 
-{%block sidebar%}
-<li>
-	<a href="#general"><i class="icon-edit"></i> <span>Свойства</span></a>
-</li>
-<li>
-	<a href="#metadata"><i class="icon-tasks"></i> <span>Метадата</span></a>
-</li>
-<li>
-	<a href="#page_list"><i class="icon-file"></i> <span>Страницы</span></a>
-</li>
-<li>
-	<a href="#history"><i class="icon-retweet"></i> <span>История</span></a>
-</li>
-{%endblock%}
+{% block title %}
+    {{ action.string }} - "{{ form.initial.name|truncatewords:2 }}"
+{% endblock %}
+{% block sidebar %}
+    <li>
+        <a href="#general"><i class="icon-edit"></i> <span>Свойства</span></a>
+    </li>
+    <li>
+        <a href="#metadata"><i class="icon-tasks"></i> <span>Метадата</span></a>
+    </li>
+    <li>
+        <a href="#page_list"><i class="icon-file"></i> <span>Страницы</span></a>
+    </li>
+    <li>
+        <a href="#history"><i class="icon-retweet"></i> <span>История</span></a>
+    </li>
+{% endblock %}
 {% block breadcrumb %}
-<li class="active">
-	{{action.string}} - "{{form.initial.name|truncatewords:2}}"
-</li>
+    <li class="active">
+        {{ action.string }} - "{{ form.initial.name|truncatewords:2 }}"
+    </li>
 {% endblock %}
 
 {% block center_content %}
 
-<a name="general"></a>
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left"><img src="/media/{{form.instance.logotype.name}}" style="height:24px;">
-		</div>
-		<div class="pull-left">
-			Свойства приложения
-		</div>
-	</div>
-	<div class="grid-content">
-		<form action="." method="post" enctype="multipart/form-data" id="page" name="page">
-			{# Include the hidden fields #}
-			{% for hidden in form.hidden_fields %}
-			{{ hidden }}
-			{% endfor %}
-			{# Include the visible fields #}
-			{% csrf_token %}
-			{% for field in form.visible_fields %}
-			<div class="row-fluid">
-				<label class="span4">{{ field.label }}:</label>
-				<div class="span8">
-					{{ field }}
-				</div>
-				{% if field.errors %}
-				<span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
-				{% endif %}
-			</div>
-			{% endfor %}
-		</form>
-	</div>
-</div>
-<a name="metadata"></a>
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left">
-			Расширения приложения
-		</div>
-		<a href="/admin/application/{{form.initial.alias}}/entity" class="pull-right btn">Метаданные</a>
-	</div>
-	<div class="grid-content">
-		<div id="extension_list" style="border:none; display: inline-block; background-color: transparent; float: none"></div>
-	</div>
-</div>
-<a name="page_list"></a>
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left">
-			Страницы приложения
-		</div>
-		<a href="/admin/application/{{form.initial.alias}}/page/create/" class="pull-right btn">Создание страницы</a>
-	</div>
-	<div class="grid-content">
-		<div id="property_list"></div>
-	</div>
-</div>
-<a name="history"></a>
-<div class="grid">
-	<div class="grid-title">
-		<div class="pull-left">
-			История
-		</div>
-	</div>
-	<div class="grid-content">
-		<div id="history"></div>
-	</div>
-</div>
+    <a name="general"></a>
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left"><img src="/media/{{ form.instance.logotype.name }}" style="height:24px;">
+            </div>
+            <div class="pull-left">
+                Свойства приложения
+            </div>
+        </div>
+        <div class="grid-content">
+            <form action="." method="post" enctype="multipart/form-data" id="page" name="page">
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {# Include the visible fields #}
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                    <div class="row-fluid">
+                        <label class="span4">{{ field.label }}:</label>
 
-<script type="text/x-kendo-tmpl" id="template">
+                        <div class="span8">
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                    class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Расширения приложения
+                </div>
+                <a href="/admin/application/{{ form.initial.alias }}/entity" class="pull-right btn">Метаданные</a>
+            </div>
+            <div class="grid-content">
+                <table class="table" id="datatable_ext">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Имя</th>
+                        <th>Тип</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in extension %}
+                        <tr>
+                            <td>
+                                <a href="/admin/application/{{ form.initial.alias }}/extension/{{ item.TableName }}/"
+                                   style="color: inherit;text-decoration: inherit;">
+                                    <img src="/media/{{ item.Image }}" style="height:16px"><br>
+                                </a></td>
+                            <td>{{ item.Name }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            <div class="clear"></div>
+            </div>
+        </div>
+
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Страницы приложения
+                </div>
+                <a href="/admin/application/{{ form.initial.alias }}/page/create/" class="pull-right btn">Создание
+                    страницы</a>
+            </div>
+            <div class="grid-content">
+                <table class="table" id="datatable_ext">
+                    <thead>
+                    <tr>
+                        <th>Имя(breadcrumb)</th>
+                        <th>Заголовок(title)</th>
+                        <th>Псевдоним</th>
+                        <th>Описание</th>
+                        <th>Ключевые слова</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in pages %}
+                        <tr>
+                            <td><a href="/admin/application/{{ form.initial.alias }}/page/{{ item.alias }}/edit/" style="color: inherit;text-decoration: inherit;">
+	{{ item.name }}
+	</a></td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.alias }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.keywords }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                История
+            </div>
+        </div>
+        <div class="grid-content">
+            <div id="history"></div>
+        </div>
+    </div>
+
+    <script type="text/x-kendo-tmpl" id="template">
 	<tr>
 	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
-	<a href="/admin/application/{{form.initial.alias}}/page/${alias}/edit/" style="color: inherit;text-decoration: inherit;">
+	<a href="/admin/application/{{ form.initial.alias }}/page/${alias}/edit/" style="color: inherit;text-decoration: inherit;">
 	${name}
 	</a>
 	</td>
@@ -111,9 +160,19 @@
 	${keywords}
 	</td>
 	</tr>
-</script>
 
-<script type="text/x-kendo-tmpl" id="template_history">
+
+
+
+
+
+
+
+
+
+    </script>
+
+    <script type="text/x-kendo-tmpl" id="template_history">
 	<tr>
 	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
 	${revision}
@@ -128,86 +187,86 @@
 	${user}
 	</td>
 	</tr>
-</script>
 
-<script type="text/x-kendo-tmpl" id="extension_template">
-	# if (text) { #
-	<div class="row"></div><h2>#= text# </h2></div>
-	#}#
 
-	<div class="admin_entity" style="height:100px; width:70px">
-	<a href="/admin/application/{{form.initial.alias}}/extension/${TableName}/" style="color: inherit;text-decoration: inherit;">
-	<img src="/media/${Image}" style="height:64px"><br>
-	${Name}
-	</a>
 
-	</div>
-</script>
 
-<script>
-$(document).ready(function(){
-var dataSource = new kendo.data.DataSource({
-transport: {
-read: {
-url: "/admin/data/page/{{ form.initial.alias }}",
-dataType: "jsonp"
-}
-},
-});
-var dataSourceHistory = new kendo.data.DataSource({
-transport: {
-read: {
-url: "/admin/data/history/application/{{form.initial.alias}}/application/{{form.initial.alias}}",
-dataType: "jsonp"
-}
-},
-});
-var extension = {% autoescape off %}{{extension}}{% endautoescape %}
-var extension_dataSource = new kendo.data.DataSource({
-data:extension
-});
 
-$("#extension_pager").kendoPager({
-dataSource: extension_dataSource
-});
 
-$("#property_list").kendoGrid({
-dataSource: dataSource,
-groupable: false,
-filterable: true,
-sortable: true,
-rowTemplate: kendo.template($("#template").html()),
-columns:[
-{ field: "name", title: "Имя(breadcrumb)" },
-{ field: "title", title: "Заголовок(title)" },
-{ field: "alias", title: "Псевдоним", width:100 },
-{ field: "description", title: "Описание" },
-{ field: "keywords", title: "Ключевые слова" },
-]
-})
-$("#extension_list").kendoListView({
-dataSource: extension_dataSource,
-template: kendo.template($("#extension_template").html())
-});
 
-$("#history").kendoGrid({
-dataSource: dataSourceHistory,
-groupable: false,
-filterable: true,
-sortable: true,
-rowTemplate: kendo.template($("#template_history").html()),
-columns:[
-{ field: "revision", title: "Версия", width:100 },
-{ field: "data", title: "Данные" },
-{ field: "date", title: "Дата" , width:140},
-{ field: "user", title: "Пользователь" , width:120},
-]
-})
-});
 
-</script>
+
+
+    </script>
+
+    <script>
+
+
+
+        /*       $(document).ready(function () {
+         var dataSource = new kendo.data.DataSource({
+         transport: {
+         read: {
+         url: "/admin/data/page/{{ form.initial.alias }}",
+         dataType: "jsonp"
+         }
+         },
+         });
+         var dataSourceHistory = new kendo.data.DataSource({
+         transport: {
+         read: {
+         url: "/admin/data/history/application/{{form.initial.alias}}/application/{{form.initial.alias}}",
+         dataType: "jsonp"
+         }
+         },
+         });
+         var extension =
+        {% autoescape off %}{{extension}}{% endautoescape %}
+         var extension_dataSource = new kendo.data.DataSource({
+         data: extension
+         });
+
+         $("#extension_pager").kendoPager({
+         dataSource: extension_dataSource
+         });
+
+         $("#property_list").kendoGrid({
+         dataSource: dataSource,
+         groupable: false,
+         filterable: true,
+         sortable: true,
+         rowTemplate: kendo.template($("#template").html()),
+         columns: [
+         { field: "name", title: "Имя(breadcrumb)" },
+         { field: "title", title: "Заголовок(title)" },
+         { field: "alias", title: "Псевдоним", width: 100 },
+         { field: "description", title: "Описание" },
+         { field: "keywords", title: "Ключевые слова" },
+         ]
+         })
+         $("#extension_list").kendoListView({
+         dataSource: extension_dataSource,
+         template: kendo.template($("#extension_template").html())
+         });
+
+         $("#history").kendoGrid({
+         dataSource: dataSourceHistory,
+         groupable: false,
+         filterable: true,
+         sortable: true,
+         rowTemplate: kendo.template($("#template_history").html()),
+         columns: [
+         { field: "revision", title: "Версия", width: 100 },
+         { field: "data", title: "Данные" },
+         { field: "date", title: "Дата", width: 140},
+         { field: "user", title: "Пользователь", width: 120},
+         ]
+         })
+         });*/
+
+    </script>
 
 {% endblock %}
 {% block left_footer %}
-<input value="Сохранить" type="submit" class="btn btn-primary pull-right" id="submit" form="page">
+    <input value="Сохранить" type="submit" class="btn btn-primary pull-right" id="submit" form="page">
 {% endblock %}

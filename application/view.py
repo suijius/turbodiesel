@@ -12,7 +12,7 @@ def embeded_code1(request):
 
     entity_model = get_model(request, 'bag', 'vintage')
     if len(request.POST):
-        item = entity_model.objects.filter(id=request.POST.get('remove-item', 0))
+        item = entity_model.objects.filter(id=request.POST.get('remove-item'))
         if len(item):
             item[0].delete()
 
@@ -77,7 +77,7 @@ def home(request, application_path):
             return data.form(request, path_split)
         page_lst = Page.objects.filter(application = application, alias = path_split[1])
         if len(page_lst) == 0:
-            custom_template = request.GET.get('template', None)
+            custom_template = request.GET.get('template')
             embeded = code_execute(request, None, application)
             if custom_template is None:
                 return render_to_response('base_error.html', {'error_title':u'Для приложения "%s" страницы "%s" не существует' % (path_split[0],path_split[1])})

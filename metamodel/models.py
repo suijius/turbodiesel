@@ -618,7 +618,7 @@ def collect_entity():
 
 
 def clear_cache(app, model):
-    cached_models = cache.app_models.get(app, SortedDict())
+    cached_models = cache.app_models.get(app)
     if cached_models.has_key(model.lower()):
         del cached_models[model.lower()]
 
@@ -717,14 +717,14 @@ def get_application_instance(application_alias, request):
     application = _application_map.get(application_alias, None)
     if application is not None:
         return (application, False)
-    if request.META.get('PATH_INFO', 'hz') != '/':
+    if request.META.get('PATH_INFO') != '/':
         instance_list = Application.objects.filter(alias=application_alias)
         if len(instance_list):
             _application_map[application_alias] = instance_list[0]
             return (instance_list[0], False)
         else:
-            a = Attack.objects.create(ip=request.META.get('HTTP_X_REAL_IP', '127.0.0.1'),
-                                      url=request.META.get('PATH_INFO', 'hz'), date_attack=datetime.datetime.now())
+            a = Attack.objects.create(ip=request.META.get('HTTP_X_REAL_IP'),
+                                      url=request.META.get('PATH_INFO'), date_attack=datetime.datetime.now())
             transaction.commit()
 
     instance_list = Application.objects.filter(default=True)

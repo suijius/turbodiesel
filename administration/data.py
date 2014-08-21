@@ -3,6 +3,7 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
+import metamodel_view
 from metamodel.models import Entity, Property, Application, Page, ExtImage, create_model, ExtFilter, \
     get_application_instance, get_entity_instance, get_model, ExtWorkflow, ExtStatus, ExtEdge
 from django.contrib import messages
@@ -109,7 +110,7 @@ def property(request, application_alias, entity_alias):
 
 @login_required
 def extension(request, application_alias, extension_alias):
-    callback = request.GET.get('callback')
+    # callback = request.GET.get('callback')
     model = get_model(request, extension_alias, application_alias)
 
     if model is not None:
@@ -152,6 +153,9 @@ def extension(request, application_alias, extension_alias):
             else:
                 data_array = model.objects.all()
 
+        params = metamodel_view.get_params(request, application_alias, extension_alias)
+        key_field = params['key_field']
+
         for row in data_array:
             value = {}
             for meta in row._meta.fields:
@@ -168,19 +172,20 @@ def extension(request, application_alias, extension_alias):
             for meta in data_array.query.extra_select.keys():
                 value[meta] = row.__dict__[str(meta)]
                 value[meta] = truncate(value[meta], meta)
+            value['key_field'] = value[key_field]
             data.append(value)
 
-        value = str(callback) + '(' + json.dumps(data) + ')'
-        response = HttpResponse(value)
-        response["Content-Type"] = "application/json"
-        return response
-
+        # value = str(callback) + '(' + json.dumps(data) + ')'
+        # response = HttpResponse(value)
+        # response["Content-Type"] = "application/json"
+        # return response
+        return data
     else:
-        value = str(callback) + '([])'
-        response = HttpResponse(value)
-        response["Content-Type"] = "application/json"
-        return response
-
+        # value = str(callback) + '([])'
+        # response = HttpResponse(value)
+        # response["Content-Type"] = "application/json"
+        # return response
+        return []
 
 @login_required
 def history(request, application_alias, entity_type, entity_alias):

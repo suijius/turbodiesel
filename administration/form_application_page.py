@@ -73,7 +73,6 @@ class ApplicationPageEdit(TurboDieselUpdateView):
                 form[field_name].field.widget.attrs.__setitem__('class', "textarea span")
         return context
 
-
     def post(self, request, application_alias, page_alias):
         application = self.prepost(request, application_alias)
         page_instance = Page.objects.filter(alias=page_alias, application=application)
@@ -89,9 +88,7 @@ class ApplicationPageEdit(TurboDieselUpdateView):
             for item in request.POST:
                 while request.POST[item].__contains__('&lt') or request.POST[item].__contains__('&gt') or request.POST[
                     item].__contains__('&amp'):
-                    request.POST[item] = request.POST[item].replace('&lt;', '<').replace('&gt;', '>').replace('&amp;',
-                                                                                                              '&').replace(
-                        '&nbsp;', ' ')
+                    request.POST[item] = request.POST[item].replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&').replace('&nbsp;', ' ')
             form = ApplicationPageForm(request.POST, request.FILES, instance=page_instance[0])
             if request.POST.get('new'):
                 form = ApplicationPageForm(request.POST, request.FILES)

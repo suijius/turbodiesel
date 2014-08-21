@@ -21,15 +21,47 @@
     <div class="grid">
         <div class="grid-title">
             <div class="pull-left">
-                Содержание сущности
+                {{ extension.Name }}
             </div>
             <a href="/admin/application/{{ application.alias }}/extension/{{ extension.TableName }}/create/"
                class="pull-right btn">Создание записи</a>
         </div>
         <div class="grid-content">
-            <div id="property_list">
-
-            </div>
+            <table class="table" id="datatable_ext">
+                <thead>
+                <tr>
+                    {% for field in extension_fields %}
+                        {% if field.visible %}
+                            <td>
+                                {{ field.verbose_name }}{{ field.label }}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for data in extension_data %}
+                    <tr>
+                        {% for field in extension_fields %}
+                            {% for k,v in data.iteritems %}
+                                {% if field.visible and k == field.name%}
+                                    <td>
+                                        <a href="/admin/application/{{ application.alias }}/extension/{{ extension.TableName }}/{{ data.key_field }}/edit/" style="color: inherit;text-decoration: inherit;">
+                                            {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
+                                                <img src="/media/{{ v }}" style="max-height: 70px; max-width: 200px"/>
+                                            {% else %}
+                                                {{ v }}
+                                            {% endif %}
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="clear"></div>
         </div>
     </div>
 
@@ -47,6 +79,11 @@
 	</td>
 	{% endfor %}
 	</tr>
+
+
+
+
+
 
     </script>
 
@@ -66,77 +103,102 @@
             });
 
             $("#property_list").kendoGrid({
-                dataSource: dataSource,
-                {% if detail.extension and not preext %}
-                    detailTemplate: kendo.template($("#detail_template").html()),
-                    detailInit: detailInit,
-                {% endif %}
-                groupable: true,
-                filterable: true,
-                sortable: true,
-                scrollable: false,
-                columnMenu: true,
-                columns: [
-                    {% for field in extension_fields %}
-                        {% if field.visible %}
-                            {
+                    dataSource: dataSource,
+                    {% if detail.extension and not preext %}
+                        detailTemplate: kendo.template($("#detail_template").html()),
+                        detailInit: detailInit,
+                    {% endif %}
+            groupable
+            :
+            true,
+                    filterable
+            :
+            true,
+                    sortable
+            :
+            true,
+                    scrollable
+            :
+            false,
+                    columnMenu
+            :
+            true,
+                    columns
+            :
+            [
+                {% for field in extension_fields %}
+                    {% if field.visible %}
+                        {
                                 field: "{{field.name}}",
                                 title: "{{field.verbose_name}}{{field.label}}",
                                 template: '<a href="/admin/application/{{application.alias}}/extension/{{extension.TableName}}/${ {{key_field}} }/edit/" style="color: inherit;text-decoration: inherit;">
-                                        {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
-                                            <img src="/media/${ {{field.name}}
-                                             }" style="max-height: 70px; max-width: 200px"/>{% else %}${ {{field.name}}
-                                             }{% endif %}</a>'
-                            },
-                        {% endif %}
-                    {% endfor %}
-                ],
-                {% if preext %}
-                    rowTemplate: kendo.template($("#template").html())
-                {% endif %}
-            })
-
-            function detailInit(e) {
-                var detailRow = e.detailRow;
-
-                detailRow.find(".tabstrip").kendoTabStrip({
-                    animation: {
-                        open: { effects: "fadeIn" }
-                    }
-                });
-
-                detailRow.find(".orders").kendoGrid({
-                    dataSource: {
-                        transport: {
-                            read: {
-                                url: "/admin/data/extension/{{application.alias}}/{{detail.extension}}",
-                                dataType: "jsonp"
-                            }
-
+                        {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
+                            <img src = "/media/${ {{field.name}}
+                                             }" style="max-height: 70px; max-width: 200px" / >{% else %}${ {{field.name}}
+                                             }{% endif %}</a > '
                         },
-                        serverFiltering: true,
-                        pageSize: 6,
-                        filter: { value: e.data.id, field: "{{detail.field}}", model: "{{detail.model}}"}
+                    {% endif %}
+                {% endfor %}
+        ],
+        {% if preext %}
+            rowTemplate: kendo.template($("#template").html())
+        {% endif %}
+        })
+
+        function detailInit(e) {
+            var detailRow = e.detailRow;
+
+            detailRow.find(".tabstrip").kendoTabStrip({
+                animation: {
+                    open: { effects: "fadeIn" }
+                }
+            });
+
+            detailRow.find(".orders").kendoGrid({
+                    dataSource: {
+                            transport: {
+                                    read: {
+                                            url: "/admin/data/extension/{{application.alias}}/{{detail.extension}}",
+                                            dataType: "jsonp"
+                                            }
+
+                                    },
+                            serverFiltering: true,
+                            pageSize: 6,
+                            filter: { value: e.data.id, field
+        :
+            "{{detail.field}}", model
+        :
+            "{{detail.model}}"
+        }
+        },
+        scrollable: false,
+                sortable
+        :
+        true,
+                pageable
+        :
+        true,
+                columns
+        :
+        [
+            {% for field in detail.fields %}
+                {% if field.name != detail.field and field.visible %}
+                    { field: "{{field.name}}", title: "{{field.verbose_name}}",
+                            template: '<a href="/admin/application/{{application.alias}}/extension/{{detail.extension}}/${ {{key_field}} }/edit/" style="color: inherit;text-decoration: inherit;">
+                    {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
+                        <img src = "/media/${ {{field.name}}
+                                                 }" style="max-height: 70px; max-width: 200px" / >{% else %}${
+                                                {{field.name}} }{% endif %}</a > '
                     },
-                    scrollable: false,
-                    sortable: true,
-                    pageable: true,
-                    columns: [
-                        {% for field in detail.fields %}
-                            {% if field.name != detail.field and field.visible %}
-                                { field: "{{field.name}}", title: "{{field.verbose_name}}",
-                                    template: '<a href="/admin/application/{{application.alias}}/extension/{{detail.extension}}/${ {{key_field}} }/edit/" style="color: inherit;text-decoration: inherit;">
-                                            {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
-                                                <img src="/media/${ {{field.name}}
-                                                 }" style="max-height: 70px; max-width: 200px"/>{% else %}${
-                                                {{field.name}} }{% endif %}</a>'
-                                },
-                            {% endif %}
-                        {% endfor %}
-                    ],
-                });
-            }
-        });
+                {% endif %}
+            {% endfor %}
+        ],
+        })
+        ;
+        }
+        })
+        ;
 
     </script>
 

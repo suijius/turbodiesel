@@ -4,22 +4,22 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response  #, render
 from django.contrib.auth.decorators import login_required
-from metamodel.models import Entity, Property, Application, Page, ExtImage, ExtWorkflow, ExtFilter, ExtCode, \
-    create_model, get_application_instance, get_entity_instance, UserProfile
 from django.forms import ModelForm
 from django.forms.widgets import TextInput, Select, Textarea, DateTimeInput, CheckboxInput, DateInput
 from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.models import User
-import localization
-import data
 from django.contrib import messages
-from dbtemplates import models as dbTemplates
-import settings
-import json
 from django.db.models.base import ModelBase
 from django.db.models.fields.related import ForeignRelatedObjectsDescriptor
 #from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.core.exceptions import PermissionDenied
+
+import localization
+import data
+from metamodel.models import Entity, Property, Application, Page, ExtImage, ExtWorkflow, ExtFilter, ExtCode, create_model, get_application_instance, get_entity_instance, UserProfile
+from dbtemplates import models as dbTemplates
+import settings
+import json
 #from application.data import get_data
 import application.data as app_data
 
@@ -89,23 +89,25 @@ def extension(request, application_alias, extension_alias):
     preext = params['preext']
     key_field = params['key_field']
 
-    detail_list = model._meta.get_all_related_objects()
-    detail = {}
-    if len(detail_list):
-        detail['extension'] = detail_list[0].model._meta.module_name
-        detail['field'] = detail_list[0].field.name
-        detail['model'] = detail_list[0].field.rel.to._meta.module_name
-        entity = Entity.objects.filter(alias=detail['extension'], application=application)
-        detail['fields'] = []
-        if entity is not None:
-            detail['fields'] = Property.objects.filter(parent_entity=entity)
-        else:
-            detail['fields'] = detail_list[0].model._meta.fields
+    # detail_list = model._meta.get_all_related_objects()
+    # detail = {}
+    # if len(detail_list):
+    #     detail['extension'] = detail_list[0].model._meta.module_name
+    #     detail['field'] = detail_list[0].field.name
+    #     detail['model'] = detail_list[0].field.rel.to._meta.module_name
+    #     entity = Entity.objects.filter(alias=detail['extension'], application=application)
+    #     detail['fields'] = []
+    #     if entity is not None:
+    #         detail['fields'] = Property.objects.filter(parent_entity=entity)
+    #     else:
+    #         detail['fields'] = detail_list[0].model._meta.fields
+
+    ext_data = data.extension(request, application_alias, extension_alias)
 
     return render_to_response('administration/extension.html',
                               {'request': request, 'messages': messages.get_messages(request),
                                'extension': extension_list[0], 'application': application, 'extension_fields': fields,
-                               'detail': detail, 'preext': preext, 'key_field': key_field})
+                               'preext': preext, 'key_field': key_field, 'extension_data': ext_data})
 
 
 @login_required

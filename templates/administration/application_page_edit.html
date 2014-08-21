@@ -49,9 +49,8 @@
                                 <div class="span4">
                                     {{ field }}
                                 </div>
-                                <div class="span4">
-                                    <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
-                                            class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
+                                <div class="span4 alert alert-error">
+                                    {{ field.errors.0 }}
                                 </div>
                             {% else %}
                                 <div class="span8">
@@ -77,7 +76,7 @@
             </div>
         </div>
         <div class="grid-content">
-            <textarea id="content" form="page" class="textarea" name="content"
+            <textarea id="content" form="page" class="wysiwyg" name="content"
                       style="height: 520px; width:100%">{{ page.content }}
             </textarea>
         </div>
@@ -137,7 +136,7 @@
             })
         });
     </script>
-    <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript"
+    <script src="http://ace.c9.io/build/src/ace.js" type="text/javascript"
             charset="utf-8"></script>
 {% endblock %}
 {% block left_footer %}

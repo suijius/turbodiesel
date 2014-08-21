@@ -38,8 +38,7 @@ class ApplicationEdit(TurboDieselUpdateView):
         context['extension'] = extension_list
         return context
 
-    def post(self, request, **kwargs):
-        application_alias = kwargs['application_alias']
+    def post(self, request, application_alias):
         application = self.prepost(request, application_alias)
         form = ApplicationForm(request.POST, request.FILES, instance=application)
         if form.is_valid():
@@ -50,7 +49,6 @@ class ApplicationEdit(TurboDieselUpdateView):
                 self.get_context_data(form=form, request=request, application_alias=application_alias))
 
     def get(self, request, application_alias):
-        # application_alias = kwargs['application_alias']
         application = self.preget(request, application_alias)
         form = ApplicationForm(instance=application)
         return self.render_to_response(

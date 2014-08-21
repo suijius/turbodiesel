@@ -13,6 +13,7 @@ $(document).ready(function () {
         "sScrollXInner": "145%",
         "bScrollCollapse": true
     });
+    $( '.wysiwyg' ).ckeditor();
     /*	$(".textarea").kendoEditor({tools:[
      "bold",
      "italic",

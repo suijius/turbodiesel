@@ -63,10 +63,6 @@
             </form>
         </div>
     </div>
-    <textarea id="editor_miracle" style="display:none" form="page" name="template-content">
-    </textarea>
-    <textarea id="code_editor_miracle" style="display:none" form="page" name="code-content">
-    </textarea>
 
     <a name="content_edit"></a>
     <div class="grid" style="height: 600px">
@@ -75,11 +71,11 @@
                 Основной контент
             </div>
         </div>
-        <div class="grid-content">
-            <textarea id="content" form="page" class="wysiwyg" name="content"
-                      style="height: 520px; width:100%">{{ page.content }}
-            </textarea>
-        </div>
+        {#        <div class="grid-content">#}
+        <textarea id="content" form="page" class="wysiwyg" name="content" style="height: 520px; width:100%">
+            {{ page.content }}
+        </textarea>
+        {#        </div>#}
     </div>
 
     <a name="template_edit"></a>
@@ -89,11 +85,9 @@
                 Шаблон страницы приложения
             </div>
         </div>
-        <div class="grid-content">
-            <div id="editor" name="template-content"
-                 style="height:520px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ page.template.content }}
-            </div>
-        </div>
+        <textarea id="editor_miracle" form="page" name="template-content">
+            {{ page.template.content }}
+        </textarea>
     </div>
 
     <a name="code_edit"></a>
@@ -103,41 +97,53 @@
                 Кодовая вставка
             </div>
         </div>
-        <div class="grid-content">
-            <div id="code_editor" name="template-content"
-                 style="height:520px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ page.code.code }}
-            </div>
-        </div>
+        <textarea id="code_editor_miracle" form="page" name="code-content">
+            {{ page.code.code }}
+        </textarea>
     </div>
     </div>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
-            var editor = ace.edit("editor");
-            editor.setTheme("ace/theme/chrome");
-            editor.getSession().setMode("ace/mode/html");
-            editor.getSession().setUseWrapMode(false)
+            var editor_miracle = CodeMirror.fromTextArea(document.getElementById("editor_miracle"), {
+                lineNumbers: true,
+                theme: "mdn-like",
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                }
+            });
+            editor_miracle.setSize("100%", 559)
 
-            var code_editor = ace.edit("code_editor");
-            code_editor.setTheme("ace/theme/chrome");
-            code_editor.getSession().setMode("ace/mode/python");
-            code_editor.getSession().setUseWrapMode(false)
+            var code_editor_miracle = CodeMirror.fromTextArea(document.getElementById("code_editor_miracle"), {
+                lineNumbers: true,
+                theme: "mdn-like",
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                }
+            });
+            code_editor_miracle.setSize("100%", 559)
 
-            $('.submit').click(function () {
-                $('#editor_miracle').val(editor.getValue());
-                $('#code_editor_miracle').val(code_editor.getValue());
-            })
-
-            $('#id_template').change(function () {
-                $('#editor').css('display', 'none')
-            })
-            $('#id_code').change(function () {
-                $('#code_editor').css('display', 'none')
-            })
         });
+
     </script>
-    <script src="http://ace.c9.io/build/src/ace.js" type="text/javascript"
-            charset="utf-8"></script>
+
+    <link rel="stylesheet" href="/media/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/media/codemirror/addon/display/fullscreen.css">
+    <link rel="stylesheet" href="/media/codemirror/theme/mdn-like.css">
+    <script src="/media/codemirror/lib/codemirror.js"></script>
+    <script src="/media/codemirror/mode/xml/xml.js"></script>
+    <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+
 {% endblock %}
 {% block left_footer %}
     <div class="btn-group pull-right">

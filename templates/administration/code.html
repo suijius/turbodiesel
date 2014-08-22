@@ -65,9 +65,8 @@
                         <div class="span4">
                             {{ form.visible_fields.2 }}
                         </div>
-                        <div class="span4">
-                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
-                                    class="k-icon k-warning"> </span> {{ form.visible_fields.2.errors.0 }} </span>
+                        <div class="span4 alert alert-error">
+                            {{ form.visible_fields.2.errors.0 }}
                         </div>
                     {% else %}
                         <div class="span8">
@@ -87,9 +86,9 @@
                                     class="k-icon k-warning"> </span> {{ form.visible_fields.1.errors.0 }} </span>
                         </div>
                     {% else %}
-                        <div id="editor"
-                             style="height:630px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ form.visible_fields.1.value }}
-                        </div>
+                        <textarea id="editor_miracle" style="display:none" form="page" name="code">
+                            {{ form.visible_fields.1.value }}
+                        </textarea>
                     {% endif %}
                 </div>
                 <div style="display: none">
@@ -112,12 +111,6 @@
             <div id="history"></div>
         </div>
     </div>
-    <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript"
-            charset="utf-8"></script>
-    <textarea id="editor_miracle" style="display:none" form="page" name="code">
-
-    </textarea>
-
 
     <style type="text/css" media="screen">
         textarea {
@@ -140,42 +133,59 @@
 	</td>
 	</tr>
 
+
+
+
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var editor = ace.edit("editor");
-            editor.setTheme("ace/theme/chrome");
-            editor.getSession().setMode("ace/mode/python");
-            editor.getSession().setUseWrapMode(false)
-
-            $('.submit').click(function () {
-                $('#editor_miracle').val(editor.getValue());
-            })
-        });
-        var dataSourceHistory = new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: "/admin/data/history/application/{{application.alias}}/ext_code/{{ form.initial.code_id }}",
-                    dataType: "jsonp"
+            var editor_miracle = CodeMirror.fromTextArea(document.getElementById("editor_miracle"), {
+                lineNumbers: true,
+                mode: "python",
+                theme: "mdn-like",
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
                 }
-            },
+            });
+            editor_miracle.setSize("100%", 669)
         });
-        $("#history").kendoGrid({
-            dataSource: dataSourceHistory,
-            groupable: false,
-            filterable: true,
-            sortable: true,
-            rowTemplate: kendo.template($("#template_history").html()),
-            columns: [
-                { field: "revision", title: "Версия", width: 100 },
-                { field: "data", title: "Данные" },
-                { field: "date", title: "Дата", width: 140},
-                { field: "user", title: "Пользователь", width: 120},
-            ]
-        })
+        /*        var dataSourceHistory = new kendo.data.DataSource({
+         transport: {
+         read: {
+         url: "/admin/data/history/application/{{application.alias}}/ext_code/{{ form.initial.code_id }}",
+         dataType: "jsonp"
+         }
+         },
+         });
+         $("#history").kendoGrid({
+         dataSource: dataSourceHistory,
+         groupable: false,
+         filterable: true,
+         sortable: true,
+         rowTemplate: kendo.template($("#template_history").html()),
+         columns: [
+         { field: "revision", title: "Версия", width: 100 },
+         { field: "data", title: "Данные" },
+         { field: "date", title: "Дата", width: 140},
+         { field: "user", title: "Пользователь", width: 120},
+         ]
+         })*/
 
 
     </script>
+
+    <link rel="stylesheet" href="/media/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/media/codemirror/addon/display/fullscreen.css">
+    <link rel="stylesheet" href="/media/codemirror/theme/mdn-like.css">
+    <script src="/media/codemirror/lib/codemirror.js"></script>
+    <script src="/media/codemirror/mode/xml/xml.js"></script>
+    <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+    <script src="/media/codemirror/mode/python/python.js"></script>
 {% endblock %}
 {% block left_footer %}
     <div class="btn-group pull-right">

@@ -13,7 +13,8 @@ $(document).ready(function () {
         "sScrollXInner": "145%",
         "bScrollCollapse": true
     });
-    $( '.wysiwyg' ).ckeditor();
+    var editor = $( '.wysiwyg' ).ckeditor();
+    editor.height = 559;
     /*	$(".textarea").kendoEditor({tools:[
      "bold",
      "italic",

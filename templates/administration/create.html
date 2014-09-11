@@ -55,7 +55,8 @@
         </div>
     </div>
     {% for k,v in related_objects.items %}
-        <div class="grid">
+        {% cycle  '<div class="row-fluid">' '' %}
+        <div class="grid span6">
             <div class="grid-title">
                 <div class="pull-left">
                     {{ k }}
@@ -64,51 +65,57 @@
                    class="pull-right btn">Создание записи</a>
             </div>
             <div class="grid-content">
-                <div id='rel{{ forloop.counter }}'>
+                {% for param_key, param_value in params.items %}
+                    {% if param_key == k %}
+                        <table class="table table-mod table-bordered table-mod table-striped table-condensed">
+                            <thead>
+                            <tr>
+                                {% for field in param_value.fields %}
+                                    {% if field.visible %}
+                                        <th>{{ field.verbose_name }}{{ field.label }}</th>
 
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-
-
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            {% for k,v in related_objects.items %}
-                var data = {% autoescape off %}{{v}}{% endautoescape %}
-                        $("#rel{{forloop.counter}}").kendoGrid({
-                            dataSource: data,
-                            groupable: true,
-                            sortable: true,
-                            columns: [
-                                {% for param_key, param_value in params.items %}
-                                    {% if param_key == k %}
-                                        {% for field in param_value.fields %}
-                                            {% if field.visible %}
-                                                {
-                                                    field: "{{field.name}}",
-                                                    title: "{{field.verbose_name}}{{field.label}}",
-                                                    template: '<a href="/admin/application/{{application.alias}}/extension/{{k.alias}}/${ {{param_value.key_field}} }/edit/" style="color: inherit;text-decoration: inherit;">
-                                                            {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
-                                                                <img src="/media/${ {{field.name}}
-                                                                 }" style="max-height: 70px; max-width: 200px"/>{% else %}
-                                                                ${ {{field.name}} }{% endif %}</a>'
-                                                },
-                                            {% endif %}
-                                        {% endfor %}
                                     {% endif %}
                                 {% endfor %}
-                            ]
-                        });
-            {% endfor %}
-        });
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in v %}
+                                <tr>
+                                    {% for field in param_value.fields %}
+                                        {% for key, value in row.items %}
+                                            {% if key == field.name and field.visible %}
+                                                <td>
 
-    </script>
-
-
-
+                                                    <a href="/admin/application/{{ application.alias }}/extension/{{ k.alias }}/
+                                        {% for key, value in row.items %}
+                                            {% if key == param_value.key_field %}
+                                                    {{ value }}
+                                            {% endif %}
+                                        {% endfor %}
+                                                    /edit/" style="color: inherit;text-decoration: inherit;">
+                                                        {% if field.name == "image" or field.name == "icon" or field.name == "picture" %}
+                                                            <img src="/media/{{ value }}" style="max-height: 70px; max-width: 200px"/>
+                                                        {% else %}
+                                                            {{ value }}
+                                                        {% endif %}
+                                                    </a>
+                                                </td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                {% endfor %}
+                <br class="clear">
+            </div>
+        </div>
+        {% cycle  '' '</div>' %}
+    {% endfor %}
+    <br class="clear">
+    <br class="clear">
 {% endblock %}
 {% block left_footer %}
     <input value="Сохранить" type="submit" class="btn btn-primary pull-right" id="submit" form="page">

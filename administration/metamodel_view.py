@@ -115,9 +115,11 @@ def entity(request, application_alias):
     if not request.user.is_superuser:
         raise PermissionDenied
     application, default = get_application_instance(application_alias, request)
+    entity_data = data.get_custom_entity(application_alias, request)
+
     return render_to_response('administration/entity.html',
                               {'request': request, 'messages': messages.get_messages(request),
-                               'application': application})
+                               'application': application, 'entity': entity_data})
 
 
 def prepare_form(form, withEditor=True):
@@ -319,9 +321,8 @@ class CustomEntityUnitEdit(TurboDieselUpdateView):
                 entity_list = Entity.objects.filter(alias=related_object.var_name)
                 if len(entity_list):
                     if not entity_list[0].service:
-                        data_array = related_object.model.objects.filter(
-                            **eval("dict(%s=%s)" % (related_object.field.column, params[1].id)))
-                        related_objects[related_object.model.entity] = json.dumps(app_data.get_data(data_array))
+                        data_array = related_object.model.objects.filter(**eval("dict(%s=%s)" % (related_object.field.column, params[1].id)))
+                        related_objects[related_object.model.entity] = app_data.get_data(data_array)#json.dumps(app_data.get_data(data_array))
                         params_ext[related_object.model.entity] = get_params(request, application_alias,
                                                                              related_object.model.entity.alias)
         return self.render_to_response(

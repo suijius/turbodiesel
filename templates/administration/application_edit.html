@@ -79,12 +79,20 @@
                     {% for item in extension %}
                         <tr>
                             <td>
-                                <a href="/admin/application/{{ form.initial.alias }}/extension/{{ item.TableName }}/"
-                                   style="color: inherit;text-decoration: inherit;">
+                                <a href="/admin/application/{{ form.initial.alias }}/extension/{{ item.TableName }}/" style="color: inherit;text-decoration: inherit;">
                                     <img src="/media/{{ item.Image }}" style="height:16px"><br>
-                                </a></td>
-                            <td>{{ item.Name }}</td>
-                            <td></td>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/admin/application/{{ form.initial.alias }}/extension/{{ item.TableName }}/" style="color: inherit;text-decoration: inherit;">
+                                    {{ item.Name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if item.Type %}
+                                    Системный
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -158,6 +166,8 @@
 	${user}
 	</td>
 	</tr>
+
+
 
     </script>
 

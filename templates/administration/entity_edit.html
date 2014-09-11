@@ -68,50 +68,35 @@
                    class="pull-right btn">Создание аттрибута</a>
             </div>
             <div class="grid-content">
-                <div id="properties"
-                     style="border:none; display: inline-block; background-color: transparent; float: none"></div>
-                <div id="pager"
-                     style="background-color:transparent;color: #ABABAB;display: inline-block; position: absolute;left:0; z-index: 100000"></div>
+                <table class="table" id="datatable_ext">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Имя</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in properties %}
+                        <tr>
+                            <td>
+                                <a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/{{ item.TableName }}/edit/" style="color: inherit;text-decoration: inherit;">
+                                    <img src="/media/turbodiesel/images/admin/property.png" alt="{{ item.Name }}" style="height:16px"/><br/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/{{ item.TableName }}/edit/" style="color: inherit;text-decoration: inherit;">
+                                    {{ item.Name }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="clear"></div>
             </div>
         </div>
     </div>
-    <script type="text/x-kendo-tmpl" id="template">
-	<div class="admin_entity">
-	<a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/${TableName}/edit/" style="color: inherit;text-decoration: inherit;">
-	<img src="/media/turbodiesel/images/admin/property.png" alt="${Name}"/><br/>
-	${Name}
-	</a>
-	</div>
-
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var dataSource = new kendo.data.DataSource({
-                transport: {
-                    read: {
-                        url: "/admin/data/property/{{application.alias}}/{{ form.initial.alias }}",
-                        dataType: "jsonp"
-                    }
-                }
-            });
-            $("#properties").kendoListView({
-                dataSource: dataSource,
-                template: kendo.template($("#template").html())
-            });
-        });
-    </script>
-
-    </div>
-    </div>
-    <!-- Окончание центрального блока -->
-    </div>
-
-    </div>
-    </div>
     <div id="tab_b" class="tab-pane"></div>
-
-    </div>
 {% endblock %}
 
 {% block left_footer %}

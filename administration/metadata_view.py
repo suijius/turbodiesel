@@ -1,6 +1,7 @@
 # coding=cp1251
 #from django.contrib.auth import logout
 import django.contrib.auth
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, render
 from django.contrib.auth.decorators import login_required
@@ -102,8 +103,11 @@ class EntityEdit(UpdateView):
             raise PermissionDenied
         entity = get_entity_instance(request, entity_alias, application_alias)
         form = EntityForm(instance=entity)
+        entity = get_entity_instance(request, entity_alias, application_alias)
+        properties = Property.objects.filter(parent_entity=entity)
+        data = [{'Name': property.label, 'TableName': property.name} for property in properties]
         return self.render_to_response(
-            self.get_context_data(form=form, request=request, application_alias=application_alias))
+                self.get_context_data(form=form, request=request, application_alias=application_alias, properties=data))
 
 
 class PropertyCreate(CreateView):

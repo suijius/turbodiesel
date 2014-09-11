@@ -298,6 +298,7 @@ class PropertyType(models.Model):
         ('ENTITY', 'ENTITY'),
         ('IMAGE', 'IMAGE'),
         ('EXTUSER', 'EXTUSER'),
+        ('WORKFLOW', 'WORKFLOW'),
     )
     property_type_id = models.AutoField(primary_key=True, verbose_name=u'ID')
     name = models.CharField(max_length=50, verbose_name=u'Èìÿ')

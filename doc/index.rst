@@ -18,9 +18,9 @@
 .. toctree::
    :maxdepth: 2
 
-   architecture/introduction
+   architecture/intro
    architecture/stakeholder
-   architecture/viewpoint
+   architecture/viewpoint/functional
 
 Индексы и таблицы
 -----------------

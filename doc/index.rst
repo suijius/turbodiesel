@@ -1,31 +1,17 @@
 Документация по системе TurboDiesel!
 =======================================================
 
-Руководство пользователя
-------------------------
-
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   concept
-   install
-   application
-   metadata
+   analytics/index
+   architecture/index
+   guide/index
 
-Описание архитектуры
---------------------
-
-.. toctree::
-   :maxdepth: 2
-
-   architecture/intro
-   architecture/stakeholder
-   architecture/viewpoint/functional
 
 Индексы и таблицы
 -----------------
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 

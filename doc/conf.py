@@ -91,15 +91,37 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
+#Темы по качеству
+html_theme = 'bootstrap'
+#html_theme = 'sphinx_rtd_theme'
+#html_theme = 'nature'
+#html_theme = 'pyramid'
+#html_theme = 'sphinxdoc'
 #html_theme = 'default'
 #html_theme = 'haiku'
-html_theme = 'sphinx_rtd_theme'
+
+#Ни рыба ни мясо
+#html_theme = 'djangochurch'
+#html_theme = 'jdoctest'
+#html_theme = 'korean'
+#html_theme = 'linfiniti'
+#html_theme = 'old_trueskill'
+#html_theme = 'scrolls'
+#html_theme = 'traditional'
+
+
 
 #Плохие темы
+#html_theme = 'ranking'
+#html_theme = 'basic'
 #html_theme = 'elo'
 #html_theme = 'energy'
 #html_theme = 'agogo'
 #html_theme = 'hangulize'
+#html_theme = 'epub'
+#html_theme = 'subleebase'
+#html_theme = 'subpixel'
+#html_theme = 'trueskill'
 
 
 # Theme options are theme-specific and customize the look and feel of a theme

@@ -1,8 +1,8 @@
 # coding=cp1251
 #from django.contrib.auth import logout
 #import django.contrib.auth 
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render_to_response  #, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
 from django.forms.widgets import TextInput, Select, Textarea, DateTimeInput, CheckboxInput, DateInput
@@ -26,6 +26,11 @@ import application.data as app_data
 
 @login_required
 def home(request):
+    """
+    Отображает главную страницу административного интерфейса
+    :param request:объект запроса
+    :return: возвращает response
+    """
     if not request.user.is_superuser:
         raise PermissionDenied
     apps = [{'Name': application.name, 'Title': application.title, 'TableName': application.alias,

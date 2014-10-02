@@ -3,6 +3,7 @@
 
 
 import os.path
+
 # import djcelery
 
 # djcelery.setup_loader()
@@ -15,6 +16,7 @@ TEMPLATE_DEBUG = DEBUG
 ADMINS = (
     ('SuijiuS', 'suijius@gmail.com'),
 )
+
 
 MANAGERS = ADMINS
 
@@ -130,11 +132,8 @@ TEMPLATE_DIRS = (
     os.path.join(ROOT_PATH, 'templates/').replace('\\', '/'),
 )
 
+
 INSTALLED_APPS = (
-    #    'admin_tools',
-    #    'admin_tools.theming',
-    #    'admin_tools.menu',
-    #    'admin_tools.dashboard',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -144,7 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'metamodel',
     'nature',
-    'mptt',
+    # 'mptt',
     #    'djcelery',
     'dbtemplates',
     #    'djkombu',

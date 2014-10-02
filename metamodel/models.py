@@ -3,35 +3,30 @@
 Модели данных
 """
 
+import datetime
+
 import django
+from django.apps import AppConfig
+from django.core.urlresolvers import clear_url_caches
+from django.conf import settings
+from django.contrib import admin
+from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.db.models.loading import cache
-from django.utils.datastructures import SortedDict
-from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete, pre_save
-from django.contrib import admin
 from django.db import models
 from django.db.models.base import Model
-import datetime
 from django.db import connections
-from django.conf import settings
-from django.utils.importlib import import_module
-from django.core.urlresolvers import clear_url_caches
-from mptt.models import MPTTModel, TreeForeignKey
-from dbtemplates import models as dbTemplates
-import mptt
-from django.contrib import messages
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
 from django.db.models.base import ModelBase
-# import reversion
 from django.db import transaction
+from django.utils.importlib import import_module
+from dbtemplates import models as dbTemplates
+from django.contrib.contenttypes.models import ContentType
 
-try:
-    reversion.register(dbTemplates.Template)
-except:
-    pass
+# try:
+#     reversion.register(dbTemplates.Template)
+# except:
+#     pass
 
 '''
 Вспомогательные классы для работы с MySql
@@ -94,12 +89,10 @@ class Column(models.Model):
         verbose_name_plural = u'information schema mysql - колонки'
 
 
-'''
-Хранение данных для анализа попыток взлома
-'''
-
-
 class Attack(models.Model):
+    u"""
+    Хранение данных для анализа попыток взлома
+    """
     id = models.AutoField(primary_key=True, verbose_name=u'ID')
     ip = models.CharField(max_length=255, verbose_name=u'ip')
     url = models.CharField(max_length=1000, verbose_name=u'url')
@@ -118,7 +111,7 @@ class Attack(models.Model):
 
 
 class Version(models.Model):
-    """
+    u"""
     Версионность базы
     """
     id = models.AutoField(primary_key=True, verbose_name=u'ID')
@@ -176,6 +169,7 @@ class Application(models.Model):
     alias = models.CharField(max_length=255, verbose_name=u'Псевдоним (eng)', unique=True)
     logotype = models.ImageField(upload_to='turbodiesel/images/admin', verbose_name=u'Логотип', db_column='image')
     default = models.BooleanField(verbose_name=u'По умолчанию')
+    site = models.OneToOneField(Site)
 
     class Meta:
         db_table = u'application'
@@ -186,10 +180,46 @@ class Application(models.Model):
         return self.name
 
 
+class Rule(models.Model):
+    """
+    Роли
+    """
+    rule_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+    name = models.CharField(max_length=255, verbose_name=u'Имя')
+    parent = models.ForeignKey('Rule', db_column='parent', null=True, blank=True)
+    application = models.ForeignKey(Application, db_column='application')
+
+    class Meta:
+        db_table = u'rule'
+        verbose_name = u'Роль'
+        verbose_name_plural = u'Роли'
+
+    def __unicode__(self):
+        return self.name
+
+
+class Operation(models.Model):
+    """
+    Операции
+    """
+    operation_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+    name = models.CharField(max_length=255, verbose_name=u'Имя')
+    description = models.TextField(verbose_name=u'Описание')
+
+    class Meta:
+        db_table = u'operation'
+        verbose_name = u'Операция'
+        verbose_name_plural = u'Операции'
+
+    def __unicode__(self):
+        return self.name
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     telephone = models.TextField(verbose_name=u'Телефон', blank=True)
     # application = models.ManyToManyField(Application, verbose_name=u'Приложение')#, through='ApplicationUser')
+
     class Meta:
         db_table = u'auth_user_profile'
         verbose_name = u'профиль пользователя'
@@ -260,6 +290,25 @@ class Entity(models.Model):
         db_table = u'entity'
         verbose_name = u'сущность'
         verbose_name_plural = u'Сущности'
+
+    def __unicode__(self):
+        return self.name
+
+
+class Access(models.Model):
+    """
+    Доступы
+    """
+    access_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+    operation_id = models.ForeignKey(Operation, verbose_name=u'Операция')
+    entity_id = models.ForeignKey(Entity, verbose_name=u'Сущность')
+    rule_id = models.ForeignKey(Rule, verbose_name=u'Роль')
+    object_id = models.IntegerField(verbose_name=u'Объект')
+
+    class Meta:
+        db_table = u'access'
+        verbose_name = u'Доступ'
+        verbose_name_plural = u'Доступы'
 
     def __unicode__(self):
         return self.name
@@ -478,73 +527,65 @@ class ImageInline(admin.TabularInline):
 def create_model(entity, inline):
     if entity.alias != "":
         properties = {'id': models.AutoField(primary_key=True, verbose_name='id', db_column='id')}
-        for property in Property.objects.filter(parent_entity=entity):
-            property_type = PropertyType.objects.get(property=property)
+        for prop in Property.objects.filter(parent_entity=entity):
+            property_type = PropertyType.objects.get(property=prop)
             if property_type.dbtype == 'DATE':
-                properties[property.name] = models.DateField(db_column=property.name, verbose_name=property.label,
-                                                             blank=True, null=True)
+                properties[prop.name] = models.DateField(db_column=prop.name, verbose_name=prop.label, blank=True, null=True)
             elif property_type.dbtype == 'DATETIME':
-                properties[property.name] = models.DateTimeField(db_column=property.name, verbose_name=property.label,
-                                                                 blank=True, null=True)
+                properties[prop.name] = models.DateTimeField(db_column=prop.name, verbose_name=prop.label, blank=True, null=True)
             elif property_type.dbtype == 'INTEGER':
-                properties[property.name] = models.IntegerField(db_column=property.name, verbose_name=property.label,
-                                                                blank=True, null=True)
+                properties[prop.name] = models.IntegerField(db_column=prop.name, verbose_name=prop.label, blank=True, null=True)
             elif property_type.dbtype == 'DOUBLE':
-                properties[property.name] = models.FloatField(db_column=property.name, verbose_name=property.label,
-                                                              blank=True, null=True)
+                properties[prop.name] = models.FloatField(db_column=prop.name, verbose_name=prop.label, blank=True, null=True)
             elif property_type.dbtype == 'BOOLEAN':
-                properties[property.name] = models.BooleanField(db_column=property.name, verbose_name=property.label,
-                                                                default=True)
+                properties[prop.name] = models.BooleanField(db_column=prop.name, verbose_name=prop.label, default=True)
             elif property_type.dbtype == 'TEXT':
-                properties[property.name] = models.TextField(db_column=property.name, verbose_name=property.label,
-                                                             blank=True, null=True)
+                properties[prop.name] = models.TextField(db_column=prop.name, verbose_name=prop.label, blank=True, null=True)
             elif property_type.dbtype == 'STRING':
-                properties[property.name] = models.CharField(max_length=1000, db_column=property.name,
-                                                             verbose_name=property.label, blank=True, null=True)
+                properties[prop.name] = models.CharField(max_length=1000, db_column=prop.name, verbose_name=prop.label, blank=True, null=True)
             elif property_type.dbtype == 'IMAGE':
-                properties[property.name] = models.ImageField(upload_to='turbodiesel/images/entity/' + entity.alias,
-                                                              db_column=property.name, verbose_name=property.label,
-                                                              blank=True, null=True)
-            elif property.property_type.dbtype == 'ENTITY':
-                if not globals().__contains__('nature_' + property.link_entity.alias):
-                    foreign_entity = Entity.objects.filter(alias=property.link_entity.alias)
+                properties[prop.name] = models.ImageField(upload_to='turbodiesel/images/entity/' + entity.alias, db_column=prop.name, verbose_name=prop.label, blank=True, null=True)
+            elif prop.property_type.dbtype == 'ENTITY':
+                if not globals().__contains__('nature_' + prop.link_entity.alias):
+                    foreign_entity = Entity.objects.filter(alias=prop.link_entity.alias)
                     if len(foreign_entity) > 0:
                         create_model(foreign_entity[0], inline)
-                properties[property.name] = models.ForeignKey(globals()['nature_' + property.link_entity.alias],
-                                                              db_column=property.name, verbose_name=property.label,
-                                                              blank=True, null=True,
-                                                              related_name='%s_%s' % (entity.alias, property.name))
-            elif property.property_type.dbtype == 'EXTUSER':
-                properties[property.name] = models.ForeignKey(User, db_column=property.name,
-                                                              verbose_name=property.label,
-                                                              related_name='%s_%s' % (entity.alias, property.name))
+                properties[prop.name] = models.ForeignKey(globals()['nature_' + prop.link_entity.alias],
+                                                          db_column=prop.name, verbose_name=prop.label,
+                                                          blank=True, null=True,
+                                                          related_name='%s_%s' % (entity.alias, prop.name))
+            elif prop.property_type.dbtype == 'EXTUSER':
+                properties[prop.name] = models.ForeignKey(User, db_column=prop.name,
+                                                          verbose_name=prop.label,
+                                                          related_name='%s_%s' % (entity.alias, prop.name))
 
-    properties['Meta'] = type('Meta', (),
-                              {'db_table': 'nature_' + entity.alias, 'verbose_name_plural': entity.name.encode('utf8'),
-                               'verbose_name': entity.name.lower().encode('utf8')})
-    properties['__module__'] = 'nature.models'
-    properties['entity'] = entity
+        properties['Meta'] = type('Meta', (),
+                                  {'db_table': 'nature_' + entity.alias, 'verbose_name_plural': entity.name.encode('utf8'),
+                                   'verbose_name': entity.name.lower().encode('utf8')})
+        properties['__module__'] = 'nature.models'
+        properties['entity'] = entity
 
-    def __unicode__(self):
-        title = u''
-        fields = Property.objects.filter(parent_entity=entity)
-        for field in fields:
-            if field.caption:
-                if field.link_entity:
-                    try:
-                        title = title + u" %s," % (self.__getattribute__(field.name))
-                    except:
-                        title = title + u"%s=''," % (field.name)
-                else:
-                    title = title + u" %s," % (self.__getattribute__(field.name))
-        return title[0:-1]
+        def __unicode__(self):
+            title = u''
+            fields = Property.objects.filter(parent_entity=entity)
+            for field in fields:
+                if field.caption:
+                    if field.link_entity:
+                        try:
+                            title += u" %s," % (self.__getattribute__(field.name))
+                        except:
+                            title += u"%s=''," % field.name
+                    else:
+                        title += u" %s," % (self.__getattribute__(field.name))
+            return title[0:-1]
 
-    properties['__unicode__'] = __unicode__
-    model = type(entity.alias.encode('cp1251'), (models.Model,), properties)
-    globals()['nature_' + entity.alias] = model
-    inline[globals()['nature_' + entity.alias]] = []
+        properties['__unicode__'] = __unicode__
+        if globals().get('nature_' + entity.alias, None) is None:
+            model = type(entity.alias.encode('cp1251'), (models.Model,), properties)
+            globals()['nature_' + entity.alias] = model
+            inline[globals()['nature_' + entity.alias]] = []
 
-    return model
+            return model
 
 
 def collect_entity():
@@ -556,10 +597,17 @@ def collect_entity():
         create_model(entity, inline)
 
     collection = [globals()[l] for l in globals().keys() if (
-        type(globals()[l]) == django.db.models.base.ModelBase or type(globals()[l]) == mptt.models.MPTTModelBase)
-                  and (issubclass(globals()[l], Model) or issubclass(globals()[l], MPTTModel))
-                  and globals()[l] not in [django.contrib.auth.models.User, django.db.models.base.Model,
-                                           django.contrib.auth.models.Group, mptt.models.MPTTModel]]
+        type(globals()[l]) == django.db.models.base.ModelBase)
+        and (issubclass(globals()[l], Model))
+        and globals()[l] not in [django.contrib.auth.models.User, django.db.models.base.Model, django.contrib.auth.models.Group]]
+
+    '''
+    С использованием деревьев
+    '''
+    # collection = [globals()[l] for l in globals().keys() if (
+    # type(globals()[l]) == django.db.models.base.ModelBase or type(globals()[l]) == mptt.models.MPTTModelBase)
+    # and (issubclass(globals()[l], Model) or issubclass(globals()[l], MPTTModel))
+    # and globals()[l] not in [django.contrib.auth.models.User, django.db.models.base.Model, django.contrib.auth.models.Group, mptt.models.MPTTModel]]
 
     site = admin.site
 
@@ -585,9 +633,9 @@ def collect_entity():
                        dict(fields=properties, list_display=list_display, list_per_page=100, list_filter=list_filter,
                             search_properties=search_properties))
 
-        if cladmin.__name__ in ('EntityAdmin'):
+        if cladmin.__name__ in 'EntityAdmin':
             cladmin.inlines = (PropertyInline, )
-        if cladmin.__name__ in ('ApplicationAdmin'):
+        if cladmin.__name__ in 'ApplicationAdmin':
             cladmin.inlines = (PageInline, ImageInline)
 
         if inline.__contains__(cl):
@@ -605,10 +653,10 @@ def collect_entity():
             pass
 
         admin.site.register(cl, cladmin)
-        try:
-            reversion.register(cl)
-        except:
-            pass
+        # try:
+        #     reversion.register(cl)
+        # except:
+        #     pass
         pre_save.connect(pre_save_model, sender=cl)
 
         post_save.connect(post_save_model, sender=cl)
@@ -620,7 +668,10 @@ def collect_entity():
 
 def clear_cache(app, model):
     cached_models = cache.app_models.get(app)
-    if cached_models.has_key(model.lower()):
+    # if cached_models.has_key(model.lower()):
+    #     del cached_models[model.lower()]
+
+    if model.lower() in cached_models:
         del cached_models[model.lower()]
 
 
@@ -645,14 +696,11 @@ CREATE TABLE `nature_%s` (
                """ % (kwargs['instance'].alias)
                 cursor.execute(sql)
         if kwargs['instance']._meta.object_name == 'Property':
-            if kwargs['instance'].property_type.dbtype == 'ENTITY' or kwargs[
-                'instance'].property_type.dbtype == 'EXTUSER':
+            if kwargs['instance'].property_type.dbtype == 'ENTITY' or kwargs['instance'].property_type.dbtype == 'EXTUSER':
                 if kwargs['instance'].property_type.dbtype == 'EXTUSER':
-                    option = {'table': kwargs['instance'].parent_entity.alias, 'column': kwargs['instance'].name,
-                              'foreign': 'auth_user', 'nature': ''}
+                    option = {'table': kwargs['instance'].parent_entity.alias, 'column': kwargs['instance'].name, 'foreign': 'auth_user', 'nature': ''}
                 else:
-                    option = {'table': kwargs['instance'].parent_entity.alias, 'column': kwargs['instance'].name,
-                              'foreign': kwargs['instance'].link_entity.alias, 'nature': 'nature_'}
+                    option = {'table': kwargs['instance'].parent_entity.alias, 'column': kwargs['instance'].name, 'foreign': kwargs['instance'].link_entity.alias, 'nature': 'nature_'}
                 sql = """
     ALTER TABLE `nature_%(table)s` ADD COLUMN `%(column)s` INT NULL,
     ADD CONSTRAINT `fk_nature_%(table)s_%(foreign)s_%(column)s`
@@ -699,7 +747,7 @@ def post_delete_model(sender, **kwargs):
         try:
             admin.site.unregister(globals()['nature_' + kwargs['instance'].alias])
             del globals()['nature_' + kwargs['instance'].alias]
-        except Exception, e:
+        except:
             pass
         clear_cache('nature', kwargs['instance'].alias)
     elif kwargs['instance']._meta.object_name == 'Property':
@@ -717,23 +765,22 @@ def get_application_instance(application_alias, request):
 
     application = _application_map.get(application_alias, None)
     if application is not None:
-        return (application, False)
+        return application, False
     if request.META.get('PATH_INFO') != '/':
         instance_list = Application.objects.filter(alias=application_alias)
         if len(instance_list):
             _application_map[application_alias] = instance_list[0]
-            return (instance_list[0], False)
+            return instance_list[0], False
         else:
-            a = Attack.objects.create(ip=request.META.get('HTTP_X_REAL_IP'),
-                                      url=request.META.get('PATH_INFO'), date_attack=datetime.datetime.now())
+            Attack.objects.create(ip=request.META.get('HTTP_X_REAL_IP'), url=request.META.get('PATH_INFO'), date_attack=datetime.datetime.now())
             transaction.commit()
 
     instance_list = Application.objects.filter(default=True)
     if len(instance_list):
         _application_map[application_alias] = instance_list[0]
-        return (instance_list[0], True)
+        return instance_list[0], True
     else:
-        raise Exception(u'Приложения "%s" не существует' % (application_alias))
+        raise Exception(u'Приложения "%s" не существует' % application_alias)
 
 
 def get_entity_instance(request, entity_alias=None, application_alias=None):
@@ -759,7 +806,6 @@ def get_entity_instance(request, entity_alias=None, application_alias=None):
 
 
 def get_model(request, entity_alias, application_alias):
-    model = None
     classname_list = [ext['ClassName'] for ext in settings.EXTENSIONS if ext['TableName'] == entity_alias]
     classname = entity_alias
     if len(classname_list):
@@ -791,5 +837,10 @@ def __unicode__(self):
 
 User.__unicode__ = __unicode__
 
-collect_entity()
 
+class MetamodelAppConfig(AppConfig):
+    name = 'metamodel'
+
+    def ready(self):
+        collect_entity()
+        pass

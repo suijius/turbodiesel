@@ -41,7 +41,7 @@ class ExtCodeEdit(TurboDieselUpdateView):
 
     def get(self, request, application_alias, code_id):
         application = self.preget(request, application_alias)
-        code_instance = ExtCode.objects.filter(code_id=code_id, application=application)
+        code_instance = ExtCode.objects.filter(code_id=code_id, site=application.site)
         if len(code_instance) > 0:
             form = ExtCodeForm(instance=code_instance[0])
         return self.render_to_response(
@@ -49,7 +49,7 @@ class ExtCodeEdit(TurboDieselUpdateView):
 
     def post(self, request, application_alias, code_id):
         application = self.prepost(request, application_alias)
-        code_instance = ExtCode.objects.filter(code_id=code_id, application=application)
+        code_instance = ExtCode.objects.filter(code_id=code_id, site=application.site)
         if len(code_instance) > 0:
             form = ExtCodeForm(request.POST, request.FILES, instance=code_instance[0])
             if request.POST.get('new'):

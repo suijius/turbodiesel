@@ -3,14 +3,15 @@
 import django.contrib.auth
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
-from metamodel.models import Entity, Property, Application, get_application_instance, get_entity_instance
 from django.forms import ModelForm
 from django.forms.widgets import TextInput, Select, Textarea, DateTimeInput, CheckboxInput, DateInput
 from django.views.generic import CreateView, UpdateView
-import localization
 from django.contrib import messages
+
+from metamodel.models import Entity, Property, get_application_instance, get_entity_instance
+import localization
 
 
 class EntityForm(ModelForm):
@@ -26,7 +27,7 @@ class EntityCreate(CreateView):
     def get_context_data(self, **kwargs):
         prepare_form(kwargs['form'])
         request = kwargs['request']
-        application, default = get_application_instance(kwargs['application_alias'], request)
+        application = get_application_instance(kwargs['application_alias'], request)
 
         context = {
             'form': kwargs['form'],
@@ -50,7 +51,7 @@ class EntityCreate(CreateView):
             raise PermissionDenied
         if len(request.FILES) > 0:
             request.FILES['image'].name = request.POST.get('alias') + '.png'
-        application, default = get_application_instance(application_alias, request)
+        application = get_application_instance(application_alias, request)
         form = EntityForm(request.POST, request.FILES)
         form.instance.application = application
         if form.is_valid():
@@ -69,7 +70,7 @@ class EntityEdit(UpdateView):
     def get_context_data(self, **kwargs):
         prepare_form(kwargs['form'])
         request = kwargs['request']
-        application, default = get_application_instance(kwargs['application_alias'], request)
+        application = get_application_instance(kwargs['application_alias'], request)
 
         context = {
             'form': kwargs['form'],
@@ -106,21 +107,19 @@ class EntityEdit(UpdateView):
         entity = get_entity_instance(request, entity_alias, application_alias)
         properties = Property.objects.filter(parent_entity=entity)
         data = [{'Name': property.label, 'TableName': property.name} for property in properties]
-        return self.render_to_response(
-                self.get_context_data(form=form, request=request, application_alias=application_alias, properties=data))
+        return self.render_to_response(self.get_context_data(form=form, request=request, application_alias=application_alias, properties=data))
 
 
 class PropertyCreate(CreateView):
     template_name = 'administration/create.html'
     object = None
 
-
     def get_context_data(self, **kwargs):
         prepare_form(kwargs['form'])
         request = kwargs['request']
         entity_alias = kwargs['entity_alias']
         entity = get_entity_instance(request, entity_alias, kwargs['application_alias'])
-        application, default = get_application_instance(kwargs['application_alias'], request)
+        application = get_application_instance(kwargs['application_alias'], request)
 
         context = {
             'form': kwargs['form'],
@@ -136,9 +135,9 @@ class PropertyCreate(CreateView):
     def get(self, request, application_alias, entity_alias):
         if not request.user.is_superuser:
             raise PermissionDenied
-        application, default = get_application_instance(application_alias, request)
+        application = get_application_instance(application_alias, request)
         form = PropertyForm()
-        form.fields['link_entity'].queryset = Entity.objects.filter(application=application)
+        form.fields['link_entity'].queryset = Entity.objects.filter(site=application.site)
         return self.render_to_response(
             context=self.get_context_data(form=form, request=request, entity_alias=entity_alias,
                                           application_alias=application_alias))
@@ -169,7 +168,7 @@ class PropertyEdit(UpdateView):
         request = kwargs['request']
         entity_alias = kwargs['entity_alias']
         entity = get_entity_instance(request, entity_alias, kwargs['application_alias'])
-        application, default = get_application_instance(kwargs['application_alias'], request)
+        application = get_application_instance(kwargs['application_alias'], request)
 
         context = {
             'form': kwargs['form'],
@@ -185,6 +184,7 @@ class PropertyEdit(UpdateView):
     def get(self, request, application_alias, entity_alias, property_alias):
         if not request.user.is_superuser:
             raise PermissionDenied
+
         entity = get_entity_instance(request, entity_alias, application_alias)
 
         instance = Property.objects.filter(name=property_alias, parent_entity=entity)
@@ -197,12 +197,12 @@ class PropertyEdit(UpdateView):
             messages.error(request, u'Свойства "%s" для сущности "%s" не существует' % (property_alias, entity_alias))
             return HttpResponseRedirect('..')
 
-
     def post(self, request, application_alias, entity_alias, property_alias):
         if not request.user.is_superuser:
             raise PermissionDenied
         if len(request.FILES) > 0:
             request.FILES['image'].name = request.POST.get('alias') + '.png'
+
         entity = get_entity_instance(request, entity_alias, application_alias)
         instance = Property.objects.filter(name=property_alias, parent_entity=entity)
         if len(instance) > 0:

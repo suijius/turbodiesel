@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect
 class ApplicationForm(ModelForm):
     class Meta:
         model = Application
-        exclude = ('editor', 'date_change')
+        exclude = ('editor', 'date_change', 'site')
 
 
 class ApplicationEdit(TurboDieselUpdateView):
@@ -25,8 +25,8 @@ class ApplicationEdit(TurboDieselUpdateView):
         request = kwargs['request']
         extension_list = settings.EXTENSIONS + data.get_custom_entity(application_alias, request)
 
-        application, default = get_application_instance(application_alias, request)
-        pages = Page.objects.filter(application=application)
+        application = get_application_instance(application_alias, request)
+        pages = Page.objects.filter(site=application.site)
         # data = []
         #        for field in pages:
         #            value = {}

@@ -53,9 +53,9 @@ def ajax(request, path):
     value = ''
     if len(path) > 2:
         callback = request.GET.get('callback')
-        application, default = get_application_instance(path[0], request)
+        application = get_application_instance(path[0], request)
 
-        filter_list = ExtFilter.objects.filter(application=application, alias=path[2])
+        filter_list = ExtFilter.objects.filter(site=application.site, alias=path[2])
         if len(filter_list) > 0:
             filter = filter_list[0]
             if len(path) > 3 and filter.expression.__contains__('%s'):
@@ -85,7 +85,7 @@ def ajax(request, path):
     return response
 
 
-def createForm(application_alias, entity):
+def create_form(application_alias, entity):
     inline = {}
     model = create_model(entity, inline)
     properties = {'Meta': type('Meta', (), {'model': model})}
@@ -97,6 +97,7 @@ def bag(request, path):
     extension_alias = path[2]
     post = request.POST.copy()
     post["session"] = request.session.session_key
+    #TODO suijius переделать вызов get_entity_instance
     entity = get_entity_instance(request, 'bag', application_alias)
     model_order = get_model(request, 'order', application_alias)
     order_list = model_order.objects.filter(status=1, session=request.session.session_key)
@@ -115,7 +116,7 @@ def bag(request, path):
     if article:
         post["article"] = model.objects.get(request=article, application_alias=null).id
 
-    form = createForm(application_alias, entity)(post, request.FILES)
+    form = create_form(application_alias, entity)(post, request.FILES)
     if form.is_valid():
         form.save()
         messages.success(request, u'Товар успешно добавлен в корзину')
@@ -125,6 +126,7 @@ def bag(request, path):
 def order(request, path):
     application_alias = path[0]
     extension_alias = path[2]
+    #TODO suijius переделать вызов get_entity_instance
     entity = get_entity_instance(request, extension_alias, application_alias)
     model_order = get_model(request, 'order', application_alias)
     model_order_status = get_model(request, 'order_status', application_alias)
@@ -141,6 +143,7 @@ def order(request, path):
     post["session"] = request.session.session_key
     post["date"] = datetime.date.today()
 
+    #TODO suijius переделать вызов get_entity_instance
     cat = get_entity_instance(request, 'catalog_extra', application_alias)
     inline = {}
     model = create_model(cat, inline)
@@ -149,7 +152,7 @@ def order(request, path):
         post["article"] = model.objects.get(request=article, application_alias=null).id
 
     post['status'] = 2
-    form = createForm(application_alias, entity)(post, request.FILES, instance=order)
+    form = create_form(application_alias, entity)(post, request.FILES, instance=order)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
@@ -163,10 +166,12 @@ def form(request, path):
     if globals().__contains__(extension_alias):
         return globals()[extension_alias](request, path)
 
+    #TODO suijius переделать вызов get_entity_instance
     entity = get_entity_instance(request, extension_alias, application_alias)
     post = request.POST.copy()
     post["session"] = request.session.session_key
 
+    #TODO suijius переделать вызов get_entity_instance
     cat = get_entity_instance(request, 'catalog_extra', application_alias)
     inline = {}
     model = create_model(cat, inline)
@@ -174,7 +179,7 @@ def form(request, path):
     if article:
         post["article"] = model.objects.get(request=article, application_alias=null).id
 
-    form = createForm(application_alias, entity)(post, request.FILES)
+    form = create_form(application_alias, entity)(post, request.FILES)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect(request.META['HTTP_REFERER'])

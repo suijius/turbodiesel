@@ -20,8 +20,9 @@ from django.db import connections
 from django.db.models.base import ModelBase
 from django.db import transaction
 from django.utils.importlib import import_module
-from dbtemplates import models as dbTemplates
+from dbtemplates import models as db_templates
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 
 # try:
 #     reversion.register(dbTemplates.Template)
@@ -163,13 +164,13 @@ class Application(models.Model):
     """
     Приложения
     """
-    application_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+    # application_id = models.AutoField(primary_key=True, verbose_name=u'ID')
     name = models.CharField(max_length=255, verbose_name=u'Имя')
     title = models.CharField(max_length=255, verbose_name=u'Заголовок')
     alias = models.CharField(max_length=255, verbose_name=u'Псевдоним (eng)', unique=True)
     logotype = models.ImageField(upload_to='turbodiesel/images/admin', verbose_name=u'Логотип', db_column='image')
     default = models.BooleanField(verbose_name=u'По умолчанию')
-    site = models.OneToOneField(Site)
+    site = models.OneToOneField(Site, primary_key=True)
 
     class Meta:
         db_table = u'application'
@@ -180,44 +181,45 @@ class Application(models.Model):
         return self.name
 
 
-class Rule(models.Model):
-    """
-    Роли
-    """
-    rule_id = models.AutoField(primary_key=True, verbose_name=u'ID')
-    name = models.CharField(max_length=255, verbose_name=u'Имя')
-    parent = models.ForeignKey('Rule', db_column='parent', null=True, blank=True)
-    application = models.ForeignKey(Application, db_column='application')
+# class Rule(models.Model):
+#     """
+#     Роли
+#     """
+#     rule_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+#     name = models.CharField(max_length=255, verbose_name=u'Имя')
+#     parent = models.ForeignKey('Rule', db_column='parent', null=True, blank=True)
+#     application = models.ForeignKey(Application, db_column='application')
+#
+#     class Meta:
+#         db_table = u'rule'
+#         verbose_name = u'Роль'
+#         verbose_name_plural = u'Роли'
+#
+#     def __unicode__(self):
+#         return self.name
 
-    class Meta:
-        db_table = u'rule'
-        verbose_name = u'Роль'
-        verbose_name_plural = u'Роли'
 
-    def __unicode__(self):
-        return self.name
-
-
-class Operation(models.Model):
-    """
-    Операции
-    """
-    operation_id = models.AutoField(primary_key=True, verbose_name=u'ID')
-    name = models.CharField(max_length=255, verbose_name=u'Имя')
-    description = models.TextField(verbose_name=u'Описание')
-
-    class Meta:
-        db_table = u'operation'
-        verbose_name = u'Операция'
-        verbose_name_plural = u'Операции'
-
-    def __unicode__(self):
-        return self.name
+# class Operation(models.Model):
+#     """
+#     Операции
+#     """
+#     operation_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+#     name = models.CharField(max_length=255, verbose_name=u'Имя')
+#     description = models.TextField(verbose_name=u'Описание')
+#
+#     class Meta:
+#         db_table = u'operation'
+#         verbose_name = u'Операция'
+#         verbose_name_plural = u'Операции'
+#
+#     def __unicode__(self):
+#         return self.name
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     telephone = models.TextField(verbose_name=u'Телефон', blank=True)
+    sites = models.ManyToManyField(Site)
     # application = models.ManyToManyField(Application, verbose_name=u'Приложение')#, through='ApplicationUser')
 
     class Meta:
@@ -226,20 +228,21 @@ class UserProfile(models.Model):
         verbose_name_plural = u'Профили пользователей'
 
 
-class ApplicationUser(models.Model):
-    application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
-    user_profile = models.ForeignKey(UserProfile, db_column='user_profile_id', verbose_name=u'Пользователь')
-
-    class Meta:
-        db_table = u'application_user'
+# class ApplicationUser(models.Model):
+#     application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+#     user_profile = models.ForeignKey(UserProfile, db_column='user_profile_id', verbose_name=u'Пользователь')
+#
+#     class Meta:
+#         db_table = u'application_user'
 
 
 class ExtCode(models.Model):
-    code_id = models.AutoField(primary_key=True, verbose_name=u'ID')
-    application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+    id = models.AutoField(db_column='code_id', primary_key=True, verbose_name=u'ID')
+    # application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
     name = models.CharField(max_length=255, verbose_name=u'Имя', unique=True)
     code = models.TextField(verbose_name=u'Код расширения')
     is_global = models.BooleanField(verbose_name=u'Глобальный код', default=False)
+    site = models.ForeignKey(Site)
 
     class Meta:
         db_table = u'ext_code'
@@ -255,13 +258,14 @@ class Page(models.Model):
     name = models.CharField(max_length=255, verbose_name=u'Краткое наименование')
     title = models.CharField(max_length=255, verbose_name=u'Заголовок страницы')
     alias = models.CharField(max_length=255, verbose_name=u'Имя в адресной строке')
-    application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
-    template = models.ForeignKey(dbTemplates.Template, db_column='template_id', verbose_name=u'Шаблон')
+    # application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+    template = models.ForeignKey(db_templates.Template, db_column='template_id', verbose_name=u'Шаблон')
     code = models.ForeignKey(ExtCode, db_column='code_id', verbose_name=u'Кодовая вставка', null=True, blank=True)
     main = models.BooleanField(default=False, verbose_name=u'Главная страница приложения')
     description = models.TextField(verbose_name=u'Мета-описание', null=True, blank=True)
     keywords = models.TextField(verbose_name=u'Мета-ключевые слова', null=True, blank=True)
     content = models.TextField(verbose_name=u'Основной контент', null=True, blank=True)
+    site = models.ForeignKey(Site)
 
     class Meta:
         db_table = u'page'
@@ -283,8 +287,9 @@ class Entity(models.Model):
     editor = models.ForeignKey(User, db_column='editor', null=True, blank=True)
     date_change = models.DateTimeField(verbose_name=u'Дата изменения', null=True, blank=True)
     image = models.ImageField(upload_to='turbodiesel/images/admin')
-    application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+    # application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
     service = models.BooleanField(verbose_name=u'Серсисная сущность')
+    site = models.ForeignKey(Site)
 
     class Meta:
         db_table = u'entity'
@@ -295,41 +300,41 @@ class Entity(models.Model):
         return self.name
 
 
-class Access(models.Model):
-    """
-    Доступы
-    """
-    access_id = models.AutoField(primary_key=True, verbose_name=u'ID')
-    operation_id = models.ForeignKey(Operation, verbose_name=u'Операция')
-    entity_id = models.ForeignKey(Entity, verbose_name=u'Сущность')
-    rule_id = models.ForeignKey(Rule, verbose_name=u'Роль')
-    object_id = models.IntegerField(verbose_name=u'Объект')
+# class Access(models.Model):
+#     """
+#     Доступы
+#     """
+#     access_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+#     operation_id = models.ForeignKey(Operation, verbose_name=u'Операция')
+#     entity_id = models.ForeignKey(Entity, verbose_name=u'Сущность')
+#     rule_id = models.ForeignKey(Rule, verbose_name=u'Роль')
+#     object_id = models.IntegerField(verbose_name=u'Объект')
+#
+#     class Meta:
+#         db_table = u'access'
+#         verbose_name = u'Доступ'
+#         verbose_name_plural = u'Доступы'
+#
+#     def __unicode__(self):
+#         return self.name
 
-    class Meta:
-        db_table = u'access'
-        verbose_name = u'Доступ'
-        verbose_name_plural = u'Доступы'
 
-    def __unicode__(self):
-        return self.name
-
-
-class PropertyTypeUI(models.Model):
-    """
-    Типы аттрибутов интерфейса
-    """
-    property_type_ui_id = models.AutoField(primary_key=True, verbose_name=u'ID')
-    name = models.CharField(max_length=50, verbose_name=u'Имя')
-    editor = models.ForeignKey(User, db_column='editor', null=True, blank=True)
-    date_change = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        db_table = u'property_type_ui'
-        verbose_name = u'тип аттрибута интерфейса'
-        verbose_name_plural = u'Типы аттрибутов интерфейса'
-
-    def __unicode__(self):
-        return self.name
+# class PropertyTypeUI(models.Model):
+#     """
+#     Типы аттрибутов интерфейса
+#     """
+#     property_type_ui_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+#     name = models.CharField(max_length=50, verbose_name=u'Имя')
+#     editor = models.ForeignKey(User, db_column='editor', null=True, blank=True)
+#     date_change = models.DateTimeField(null=True, blank=True)
+#
+#     class Meta:
+#         db_table = u'property_type_ui'
+#         verbose_name = u'тип аттрибута интерфейса'
+#         verbose_name_plural = u'Типы аттрибутов интерфейса'
+#
+#     def __unicode__(self):
+#         return self.name
 
 
 class PropertyType(models.Model):
@@ -404,11 +409,12 @@ class Property(models.Model):
 
 
 class ExtImage(models.Model):
-    image_id = models.AutoField(primary_key=True, verbose_name=u'ID')
-    application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+    id = models.AutoField(db_column='image_id', primary_key=True, verbose_name=u'ID')
+    # application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
     name = models.CharField(max_length=255, verbose_name=u'Имя', unique=True)
     alias = models.CharField(max_length=255, verbose_name=u'Псевдоним (eng)', unique=True)
     image = models.ImageField(upload_to='turbodiesel/images/application', verbose_name=u'Изображение')
+    site = models.ForeignKey(Site)
 
     class Meta:
         db_table = u'ext_image'
@@ -420,14 +426,15 @@ class ExtImage(models.Model):
 
 
 class ExtFilter(models.Model):
-    filter_id = models.AutoField(primary_key=True, verbose_name=u'ID')
-    application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+    id = models.AutoField(db_column='filter_id', primary_key=True, verbose_name=u'ID')
+    # application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
     name = models.CharField(max_length=255, verbose_name=u'Имя', unique=True)
     alias = models.CharField(max_length=255, verbose_name=u'Псевдоним', unique=True, db_column='alias')
     entity = models.ForeignKey(Entity, verbose_name=u'Сущность', blank=False, null=False, related_name='entity')
     expression = models.TextField(verbose_name=u'Фильтр', blank=True, null=True)
     extra = models.TextField(verbose_name=u'Дополнение к фильтру', blank=True, null=True)
     groupby = models.TextField(verbose_name=u'Группировка', blank=True, null=True)
+    site = models.ForeignKey(Site)
 
     class Meta:
         db_table = u'ext_filter'
@@ -455,10 +462,11 @@ class FilterOnPage(models.Model):
 
 
 class ExtWorkflow(models.Model):
-    workflow_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+    id = models.AutoField(db_column='workflow_id', primary_key=True, verbose_name=u'ID')
     name = models.CharField(max_length=255, verbose_name=u'Имя')
     description = models.CharField(max_length=1000, verbose_name=u'Описание')
-    application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+    # application = models.ForeignKey(Application, db_column='application_id', verbose_name=u'Приложение')
+    site = models.ForeignKey(Site)
 
     class Meta:
         db_table = u'ext_workflow'
@@ -467,7 +475,7 @@ class ExtWorkflow(models.Model):
 
 
 class ExtStatus(models.Model):
-    status_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+    id = models.AutoField(db_column='status_id', primary_key=True, verbose_name=u'ID')
     name = models.CharField(max_length=255, verbose_name=u'Имя')
     workflow = models.ForeignKey(ExtWorkflow, db_column='workflow_id', verbose_name=u'Рабочий процесс', blank=False,
                                  null=False, related_name='workflow')
@@ -479,7 +487,7 @@ class ExtStatus(models.Model):
 
 
 class ExtEdge(models.Model):
-    edge_id = models.AutoField(primary_key=True, verbose_name=u'ID')
+    id = models.AutoField(db_column='edge_id', primary_key=True, verbose_name=u'ID')
     name = models.CharField(max_length=255, verbose_name=u'Имя')
     previous = models.ManyToManyField(ExtStatus, verbose_name=u'Предыдущий статус')  # , through='PreviousStatus')
     action = models.ManyToManyField(ExtCode, verbose_name=u'Выполняемые действия')  # , through='EdgeCode')
@@ -514,14 +522,14 @@ class PropertyInline(admin.TabularInline):
     fk_name = 'parent_entity'
 
 
-class PageInline(admin.TabularInline):
-    model = Page
-    extra = 1
+# class PageInline(admin.TabularInline):
+#     model = Page
+#     extra = 1
 
 
-class ImageInline(admin.TabularInline):
-    model = ExtImage
-    extra = 1
+# class ImageInline(admin.TabularInline):
+#     model = ExtImage
+#     extra = 1
 
 
 def create_model(entity, inline):
@@ -635,8 +643,8 @@ def collect_entity():
 
         if cladmin.__name__ in 'EntityAdmin':
             cladmin.inlines = (PropertyInline, )
-        if cladmin.__name__ in 'ApplicationAdmin':
-            cladmin.inlines = (PageInline, ImageInline)
+        # if cladmin.__name__ in 'ApplicationAdmin':
+        #     cladmin.inlines = (PageInline, ImageInline)
 
         if inline.__contains__(cl):
             for entity in inline[cl]:
@@ -693,7 +701,7 @@ CREATE TABLE `nature_%s` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  PRIMARY KEY (`id`)
 ) AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
-               """ % (kwargs['instance'].alias)
+               """ % kwargs['instance'].alias
                 cursor.execute(sql)
         if kwargs['instance']._meta.object_name == 'Property':
             if kwargs['instance'].property_type.dbtype == 'ENTITY' or kwargs['instance'].property_type.dbtype == 'EXTUSER':
@@ -725,7 +733,7 @@ ALTER TABLE `nature_%s` ADD COLUMN `%s` %s NULL;
             try:
                 cursor.execute(sql)
                 connections['default'].commit()
-            except Exception, e:
+            except:
                 pass
 
     if kwargs['instance']._meta.object_name == 'Entity':
@@ -760,44 +768,65 @@ _entity_map = {}
 
 
 def get_application_instance(application_alias, request):
+    """
+    Получение экземпляра приложения
+    :param application_alias: Псевдоним приложения
+    :param request: HTTP запрос
+    :return: экземпляр приложения
+    """
     if application_alias is None:
         raise Exception(u'Недопустимая операция при выборе приложения, не указан объект запроса')
 
+    # Попытка получить экземпляр приложения из кэша
     application = _application_map.get(application_alias, None)
     if application is not None:
-        return application, False
-    if request.META.get('PATH_INFO') != '/':
-        instance_list = Application.objects.filter(alias=application_alias)
-        if len(instance_list):
-            _application_map[application_alias] = instance_list[0]
-            return instance_list[0], False
-        else:
-            Attack.objects.create(ip=request.META.get('HTTP_X_REAL_IP'), url=request.META.get('PATH_INFO'), date_attack=datetime.datetime.now())
-            transaction.commit()
+        return application
 
-    instance_list = Application.objects.filter(default=True)
-    if len(instance_list):
-        _application_map[application_alias] = instance_list[0]
-        return instance_list[0], True
-    else:
-        raise Exception(u'Приложения "%s" не существует' % application_alias)
+    # Попытка получить экземпляр приложения по псевдониму
+    application_type = ContentType.objects.get(app_label="metamodel", model="application")
+    if request.META.get('PATH_INFO') != '/':
+        try:
+            application = application_type.get_object_for_this_type(alias=application_alias)
+            _application_map[application_alias] = application
+            return application
+        except ObjectDoesNotExist:
+            ip = request.META.get('HTTP_X_REAL_IP')
+            if ip is not None:
+                Attack.objects.create(ip=ip, url=request.META.get('PATH_INFO'), date_attack=datetime.datetime.now())
+                transaction.commit()
+
+    # Попытка получить приложение по умолчанию
+    try:
+        application = application_type.get_object_for_this_type(default=True)
+        _application_map[application.alias] = application
+        return application
+    except ObjectDoesNotExist:
+        raise Exception(u'Приложения по умолчанию не существует')
+
+    # if request.META.get('PATH_INFO') != '/':
+    #     instance_list = Application.objects.filter(alias=application_alias)
+    #     if len(instance_list):
+    #         _application_map[application_alias] = instance_list[0]
+    #         return instance_list[0], False
+    #     else:
+    #         Attack.objects.create(ip=request.META.get('HTTP_X_REAL_IP'), url=request.META.get('PATH_INFO'), date_attack=datetime.datetime.now())
+    #         transaction.commit()
+
+    # instance_list = Application.objects.filter(default=True)
+    # if len(instance_list):
+    #     _application_map[application_alias] = instance_list[0]
+    #     return instance_list[0], True
+    # else:
+    #     raise Exception(u'Приложения "%s" не существует' % application_alias)
 
 
 def get_entity_instance(request, entity_alias=None, application_alias=None):
     if entity_alias is None and application_alias is None:
         raise Exception(u'Недопустимая операция при выборе приложения, не указан объект запроса')
 
-    application, default = get_application_instance(application_alias, request)
-
-    classname = ''
-    classname_list = [ext['ClassName'] for ext in settings.EXTENSIONS if ext['TableName'] == entity_alias]
-    if len(classname_list):
-        classname = classname_list[0]
-    if globals().__contains__(classname):
-        model = globals()[classname]
-        return model
-
-    instance_list = Entity.objects.filter(alias=entity_alias, application=application)
+    # Получение экземпляра класса сущности
+    application = get_application_instance(application_alias, request)
+    instance_list = Entity.objects.filter(alias=entity_alias, site=application.site)
     if len(instance_list):
         entity = instance_list[0]
         return entity
@@ -806,21 +835,25 @@ def get_entity_instance(request, entity_alias=None, application_alias=None):
 
 
 def get_model(request, entity_alias, application_alias):
-    classname_list = [ext['ClassName'] for ext in settings.EXTENSIONS if ext['TableName'] == entity_alias]
-    classname = entity_alias
-    if len(classname_list):
-        classname = classname_list[0]
-    if globals().__contains__(classname):
-        model = globals()[classname]
-        if classname == 'dbTemplates':
-            model = model.Template
-    else:
-        instance = get_entity_instance(request, entity_alias, application_alias)
-        if type(instance) is not ModelBase:
-            model = create_model(instance, {})
-        else:
-            model = instance
-    return model
+    # Получение модели глобальной сущности
+    try:
+        entity_type = ContentType.objects.get(app_label="metamodel", model=entity_alias)
+        return entity_type.model_class()
+    except ObjectDoesNotExist:
+        pass
+
+    # Получение модели глобальной сущности
+    try:
+        entity_type = ContentType.objects.get(app_label="dbtemplates", model=entity_alias)
+        return entity_type.model_class()
+    except ObjectDoesNotExist:
+        pass
+
+    try:
+        entity_type = ContentType.objects.get(app_label="nature", model=entity_alias)
+        return entity_type.model_class()
+    except ObjectDoesNotExist:
+        pass
 
 
 def create_user_profile(sender, instance, created, **kwargs):

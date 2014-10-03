@@ -1,18 +1,13 @@
 # coding=cp1251
 import json
+
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
-import metamodel_view
-from metamodel.models import Entity, Property, Application, Page, ExtImage, create_model, ExtFilter, \
-    get_application_instance, get_entity_instance, get_model, ExtWorkflow, ExtStatus, ExtEdge
-from django.contrib import messages
 from django.db import models
-from django.core import serializers
-from django.db.models import Avg, Max, Min, Count
-import settings
-from dbtemplates import models as dbTemplates
-from django.db.models.base import ModelBase
+
+import metamodel_view
+from metamodel.models import Entity, Property, Application, Page, get_application_instance, get_entity_instance, get_model, ExtWorkflow
+
 # import reversion
 
 def truncate(item, name):
@@ -45,8 +40,8 @@ def application(request):
 def page(request, application_alias):
     callback = request.GET['callback']
 
-    application, default = get_application_instance(application_alias, request)
-    pages = Page.objects.filter(application=application)
+    application = get_application_instance(application_alias, request)
+    pages = Page.objects.filter(site=application.site)
     data = []
     for field in pages:
         value = {}
@@ -65,8 +60,8 @@ def page(request, application_alias):
 def picture(request, application_alias):
     callback = request.GET['callback']
 
-    application, default = get_application_instance(application_alias, request)
-    images = Image.objects.filter(application=application)
+    application = get_application_instance(application_alias, request)
+    images = Image.objects.filter(site=application.site)
     data = [{'Name': image.name, 'Image': image.image.name} for image in images]
 
     value = str(callback) + '(' + json.dumps(data) + ')'
@@ -87,9 +82,9 @@ def entity(request, application_alias):
 
 
 def get_custom_entity(application_alias, request):
-    application, default = get_application_instance(application_alias, request)
+    application = get_application_instance(application_alias, request)
     data = [{'Name': entity.name, 'TableName': entity.alias, 'Image': entity.image.name, 'text': ''} for entity in
-            Entity.objects.filter(application=application)]
+            Entity.objects.filter(site=application.site)]
     if len(data):
         data[0]['text'] = u'Пользовательские расширения'
     return data
@@ -114,12 +109,12 @@ def extension(request, application_alias, extension_alias):
     model = get_model(request, extension_alias, application_alias)
 
     if model is not None:
-        application, default = get_application_instance(application_alias, request)
+        application = get_application_instance(application_alias, request)
         data = []
         data_array = []
         if request.GET.__contains__('expression'):
             expression = request.GET['expression']
-            entity = Entity.objects.filter(entity_id=request.GET.get('entity'), application=application)
+            entity = Entity.objects.filter(entity_id=request.GET.get('entity'), site=application.site)
             if len(entity):
                 entity_model = get_model(request, entity[0].alias, application_alias)
                 expression_list = expression.split('|')
@@ -133,7 +128,7 @@ def extension(request, application_alias, extension_alias):
             value = request.GET['filter[filters][0][value]']
             detail_model = get_model(request, request.GET['filter[filters][0][model]'], application_alias)
             kwargs = {request.GET['filter[filters][0][field]']: detail_model.objects.get(request=value,
-                                                                                         application_alias=null)}
+                                                                                         application_alias=None)}
             if len(data_array):
                 data_array = data_array.__or__(model.objects.filter(**kwargs))
             else:
@@ -141,11 +136,11 @@ def extension(request, application_alias, extension_alias):
                 #data_array = data_array.extra(**eval("dict(%s)" % request.GET['extra']))
 
         else:
-            if extension_alias == 'ext_template':
+            if extension_alias == 'exttemplate':
                 data_array = model.objects.filter(name__contains=application.alias)
-            elif extension_alias == 'ext_image' or extension_alias == 'ext_filter' or extension_alias == 'ext_code' or extension_alias == 'ext_workflow':
-                data_array = model.objects.filter(application=application)
-            elif extension_alias == 'ext_status' or extension_alias == 'ext_edge':
+            elif extension_alias == 'extimage' or extension_alias == 'extfilter' or extension_alias == 'extcode' or extension_alias == 'extworkflow':
+                data_array = model.objects.filter(site=application.site)
+            elif extension_alias == 'extstatus' or extension_alias == 'extedge':
                 workflow_id = request.GET.get('workflow')
                 wf_list = ExtWorkflow.objects.filter(workflow_id=workflow_id)
                 if len(wf_list):
@@ -194,16 +189,22 @@ def history(request, application_alias, entity_type, entity_alias):
     try:
         instance = None
         if entity_type == 'application':
-            instance, default = get_application_instance(entity_alias, request)
-        elif entity_type == 'ext_code':
-            model = get_entity_instance(request, entity_type, application_alias)
+            instance = get_application_instance(application_alias, request)
+        else:
+            model = get_model(request, entity_type, application_alias)
             instance_list = model.objects.filter(code_id=entity_alias)
             if len(instance_list):
                 instance = instance_list[0]
-        elif entity_type == 'ext_template':
-            instance_list = dbTemplates.Template.objects.filter(id=entity_alias)
-            if len(instance_list):
-                instance = instance_list[0]
+
+        # elif entity_type == 'extcode':
+        #     model = get_model(request, entity_type, application_alias)
+        #     instance_list = model.objects.filter(code_id=entity_alias)
+        #     if len(instance_list):
+        #         instance = instance_list[0]
+        # elif entity_type == 'exttemplate':
+        #     instance_list = dbTemplates.Template.objects.filter(id=entity_alias)
+        #     if len(instance_list):
+        #         instance = instance_list[0]
 
         version_list = reversion.get_unique_for_object(instance)
         # entity = get_entity_instance(entity_alias, application_alias)

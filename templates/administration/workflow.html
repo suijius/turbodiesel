@@ -10,7 +10,7 @@
         </li>
     {% endif %}
     <li>
-        <a title="" href="/admin/application/{{ application.alias }}/extension/ext_workflow/">Рабочие процессы</a>
+        <a title="" href="/admin/application/{{ application.alias }}/extension/extworkflow/">Рабочие процессы</a>
     </li>
     <li class="active">
         {{ action.string }}
@@ -146,7 +146,7 @@
             var dataSourceHistory = new kendo.data.DataSource({
                 transport: {
                     read: {
-                        url: "/admin/data/history/application/{{application.alias}}/ext_workflow/{{ form.initial.workflow_id }}",
+                        url: "/admin/data/history/application/{{application.alias}}/extworkflow/{{ form.initial.workflow_id }}",
                         dataType: "jsonp"
                     }
                 },
@@ -169,20 +169,20 @@
                 pageSize: 20,
                 transport: {
                     read: {
-                        url: "/admin/data/extension/{{application.alias}}/ext_status",
+                        url: "/admin/data/extension/{{application.alias}}/extstatus",
                         dataType: "jsonp"
                     },
                     create: {
-                        url: "/admin/application/{{application.alias}}/extension/ext_status/{{ form.initial.workflow_id }}/create/",
+                        url: "/admin/application/{{application.alias}}/extension/extstatus/{{ form.initial.workflow_id }}/create/",
                         dataType: "jsonp",
                         type: "POST"
                     },
                     update: {
-                        url: "/admin/data/extension/{{application.alias}}/ext_status",
+                        url: "/admin/data/extension/{{application.alias}}/extstatus",
                         dataType: "jsonp"
                     },
                     destroy: {
-                        url: "/admin/data/extension/{{application.alias}}/ext_status",
+                        url: "/admin/data/extension/{{application.alias}}/extstatus",
                         dataType: "jsonp"
                     }
                 },

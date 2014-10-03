@@ -15,7 +15,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 class ApplicationPageForm(ModelForm):
     class Meta:
         model = Page
-        exclude = ('editor', 'date_change', 'application', 'parent')
+        exclude = ('editor', 'date_change', 'application', 'parent', 'site')
 
 
 class ApplicationPageCreate(TurboDieselCreateView):
@@ -75,7 +75,7 @@ class ApplicationPageEdit(TurboDieselUpdateView):
 
     def post(self, request, application_alias, page_alias):
         application = self.prepost(request, application_alias)
-        page_instance = Page.objects.filter(alias=page_alias, application=application)
+        page_instance = Page.objects.filter(alias=page_alias, site=application.site)
         if len(page_instance) > 0:
             templates = dbTemplates.Template.objects.filter(name__icontains=application_alias + '/')
             pages = Page.objects.filter(application=page_instance[0].application)
@@ -114,7 +114,7 @@ class ApplicationPageEdit(TurboDieselUpdateView):
 
     def get(self, request, application_alias, page_alias):
         application = self.preget(request, application_alias)
-        page_instance = Page.objects.filter(alias=page_alias, application=application)
+        page_instance = Page.objects.filter(alias=page_alias, site=application.site)
         if len(page_instance) > 0:
             templates = dbTemplates.Template.objects.filter(name__icontains=application_alias + '/')
             form = ApplicationPageForm(instance=page_instance[0])

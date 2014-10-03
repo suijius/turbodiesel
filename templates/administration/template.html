@@ -10,7 +10,7 @@
         </li>
     {% endif %}
     <li>
-        <a title="" href="/admin/application/{{ application.alias }}/extension/ext_template/">Шаблоны страниц</a>
+        <a title="" href="/admin/application/{{ application.alias }}/extension/exttemplate/">Шаблоны страниц</a>
     </li>
     <li class="active">
         {{ action.string }}
@@ -135,7 +135,7 @@
             var dataSourceHistory = new kendo.data.DataSource({
                 transport: {
                     read: {
-                        url: "/admin/data/history/application/{{application.alias}}/ext_template/{{ form.initial.id }}",
+                        url: "/admin/data/history/application/{{application.alias}}/exttemplate/{{ form.initial.id }}",
                         dataType: "jsonp"
                     }
                 },

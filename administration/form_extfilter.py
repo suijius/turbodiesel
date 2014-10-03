@@ -31,7 +31,7 @@ class ExtFilterCreate(TurboDieselCreateView):
     def get(self, request, application_alias):
         application = self.preget(request, application_alias)
         form = ExtFilterForm()
-        entities = Entity.objects.filter(application=application)
+        entities = Entity.objects.filter(site=application.site)
         form.fields['entity'].queryset = entities
 
         return self.render_to_response(
@@ -62,17 +62,17 @@ class ExtFilterEdit(TurboDieselUpdateView):
 
     def get(self, request, application_alias, filter_id):
         application = self.preget(request, application_alias)
-        filter_instance = ExtFilter.objects.filter(filter_id=filter_id, application=application)
+        filter_instance = ExtFilter.objects.filter(filter_id=filter_id, site=application.site)
         if len(filter_instance) > 0:
             form = ExtFilterForm(instance=filter_instance[0])
-            entities = Entity.objects.filter(application=application)
+            entities = Entity.objects.filter(site=application.site)
             form.fields['entity'].queryset = entities
         return self.render_to_response(
             context=self.get_context_data(form=form, request=request, application=application))
 
     def post(self, request, application_alias, filter_id):
         application = self.prepost(request, application_alias)
-        filter_instance = ExtFilter.objects.filter(filter_id=filter_id, application=application)
+        filter_instance = ExtFilter.objects.filter(filter_id=filter_id, site=application.site)
         if len(filter_instance) > 0:
             form = ExtFilterForm(request.POST, request.FILES, instance=filter_instance[0])
             form.instance.application = application

@@ -71,7 +71,7 @@
             var dataSource = new kendo.data.DataSource({
                 transport: {
                     read: {
-                        url: "/admin/data/extension/{{application.alias}}/ext_filter",
+                        url: "/admin/data/extension/{{application.alias}}/extfilter",
                         dataType: "jsonp",
                         data: {
                             expression: $("textarea#id_expression").val() // sends the value of the input as the orderId

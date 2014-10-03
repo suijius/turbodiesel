@@ -226,14 +226,14 @@ DBTEMPLATES_USE_CODEMIRROR = True
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 EXTENSIONS = [
-    {'Name': u'Изображения', 'Image': 'turbodiesel/images/admin/image.png', 'TableName': 'ext_image', 'ClassName': 'ExtImage', 'Type': 1},
-    {'Name': u'Кодовые вставки', 'Image': 'turbodiesel/images/admin/code.png', 'TableName': 'ext_code', 'ClassName': 'ExtCode', 'Type': 1},
-    {'Name': u'Фильтры', 'Image': 'turbodiesel/images/admin/filter.png', 'TableName': 'ext_filter', 'ClassName': 'ExtFilter', 'Type': 1},
-    {'Name': u'Шаблоны', 'Image': 'turbodiesel/images/admin/template.png', 'TableName': 'ext_template', 'ClassName': 'dbTemplates', 'Type': 1},
-    {'Name': u'Пользователи', 'Image': 'turbodiesel/images/admin/user.png', 'TableName': 'ext_user', 'ClassName': 'User', 'Type': 1},
-    {'Name': u'Рабочие потоки', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'ext_workflow', 'ClassName': 'ExtWorkflow', 'Type': 1},
-    {'Name': u'Статусы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'ext_status', 'ClassName': 'ExtStatus', 'Type': 1},
-    {'Name': u'Переходы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'ext_edge', 'ClassName': 'ExtEdge', 'Type': 1},
+    {'Name': u'Изображения', 'Image': 'turbodiesel/images/admin/image.png', 'TableName': 'extimage', 'ClassName': 'ExtImage', 'Type': 1},
+    {'Name': u'Кодовые вставки', 'Image': 'turbodiesel/images/admin/code.png', 'TableName': 'extcode', 'ClassName': 'ExtCode', 'Type': 1},
+    {'Name': u'Фильтры', 'Image': 'turbodiesel/images/admin/filter.png', 'TableName': 'extfilter', 'ClassName': 'ExtFilter', 'Type': 1},
+    {'Name': u'Шаблоны', 'Image': 'turbodiesel/images/admin/template.png', 'TableName': 'exttemplate', 'ClassName': 'dbTemplates', 'Type': 1},
+    {'Name': u'Пользователи', 'Image': 'turbodiesel/images/admin/user.png', 'TableName': 'extuser', 'ClassName': 'User', 'Type': 1},
+    {'Name': u'Рабочие потоки', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extworkflow', 'ClassName': 'ExtWorkflow', 'Type': 1},
+    {'Name': u'Статусы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extstatus', 'ClassName': 'ExtStatus', 'Type': 1},
+    {'Name': u'Переходы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extedge', 'ClassName': 'ExtEdge', 'Type': 1},
 ]
 
 EMAIL_HOST = 'smtp.gmail.com'

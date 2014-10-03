@@ -41,7 +41,7 @@ class ExtWorkflowEdit(TurboDieselUpdateView):
 
     def get(self, request, application_alias, id):
         application = self.preget(request, application_alias)
-        filter_instance = ExtWorkflow.objects.filter(workflow_id=id, application=application)
+        filter_instance = ExtWorkflow.objects.filter(workflow_id=id, site=application.site)
         if len(filter_instance) > 0:
             form = ExtWorkflowForm(instance=filter_instance[0])
         return self.render_to_response(
@@ -49,7 +49,7 @@ class ExtWorkflowEdit(TurboDieselUpdateView):
 
     def post(self, request, application_alias, id):
         application = self.prepost(request, application_alias)
-        filter_instance = ExtWorkflow.objects.filter(workflow_id=id, application=application)
+        filter_instance = ExtWorkflow.objects.filter(workflow_id=id, site=application.site)
         if len(filter_instance) > 0:
             form = ExtWorkflowForm(request.POST, request.FILES, instance=filter_instance[0])
             if request.POST.get('new'):

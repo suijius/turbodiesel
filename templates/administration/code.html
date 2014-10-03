@@ -10,7 +10,7 @@
         </li>
     {% endif %}
     <li>
-        <a title="" href="/admin/application/{{ application.alias }}/extension/ext_code/">Кодовые вставки</a>
+        <a title="" href="/admin/application/{{ application.alias }}/extension/extcode/">Кодовые вставки</a>
     </li>
     <li class="active">
         Редактирование - "{{ form.visible_fields.0.value }}"
@@ -157,7 +157,7 @@
         /*        var dataSourceHistory = new kendo.data.DataSource({
          transport: {
          read: {
-         url: "/admin/data/history/application/{{application.alias}}/ext_code/{{ form.initial.code_id }}",
+         url: "/admin/data/history/application/{{application.alias}}/extcode/{{ form.initial.code_id }}",
          dataType: "jsonp"
          }
          },

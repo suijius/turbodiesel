@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}
+    Редактирование - "{{ form.visible_fields.0.value }}"
+{% endblock %}
+{% block breadcrumb %}
+    {% if application %}
+        <li>
+            <a title="" href="/admin/application/{{ application.alias }}/edit">Приложение -
+                "{{ application|truncatewords:2 }}"</a>
+        </li>
+    {% endif %}
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/extension/extcode/">Кодовые вставки</a>
+    </li>
+    <li class="active">
+        Редактирование - "{{ form.visible_fields.0.value }}"
+    </li>
+{% endblock %}
+
+{% block sidebar %}
+    <li>
+        <a href="#code_edit"><i class="icon-beaker"></i> <span>Код</span></a>
+    </li>
+    <li>
+        <a href="#history"><i class="icon-retweet"></i> <span>История</span></a>
+    </li>
+{% endblock %}
+
+{% block center_content %}
+
+
+    <div class="grid" style="height: 800px">
+        <div class="grid-title">
+            <div class="pull-left">
+                Код
+            </div>
+        </div>
+        <div class="grid-content">
+            <form action="" method="post" enctype="multipart/form-data" id="page" name="page">
+                {% csrf_token %}
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {# Include the visible fields #}
+                <div class="row-fluid">
+                    <label class="span4">{{ form.visible_fields.0.label }}:</label>
+                    {% if form.visible_fields.0.errors %}
+                        <div class="span4">
+                            {{ form.visible_fields.0 }}
+                        </div>
+                        <div class="span4">
+                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                    class="k-icon k-warning"> </span> {{ form.visible_fields.0.errors.0 }} </span>
+                        </div>
+                    {% else %}
+                        <div class="span8">
+                            {{ form.visible_fields.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="row-fluid">
+                    <label class="span4">{{ form.visible_fields.2.label }}:</label>
+                    {% if form.visible_fields.2.errors %}
+                        <div class="span4">
+                            {{ form.visible_fields.2 }}
+                        </div>
+                        <div class="span4 alert alert-error">
+                            {{ form.visible_fields.2.errors.0 }}
+                        </div>
+                    {% else %}
+                        <div class="span8">
+                            {{ form.visible_fields.2 }}
+                        </div>
+                    {% endif %}
+                </div>
+                <a name="code_edit"></a>
+
+                <div class="row-fluid">
+                    {% if form.visible_fields.1.errors %}
+                        <div id="editor"
+                             style="height:630px; position:absolute; left:90px; right:20px; background-color: #FFFFFF;">{{ form.visible_fields.1.value }}
+                        </div>
+                        <div class="span3">
+                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                    class="k-icon k-warning"> </span> {{ form.visible_fields.1.errors.0 }} </span>
+                        </div>
+                    {% else %}
+                        <textarea id="editor_miracle" style="display:none" form="page" name="code">
+                            {{ form.visible_fields.1.value }}
+                        </textarea>
+                    {% endif %}
+                </div>
+                <div style="display: none">
+                    {{ form.visible_fields.3 }}
+                    {{ form.visible_fields.4 }}
+                </div>
+                <br class="clear">
+            </form>
+        </div>
+    </div>
+    <a name="history"></a>
+
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                История
+            </div>
+        </div>
+        <div class="grid-content">
+            <div id="history"></div>
+        </div>
+    </div>
+
+    <style type="text/css" media="screen">
+        textarea {
+            width: 100%;
+        }
+    </style>
+    <script type="text/x-kendo-tmpl" id="template_history">
+	<tr>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${revision}
+	</td>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${data}
+	</td>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${date}
+	</td>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${user}
+	</td>
+	</tr>
+
+
+
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var editor_miracle = CodeMirror.fromTextArea(document.getElementById("editor_miracle"), {
+                lineNumbers: true,
+                mode: "python",
+                theme: "mdn-like",
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                }
+            });
+            editor_miracle.setSize("100%", 669)
+        });
+        /*        var dataSourceHistory = new kendo.data.DataSource({
+         transport: {
+         read: {
+         url: "/admin/data/history/application/{{application.alias}}/extcode/{{ form.initial.code_id }}",
+         dataType: "jsonp"
+         }
+         },
+         });
+         $("#history").kendoGrid({
+         dataSource: dataSourceHistory,
+         groupable: false,
+         filterable: true,
+         sortable: true,
+         rowTemplate: kendo.template($("#template_history").html()),
+         columns: [
+         { field: "revision", title: "Версия", width: 100 },
+         { field: "data", title: "Данные" },
+         { field: "date", title: "Дата", width: 140},
+         { field: "user", title: "Пользователь", width: 120},
+         ]
+         })*/
+
+
+    </script>
+
+    <link rel="stylesheet" href="/media/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/media/codemirror/addon/display/fullscreen.css">
+    <link rel="stylesheet" href="/media/codemirror/theme/mdn-like.css">
+    <script src="/media/codemirror/lib/codemirror.js"></script>
+    <script src="/media/codemirror/mode/xml/xml.js"></script>
+    <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+    <script src="/media/codemirror/mode/python/python.js"></script>
+{% endblock %}
+{% block left_footer %}
+    <div class="btn-group pull-right">
+        <input value="Сохранить без закрытия" type="submit" class="btn btn-primary submit b2" form="page" name="lazy">
+        <input value="Сохранить" type="submit" class="btn btn-primary submit b2" form="page" name="directly">
+    </div>
+    <input value="Сохранить как новый" type="submit" class="btn btn-primary submit" form="page" name="new">
+{% endblock %}

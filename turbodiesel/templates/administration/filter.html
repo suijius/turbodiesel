@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ action.string }}
+{% endblock %}
+{% block breadcrumb %}
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/edit">Приложение -
+            "{{ application|truncatewords:2 }}"</a>
+    </li>
+    <li class="active">
+        {{ action.string }}
+    </li>
+{% endblock %}
+
+{% block center_content %}
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                Свойства фильтра
+            </div>
+        </div>
+        <div class="grid-content">
+            <form action="" method="post" enctype="multipart/form-data" id="filter" name="filter">
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {# Include the visible fields #}
+                {% csrf_token %}
+
+                {% for field in form.visible_fields %}
+                    <div class="row-fluid">
+                        <label class="span4">{{ field.label }}:</label>
+                        {% if field.errors %}
+                            <div class="span4">
+                                {{ field }}
+                            </div>
+                            <div class="span4">
+                                <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                        class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
+                            </div>
+                        {% else %}
+                            <div class="span8">
+                                {{ field }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                Предпросмотр результатов
+            </div>
+        </div>
+        <div class="grid-content">
+            <div id="result">
+
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/admin/data/extension/{{application.alias}}/extfilter",
+                        dataType: "jsonp",
+                        data: {
+                            expression: $("textarea#id_expression").val() // sends the value of the input as the orderId
+                        }
+
+                    }
+
+                },
+                pageSize: 20
+            });
+            $("#result").kendoGrid({
+                dataSource: dataSource,
+                groupable: true,
+                sortable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: true
+                },
+                pageSize: 20
+
+            });
+            $("#preview").click(function () {
+                dataSource.read({
+                    expression: $("textarea#id_expression").val(),
+                    entity: $("#id_entity").val(),
+                    extra: $("textarea#id_extra").val()
+                });
+            })
+        });
+
+    </script>
+
+{% endblock %}
+{% block left_footer %}
+    <div class="btn-group pull-right">
+        <input value="Предпросмотр" type="button" class="btn btn-primary b2" id="preview">
+        <input value="Сохранить" type="submit" class="btn btn-primary b2" form="filter">
+    </div>
+{% endblock %}

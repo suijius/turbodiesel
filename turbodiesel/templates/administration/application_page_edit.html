@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ action.string }}{% if page %} - "{{ form.initial.name|truncatewords:2 }}" {% endif %}
+{% endblock %}
+{% block breadcrumb %}
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/edit">Приложение -
+            "{{ application|truncatewords:2 }}"</a>
+    </li>
+    <li class="active">
+        {{ action.string }}{% if page %} - "{{ form.initial.name|truncatewords:2 }}" {% endif %}
+    </li>
+{% endblock %}
+{% block sidebar %}
+    <li>
+        <a href="#general"><i class="icon-edit"></i> <span>Свойства</span></a>
+    </li>
+    <li>
+        <a href="#content_edit"><i class="icon-book"></i> <span>Контент</span></a>
+    </li>
+    <li>
+        <a href="#template_edit"><i class="icon-th-large"></i> <span>Шаблон</span></a>
+    </li>
+    <li>
+        <a href="#code_edit"><i class="icon-beaker"></i> <span>Код</span></a>
+    </li>
+{% endblock %}
+{% block center_content %}
+    <a name="general"></a>
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                Свойства страницы приложения
+            </div>
+        </div>
+        <div class="grid-content">
+            <form action="" method="post" enctype="multipart/form-data" id="page" name="page">
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {# Include the visible fields #}
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                    {% if field.name != 'content' %}
+                        <div class="row-fluid">
+                            <label class="span4">{{ field.label }}:</label>
+                            {% if field.errors %}
+                                <div class="span4">
+                                    {{ field }}
+                                </div>
+                                <div class="span4 alert alert-error">
+                                    {{ field.errors.0 }}
+                                </div>
+                            {% else %}
+                                <div class="span8">
+                                    {{ field }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+
+    <a name="content_edit"></a>
+    <div class="grid" style="height: 600px">
+        <div class="grid-title">
+            <div class="pull-left">
+                Основной контент
+            </div>
+        </div>
+        {#        <div class="grid-content">#}
+        <textarea id="content" form="page" class="wysiwyg" name="content" style="height: 520px; width:100%">
+            {{ page.content }}
+        </textarea>
+        {#        </div>#}
+    </div>
+
+    <a name="template_edit"></a>
+    <div class="grid" style="height: 600px">
+        <div class="grid-title">
+            <div class="pull-left">
+                Шаблон страницы приложения
+            </div>
+        </div>
+        <textarea id="editor_miracle" form="page" name="template-content">
+            {{ page.template.content }}
+        </textarea>
+    </div>
+
+    <a name="code_edit"></a>
+    <div class="grid" style="height: 600px">
+        <div class="grid-title">
+            <div class="pull-left">
+                Кодовая вставка
+            </div>
+        </div>
+        <textarea id="code_editor_miracle" form="page" name="code-content">
+            {{ page.code.code }}
+        </textarea>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var editor_miracle = CodeMirror.fromTextArea(document.getElementById("editor_miracle"), {
+                lineNumbers: true,
+                theme: "mdn-like",
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                }
+            });
+            editor_miracle.setSize("100%", 559);
+
+            var code_editor_miracle = CodeMirror.fromTextArea(document.getElementById("code_editor_miracle"), {
+                lineNumbers: true,
+                theme: "mdn-like",
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                }
+            });
+            code_editor_miracle.setSize("100%", 559)
+
+        });
+
+    </script>
+
+    <link rel="stylesheet" href="/media/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/media/codemirror/addon/display/fullscreen.css">
+    <link rel="stylesheet" href="/media/codemirror/theme/mdn-like.css">
+    <script src="/media/codemirror/lib/codemirror.js"></script>
+    <script src="/media/codemirror/mode/xml/xml.js"></script>
+    <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+
+{% endblock %}
+{% block left_footer %}
+    <div class="btn-group pull-right">
+        <input value="Сохранить без закрытия" type="submit" class="btn btn-primary submit b2" form="page" name="lazy">
+        <input value="Сохранить" type="submit" class="btn btn-primary submit b2" id="submit" form="page">
+    </div>
+    <input value="Сохранить как новую" type="submit" class="btn btn-primary submit b1" form="page" name="new">
+{% endblock %}
+

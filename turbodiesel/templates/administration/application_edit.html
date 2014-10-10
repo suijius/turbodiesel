@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ action.string }} - "{{ form.initial.name|truncatewords:2 }}"
+{% endblock %}
+{% block sidebar %}
+    <li>
+        <a href="#general"><i class="icon-edit"></i> <span>Свойства</span></a>
+    </li>
+    <li>
+        <a href="#metadata"><i class="icon-tasks"></i> <span>Метадата</span></a>
+    </li>
+    <li>
+        <a href="#page_list"><i class="icon-file"></i> <span>Страницы</span></a>
+    </li>
+    <li>
+        <a href="#history"><i class="icon-retweet"></i> <span>История</span></a>
+    </li>
+{% endblock %}
+{% block breadcrumb %}
+    <li class="active">
+        {{ action.string }} - "{{ form.initial.name|truncatewords:2 }}"
+    </li>
+{% endblock %}
+
+{% block center_content %}
+
+    <a name="general"></a>
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left"><img src="/media/{{ form.instance.logotype.name }}" style="height:24px;">
+            </div>
+            <div class="pull-left">
+                Свойства приложения
+            </div>
+        </div>
+        <div class="grid-content">
+            <form action="" method="post" enctype="multipart/form-data" id="page" name="page">
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {# Include the visible fields #}
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                    <div class="row-fluid">
+                        <label class="span4">{{ field.label }}:</label>
+
+                        <div class="span8">
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                            <div class="span4 alert alert-error">
+                                {{ field.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="grid span4">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Расширения приложения
+                </div>
+                <a href="/admin/application/{{ form.initial.alias }}/entity" class="pull-right btn">Метаданные</a>
+            </div>
+            <div class="grid-content">
+                <table class="table" id="datatable_ext">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Имя</th>
+                        <th>Тип</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in extension %}
+                        <tr>
+                            <td>
+                                <a href="/admin/application/{{ form.initial.alias }}/extension/{{ item.TableName }}/" style="color: inherit;text-decoration: inherit;">
+                                    <img src="/media/{{ item.Image }}" style="height:16px"><br>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/admin/application/{{ form.initial.alias }}/extension/{{ item.TableName }}/" style="color: inherit;text-decoration: inherit;">
+                                    {{ item.Name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if item.Type %}
+                                    Системный
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <div class="grid span8">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Страницы приложения
+                </div>
+                <a href="/admin/application/{{ form.initial.alias }}/page/create/" class="pull-right btn">Создание
+                    страницы</a>
+            </div>
+            <div class="grid-content">
+                <table class="table" id="datatable_ext">
+                    <thead>
+                    <tr>
+                        <th>Имя(breadcrumb)</th>
+                        <th>Заголовок(title)</th>
+                        <th>Псевдоним</th>
+                        <th>Описание</th>
+                        <th>Ключевые слова</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in pages %}
+                        <tr>
+                            <td><a href="/admin/application/{{ form.initial.alias }}/page/{{ item.alias }}/edit/"
+                                   style="color: inherit;text-decoration: inherit;">
+                                {{ item.name }}
+                            </a></td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.alias }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.keywords }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                История
+            </div>
+        </div>
+        <div class="grid-content">
+            <div id="history"></div>
+        </div>
+    </div>
+
+
+    <script type="text/x-kendo-tmpl" id="template_history">
+	<tr>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${revision}
+	</td>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${data}
+	</td>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${date}
+	</td>
+	<td style="border-bottom-color:lightgray; border-bottom-style: solid; border-bottom-width:1px">
+	${user}
+	</td>
+	</tr>
+
+
+
+    </script>
+
+    <script>
+
+
+        /*
+         var dataSourceHistory = new kendo.data.DataSource({
+         transport: {
+         read: {
+         url: "/admin/data/history/application/{{form.initial.alias}}/application/{{form.initial.alias}}",
+         dataType: "jsonp"
+         }
+         },
+         });
+         $("#history").kendoGrid({
+         dataSource: dataSourceHistory,
+         groupable: false,
+         filterable: true,
+         sortable: true,
+         rowTemplate: kendo.template($("#template_history").html()),
+         columns: [
+         { field: "revision", title: "Версия", width: 100 },
+         { field: "data", title: "Данные" },
+         { field: "date", title: "Дата", width: 140},
+         { field: "user", title: "Пользователь", width: 120},
+         ]
+         })
+         });*/
+
+    </script>
+
+{% endblock %}
+{% block left_footer %}
+    <input value="Сохранить" type="submit" class="btn btn-primary pull-right" id="submit" form="page">
+{% endblock %}
+{% block right_footer %}
+    <a class="btn btn-primary pull-right" href="/admin/application/{{ form.initial.alias }}/delete">Удалить</a>
+{% endblock %}

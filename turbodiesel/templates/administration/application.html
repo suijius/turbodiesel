@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+    Приложения
+{% endblock %}
+
+{% block without_breadcrumb %}
+{% endblock %}
+{% block speedbar %}
+    <li><a href="/admin/application/create/" class="act_link">Создание приложения</a></li>
+{% endblock %}
+{% block left_footer %}
+
+    <div class="span4">
+        <div id="pager" class="" style="border-style: none; color: #ABABAB; background: transparent none;width:300px"></div>
+    </div>
+{% endblock %}
+
+{% block center_content %}
+    <div class="row-fluid">
+        {% for application in applications %}
+            <div style="background-color:transparent;max-width: 120px;min-height: 100px;border:none;margin-left: 0px;" class="grid span6">
+                <a href="/admin/application/{{ application.TableName }}/edit/" style="color: inherit;text-decoration: inherit;">
+                    <div class="admin_entity" style="max-width: 200px;padding:0; margin: 0; background-image: url('/media/turbodiesel/images/admin/six.png');background-size: 120px; float: none">
+
+                        <img src="/media/{{ application.Image }}" alt="{{ application.Name }}" style="height:46px; margin-top: 30px; margin-bottom: 5px"/>
+
+                        <p style="margin-top: 20px;">{{ application.Name|truncatewords:2 }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" class="body-error">
+<head>
+    <meta charset="utf-8">
+    <title>TurboDiesel - Вход</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/media/themes/sweet-dreams/css/login.css" rel="stylesheet">
+    <link href="/media/themes/sweet-dreams/css/bootstrap.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/icon/font-awesome.css">
+    <link rel="stylesheet" href="/media/themes/sweet-dreams/css/bootstrap-responsive.css">
+
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="green-theme"
+          href="/media/themes/sweet-dreams/css/color/green.css"/>
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="red-theme"
+          href="/media/themes/sweet-dreams/css/color/red.css"/>
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="black-theme"
+          href="/media/themes/sweet-dreams/css/color/black.css"/>
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="orange-theme"
+          href="/media/themes/sweet-dreams/css/color/orange.css"/>
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="purple-theme"
+          href="/media/themes/sweet-dreams/css/color/purple.css"/>
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="silver-theme"
+          href="/media/themes/sweet-dreams/css/color/silver.css"/>
+    <link rel="alternate stylesheet" type="text/css" media="screen" title="metro-theme"
+          href="/media/themes/sweet-dreams/css/color/metro.css"/>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <!--[if lte IE 8]><script type="text/javascript" src="/js/excanvas.min.js"></script><![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/media/themes/sweet-dreams/images/icons/favicon.ico">
+
+</head>
+
+<body>
+
+<div id="container_demo">
+    <a class="hiddenanchor" id="toregister"></a>
+    <a class="hiddenanchor" id="tologin"></a>
+
+    <div id="wrapper">
+        <div id="login" class="animate form position">
+            <form action="" method="post" class="form-login">
+                {% csrf_token %}
+                <div class="content-login">
+                    <a href="#" class="logo" style="background-image: url('../images/logo_login.png');"></a>
+
+                    <p>Вы уверены, что хотите удалить приложение - "{{ object.title }}" ?</p>
+                    <div class="clear"></div>
+                        <div class="button-login">
+                        <input type="submit" value="Удалить" class="btn btn-large"/>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="footer-login">
+                </div>
+
+
+            </form>
+
+            <!--<div class="info-message">
+            <div class="alert alert-info">
+            Если у Вас нет профиля, нажмите "Зарегистрироваться"
+            </div>
+            </div>-->
+
+        </div>
+    </div>
+</div>
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/media/themes/sweet-dreams/js/jquery.min.js"></script>
+
+</body>
+</html>
+

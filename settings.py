@@ -84,13 +84,13 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = os.path.join(ROOT_PATH, 'media').replace('\\', '/') + '/'
-MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(ROOT_PATH, 'turbodiesel/media').replace('\\', '/') + '/'
+MEDIA_URL = 'turbodiesel/media/'
 
 STATIC_ROOT = ''
-STATIC_URL = '/media/'
+STATIC_URL = '/turbodiesel/media/'
 
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/turbodiesel/media/'
 
 
 # Make this unique, and don't share it with anybody.
@@ -129,7 +129,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.CookieStorage'
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(ROOT_PATH, 'templates/').replace('\\', '/'),
+    os.path.join(ROOT_PATH, 'turbodiesel/turbodiesel/templates/').replace('\\', '/'),
 )
 
 
@@ -141,7 +141,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'metamodel',
+    'turbodiesel',
     'nature',
     # 'mptt',
     #    'djcelery',
@@ -229,7 +229,7 @@ EXTENSIONS = [
     {'Name': u'Изображения', 'Image': 'turbodiesel/images/admin/image.png', 'TableName': 'extimage', 'ClassName': 'ExtImage', 'Type': 1},
     {'Name': u'Кодовые вставки', 'Image': 'turbodiesel/images/admin/code.png', 'TableName': 'extcode', 'ClassName': 'ExtCode', 'Type': 1},
     {'Name': u'Фильтры', 'Image': 'turbodiesel/images/admin/filter.png', 'TableName': 'extfilter', 'ClassName': 'ExtFilter', 'Type': 1},
-    {'Name': u'Шаблоны', 'Image': 'turbodiesel/images/admin/template.png', 'TableName': 'exttemplate', 'ClassName': 'dbTemplates', 'Type': 1},
+    {'Name': u'Шаблоны', 'Image': 'turbodiesel/images/admin/template.png', 'TableName': 'template', 'ClassName': 'dbTemplates', 'Type': 1},
     {'Name': u'Пользователи', 'Image': 'turbodiesel/images/admin/user.png', 'TableName': 'extuser', 'ClassName': 'User', 'Type': 1},
     {'Name': u'Рабочие потоки', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extworkflow', 'ClassName': 'ExtWorkflow', 'Type': 1},
     {'Name': u'Статусы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extstatus', 'ClassName': 'ExtStatus', 'Type': 1},

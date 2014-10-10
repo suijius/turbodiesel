@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ action.string }} - "{{ form.initial.name }}"
+{% endblock %}
+{% block breadcrumb %}
+    <li>
+        <a title="" href="/admin/application/{{ application.alias }}/edit/">Приложение -
+            "{{ application.name|truncatewords:2 }}"</a>
+    </li>
+    <li>
+        <a href="/admin/application/{{ application.alias }}/entity">Управление метаданными</a>
+    </li>
+    <li class="active">
+        {{ action.string }} - "{{ form.initial.name }}"
+    </li>
+{% endblock %}
+
+{% block center_content %}
+    <div class="row-fluid">
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Свойства
+                </div>
+            </div>
+            <div class="grid-content">
+                <form action="./{{ form.initial.alias }}" method="post" enctype="multipart/form-data" id="page"
+                      name="page">
+                    {# Include the hidden fields #}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                    {# Include the visible fields #}
+                    <div id="window" style="min-width: 90px; min-height: 50px;">
+                        <div id="content-main" style="">
+                            {% csrf_token %}
+
+                            {% for field in form.visible_fields %}
+                                <div class="row-fluid">
+                                    <label class="span4">{{ field.label }}:</label>
+                                    {% if field.errors %}
+                                        <div class="span4">
+                                            {{ field }}
+                                        </div>
+                                        <div class="span4">
+                                            <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"> <span
+                                                    class="k-icon k-warning"> </span> {{ field.errors.0 }} </span>
+                                        </div>
+                                    {% else %}
+                                        <div class="span8">
+                                            {{ field }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="grid span6">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Аттрибуты
+                </div>
+                <a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/create/"
+                   class="pull-right btn">Создание аттрибута</a>
+            </div>
+            <div class="grid-content">
+                <table class="table" id="datatable_ext">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Имя</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in properties %}
+                        <tr>
+                            <td>
+                                <a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/{{ item.TableName }}/edit/" style="color: inherit;text-decoration: inherit;">
+                                    <img src="/media/turbodiesel/images/admin/property.png" alt="{{ item.Name }}" style="height:16px"/><br/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/admin/application/{{ application.alias }}/entity/{{ form.initial.alias }}/property/{{ item.TableName }}/edit/" style="color: inherit;text-decoration: inherit;">
+                                    {{ item.Name }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <div id="tab_b" class="tab-pane"></div>
+{% endblock %}
+
+{% block left_footer %}
+    <input value="Сохранить" type="submit" class="btn btn-primary pull-right" id="submit" form="page">
+{% endblock %}

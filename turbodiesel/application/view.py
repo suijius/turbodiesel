@@ -1,10 +1,13 @@
 # coding=cp1251
+from django.contrib.sites.models import Site
 from django.shortcuts import render_to_response
 from django.contrib import messages
+
 
 from turbodiesel.models import Page, ExtCode, get_application_instance
 from turbodiesel.application import data
 
+from django.conf import settings
 
 def embeded_code1(request):
     from turbodiesel.models import get_model
@@ -95,6 +98,9 @@ def home(request, application_path):
 
     embeded = code_execute(request, page_lst[0], application)
 
+    settings.SITE_ID = application.site_id
+
+
     return render_to_response(page_lst[0].template.name,
                               {'logotype': application.logotype, 'title': application.title, 'page': page_lst[0],
                                'page_embeded': embeded[0], 'app_embeded': embeded[1], 'error': embeded[2],
@@ -109,6 +115,9 @@ def main_url(request):
             'error_title': u'Для приложения "%s" не существует главной страницы' % _application.alias})
 
     embeded = code_execute(request, _page_lst[0], _application)
+
+    settings.SITE_ID = _application.site_id
+
 
     return render_to_response(_page_lst[0].template.name,
                               {'logotype': _application.logotype, 'title': _application.title, 'page': _page_lst[0],

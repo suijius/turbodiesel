@@ -28,24 +28,392 @@
 <article>
 <h2>Django template mode</h2>
 <form><textarea id="code" name="code">
-<!doctype html>
-<html>
-    <head>
-        <title>My Django web application</title>
-    </head>
-    <body>
-        <h1>
-            {{ page.title }}
-        </h1>
-        <ul class="my-list">
-            {% for item in items %}
-                <li>{% item.name %}</li>
-            {% empty %}
-                <li>You have no items in your list.</li>
-            {% endfor %}
-        </ul>
-    </body>
-</html>
+        {% extends &quot;magmadiz/base.html&quot; %}
+{% block description %}{{ page_embeded.post.0.description }}{% endblock %}
+{% block keywords %}{{page_embeded.post.0.keywords}}{% endblock %}
+{% block title %}
+{{ page_embeded.article.name}}{{block.super}}
+{% endblock %}
+{% block breadcrumb %} :: Статья{% endblock %}
+{% block content %}
+&lt;link rel=&quot;stylesheet&quot; href=&quot;/media/themes/shoploop/css/blog.css&quot;&gt;
+	&lt;!-- strat the main content area --&gt;
+	{{error}}
+	&lt;div class=&quot;container&quot;&gt;
+
+		&lt;div class=&quot;eleven columns&quot;&gt;
+			&lt;article&gt;
+				&lt;div class=&quot;blogImg&quot;&gt;
+					&lt;div class=&quot;pagers center&quot;&gt;
+						&lt;a class=&quot;prev blog_slide_prev&quot; href=&quot;#prev&quot;&gt;Prev&lt;/a&gt;
+						&lt;a class=&quot;nxt blog_slide_nxt&quot; href=&quot;#nxt&quot;&gt;Next&lt;/a&gt;
+					&lt;/div&gt;
+
+		        	&lt;ul class=&quot;cycle-slideshow&quot;
+					data-cycle-fx=&quot;tileBlind&quot;
+			        data-cycle-timeout=0
+			        data-cycle-slides=&quot;&gt; li&quot;
+			        data-cycle-prev=&quot;div.pagers a.blog_slide_prev&quot;
+			        data-cycle-next=&quot;div.pagers a.blog_slide_nxt&quot;
+			        &gt;
+
+		        		&lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;/media/{{page_embeded.post.0.image}}&quot; alt=&quot;blog image&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+		        	&lt;!--	&lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;/media/{{page_embeded.post.0.image}}&quot; alt=&quot;blog image&quot;&gt;&lt;/a&gt;&lt;/li&gt;--&gt;
+
+		        	&lt;/ul&gt;
+				&lt;/div&gt;&lt;!--end blogImg--&gt;
+
+				&lt;div class=&quot;blogDesc clearfix&quot;&gt;
+&lt;!--					&lt;div class=&quot;blogLeft clearfix&quot;&gt;
+						&lt;h6&gt;&lt;span&gt;{{page_embeded.post.0.date|date:&quot;d&quot;}}&lt;/span&gt;&lt;br&gt;{{page_embeded.post.0.date|date:&quot;M&quot;}}&lt;/h6&gt;
+						&lt;ul&gt;
+    						&lt;li&gt;Комментарии: &lt;a href=&quot;&quot;&gt;25&lt;/a&gt;&lt;/li&gt;
+							&lt;li&gt;Избранное: &lt;a href=&quot;&quot;&gt;13&lt;/a&gt;&lt;/li&gt;
+							&lt;li&gt;Автор: &lt;a href=&quot;&quot;&gt;Аdmin&lt;/a&gt;&lt;/li&gt;
+							&lt;li&gt;Просмотров: &lt;a href=&quot;&quot;&gt;113 &lt;/a&gt;&lt;/li&gt;
+						&lt;/ul&gt;
+					&lt;/div&gt;&lt;!--end blog left--&gt;
+
+					&lt;div&gt;&lt;!--class=&quot;blogRight&quot;--&gt;
+						&lt;h5&gt;
+							&lt;a href=&quot;#&quot;&gt;{{page_embeded.post.0.title}}&lt;/a&gt;
+						&lt;/h5&gt;
+{% autoescape off %}
+    {{page_embeded.post.0.post}}
+{% endautoescape %}
+
+					&lt;/div&gt;&lt;!--end blogText--&gt;
+				&lt;/div&gt;&lt;!--end blogDesc--&gt;
+
+			&lt;/article&gt;&lt;!--end article--&gt;
+            {% if page_embeded.comments %}
+			&lt;section id=&quot;userComments&quot;&gt;
+				&lt;div class=&quot;box_head&quot;&gt;
+					&lt;h3&gt;Комментарии&lt;/h3&gt;
+				&lt;/div&gt;&lt;!--end box_head --&gt;
+
+				&lt;ul class=&quot;commentWrapper&quot;&gt;
+                    {% for item in page_embeded.comments %}
+					&lt;li&gt;
+						&lt;div class=&quot;comment clearfix&quot;&gt;
+							&lt;div class=&quot;user_avatar&quot;&gt;
+							&lt;a href=&quot;#&quot;&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;user Avater&quot;&gt;
+							&lt;/a&gt;
+							&lt;h6&gt;&lt;a href=&quot;#&quot;&gt;{{item.name}}&lt;/a&gt;&lt;/h6&gt;
+							&lt;/div&gt;&lt;!--end user avatar--&gt;
+
+							&lt;div class=&quot;comment_content&quot;&gt;
+							&lt;span class=&quot;comment_arrow&quot;&gt;&lt;/span&gt;
+							&lt;em&gt;
+								{{item.date}}
+&lt;!--								&lt;a href=&quot;#&quot;&gt;Reply&lt;/a&gt; --&gt;
+							&lt;/em&gt;
+							&lt;p&gt;
+								{{item.comment}}
+							&lt;/p&gt;
+							&lt;/div&gt;&lt;!--end comment_content--&gt;
+						&lt;/div&gt;&lt;!--end comment--&gt;
+					&lt;/li&gt;
+                    {% endfor %}
+&lt;!--						&lt;ul&gt;
+							&lt;li&gt;
+								&lt;div class=&quot;comment clearfix&quot;&gt;
+									&lt;div class=&quot;user_avatar&quot;&gt;
+										&lt;a href=&quot;#&quot;&gt;
+											&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;user Avater&quot;&gt;
+										&lt;/a&gt;
+										&lt;h6&gt;&lt;a href=&quot;#&quot;&gt;shoploop&lt;/a&gt;&lt;/h6&gt;
+										&lt;/div&gt;
+										&lt;div class=&quot;comment_content&quot;&gt;
+										&lt;span class=&quot;comment_arrow&quot;&gt;&lt;/span&gt;
+										&lt;em&gt;
+											12 June, 2012 &amp;nbsp;&amp;nbsp; 09:16:45 Am &amp;nbsp;&amp;nbsp;
+											&lt;a href=&quot;#&quot;&gt;Reply&lt;/a&gt; 
+										&lt;/em&gt;
+										&lt;p&gt;
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu risus lorem, ut placerat nisl. Integer sit amet dolor eros, vitae eleifend nisl.
+										&lt;/p&gt;
+									&lt;/div&gt;
+								&lt;/div&gt;
+
+								&lt;ul&gt;
+							&lt;li&gt;
+								&lt;div class=&quot;comment clearfix&quot;&gt;
+									&lt;div class=&quot;user_avatar&quot;&gt;
+										&lt;a href=&quot;#&quot;&gt;
+											&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;user Avater&quot;&gt;
+										&lt;/a&gt;
+										&lt;h6&gt;&lt;a href=&quot;#&quot;&gt;shoploop&lt;/a&gt;&lt;/h6&gt;
+										&lt;/div&gt;
+										&lt;div class=&quot;comment_content&quot;&gt;
+										&lt;span class=&quot;comment_arrow&quot;&gt;&lt;/span&gt;
+										&lt;em&gt;
+											12 June, 2012 &amp;nbsp;&amp;nbsp; 09:16:45 Am &amp;nbsp;&amp;nbsp;
+											&lt;a href=&quot;#&quot;&gt;Reply&lt;/a&gt; 
+										&lt;/em&gt;
+										&lt;p&gt;
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu risus lorem, ut placerat nisl. Integer sit amet dolor eros, vitae eleifend nisl.
+										&lt;/p&gt;
+									&lt;/div&gt;
+								&lt;/div&gt;
+							&lt;/li&gt;
+						&lt;/ul&gt;
+
+							&lt;/li&gt;
+						&lt;/ul&gt;
+					&lt;/li&gt;
+					
+					&lt;li&gt;
+						&lt;div class=&quot;comment clearfix&quot;&gt;
+							&lt;div class=&quot;user_avatar&quot;&gt;
+								&lt;a href=&quot;#&quot;&gt;
+									&lt;img src=&quot;images/photos/thumbnail.jpg&quot; alt=&quot;user Avater&quot;&gt;
+								&lt;/a&gt;
+								&lt;h6&gt;&lt;a href=&quot;#&quot;&gt;shoploop&lt;/a&gt;&lt;/h6&gt;
+								&lt;/div&gt;
+								&lt;div class=&quot;comment_content&quot;&gt;
+								&lt;span class=&quot;comment_arrow&quot;&gt;&lt;/span&gt;
+								&lt;em&gt;
+								12 June, 2012 &amp;nbsp;&amp;nbsp; 09:16:45 Am &amp;nbsp;&amp;nbsp;
+								&lt;a href=&quot;#&quot;&gt;Reply&lt;/a&gt; 
+								&lt;/em&gt;
+								&lt;p&gt;
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu risus lorem, ut placerat nisl. Integer sit amet dolor eros, vitae eleifend nisl. Suspendisse vel ante.
+								&lt;/p&gt;
+							&lt;/div&gt;
+						&lt;/div&gt;
+					&lt;/li&gt;--&gt;
+				&lt;/ul&gt;&lt;!--end commentWrapper--&gt;
+
+			&lt;/section&gt;&lt;!--end userComments--&gt;
+            {% endif %}
+
+
+			&lt;section id=&quot;addComment&quot;&gt;
+				&lt;div class=&quot;box_head&quot;&gt;
+					&lt;h3&gt;Оставьте комментарий&lt;/h3&gt;
+				&lt;/div&gt;&lt;!--end box_head --&gt;
+
+				&lt;form method=&quot;post&quot; action=&quot;.&quot;&gt;
+
+					&lt;div class=&quot;five columns alpha&quot;&gt;
+						&lt;input class=&quot;input_tool_tip&quot; type=&quot;text&quot; name=&quot;name&quot; value=&quot;&quot; placeholder=&quot;Имя *&quot; title=&quot;Подпишитесь&quot;&gt;
+
+						&lt;input class=&quot;input_tool_tip&quot; type=&quot;text&quot; name=&quot;email&quot; value=&quot;&quot; placeholder=&quot;E-Mail&quot; title=&quot;Оставьте свой E-Mail&quot;&gt;
+
+		&lt;!--				&lt;input class=&quot;input_tool_tip&quot; type=&quot;text&quot; name=&quot;website&quot; value=&quot;&quot; placeholder=&quot;Your Website&quot; title=&quot;Inter your Website URL here - OPtional&quot;&gt;
+
+						&lt;input class=&quot;input_tool_tip&quot; type=&quot;text&quot; name=&quot;company&quot; value=&quot;&quot; placeholder=&quot;Your Company&quot; title=&quot;Inter your Company / Job  here - OPtional&quot;&gt;--&gt;
+					&lt;/div&gt;&lt;!--end five--&gt;
+
+					&lt;div class=&quot;six columns omega&quot;&gt;
+						&lt;textarea class=&quot;input_tool_tip&quot; name=&quot;comment&quot; placeholder=&quot;Кооментарий *&quot; title=&quot;Оставьте здесь комментарий&quot;&gt;&lt;/textarea&gt;
+					&lt;/div&gt;&lt;!--end six--&gt;
+
+					&lt;div class=&quot;submitForm&quot;&gt;
+						&lt;p&gt;Поля отмеченные ( * ) обязательны к заполнению.&lt;/p&gt;&lt;br/&gt;
+						&lt;input class=&quot;red_btn&quot; type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Отправить&quot;&gt;
+						&lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+					&lt;/div&gt;&lt;!--end submitForm--&gt;
+
+				&lt;/form&gt;&lt;!--end form--&gt;
+
+			&lt;/section&gt;&lt;!--end addComment--&gt;
+
+		&lt;/div&gt;&lt;!--end eleven--&gt;
+
+
+		&lt;aside class=&quot;five columns&quot;&gt;
+
+			&lt;!--&lt;div class=&quot;blogSearch clearfix&quot;&gt;
+				&lt;form method=&quot;get&quot; action=&quot;#&quot;&gt;
+					&lt;label&gt;
+						&lt;input class=&quot;input_tool_tip&quot; type=&quot;text&quot; name=&quot;search&quot; placeholder=&quot;Search In Blog&quot;&gt;
+					&lt;/label&gt;
+					&lt;div class=&quot;submit&quot;&gt;
+						&lt;input type=&quot;submit&quot; name=&quot;submit&quot;&gt;
+					&lt;/div&gt;
+				&lt;/form&gt;
+			&lt;/div&gt;&lt;!--end blogSearch--&gt;
+
+			&lt;!--&lt;div class=&quot;blog_category clearfix&quot;&gt;
+				&lt;div class=&quot;box_head&quot;&gt;
+					&lt;h3&gt;Category&lt;/h3&gt;
+				&lt;/div&gt;&lt;!--end box_head 
+				&lt;ul&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;December&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Noveber&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;October&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;July&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;June&lt;/a&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+				&lt;ul&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;May&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;September&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;January&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;December&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Noveber&lt;/a&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/div&gt;&lt;!--end blogArchive--&gt;
+
+
+			&lt;!--&lt;div class=&quot;blogTab&quot;&gt;
+				&lt;div id=&quot;tabs&quot;&gt;
+
+					&lt;ul class=&quot;tabNav&quot;&gt;
+						&lt;li&gt;&lt;a class=&quot;currentTab&quot; href=&quot;#recent&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+						&lt;!--&lt;li&gt;&lt;a href=&quot;#puplar&quot;&gt;Puplar&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;#comment&quot;&gt;Comments&lt;/a&gt;&lt;/li&gt;
+						&lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+					&lt;/ul&gt;
+
+					&lt;div id=&quot;tabContentOuter&quot;&gt;
+
+						&lt;div id=&quot;recent&quot; class=&quot;tabContent&quot;&gt;
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;Размеры теромобелья Norveg&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;16 October, 2012&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;Как стирать термобелье&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;16 October, 2012&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;Какое термобелье мне нужно&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;25 июля, 2013&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+							&lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+						&lt;/div&gt;&lt;!--end recent--&gt;
+
+
+						&lt;!--&lt;div id=&quot;puplar&quot; class=&quot;tabContent&quot;&gt;
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;Детское термобелье&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;8 августа, 2013&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;consectetur adipiscing elit. Curabitur eu risus lorem&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;18 September, 2012&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;consectetur adipiscing elit. Curabitur eu risus lorem&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;16 September, 2012&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+							&lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+						&lt;/div&gt;&lt;!--end puplar--&gt;
+
+
+						&lt;!--&lt;div id=&quot;comment&quot; class=&quot;tabContent&quot;&gt;
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;consectetur adipiscing elit. Curabitur eu risus lorem&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;15 May, 2012&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;consectetur adipiscing elit. Curabitur eu risus lorem&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;9 Januury, 2012&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+
+							&lt;div&gt;
+								&lt;img src=&quot;/media/themes/shoploop/images/photos/thumbnail.jpg&quot; alt=&quot;&quot;&gt;
+								&lt;div&gt;
+									&lt;a href=&quot;#&quot;&gt;
+									&lt;p&gt;consectetur adipiscing elit. Curabitur eu risus lorem&lt;/p&gt;
+									&lt;/a&gt;
+									&lt;span&gt;11 June, 2012&lt;/span&gt;
+								&lt;/div&gt;
+							&lt;/div&gt;
+							&lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+						&lt;/div&gt;&lt;!--end comment--&gt;
+
+					&lt;!--&lt;/div&gt;&lt;!--end tabContentOuter--&gt;
+
+			&lt;!--	&lt;/div&gt;&lt;!--end tabs--&gt;
+			&lt;!--&lt;/div&gt;&lt;!--end blogTab--&gt;
+
+			&lt;div class=&quot;blogArchive&quot;&gt;
+				&lt;div class=&quot;box_head&quot;&gt;
+					&lt;h3&gt;Архив статей&lt;/h3&gt;
+				&lt;/div&gt;&lt;!--end box_head --&gt;
+				&lt;ul&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+    				&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;#&quot;&gt;...&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/div&gt;&lt;!--end blogArchive--&gt;
+
+
+			&lt;!--&lt;div class=&quot;ads&quot;&gt;
+				&lt;h6&gt;Addvertise Here&lt;/h6&gt;
+			&lt;/div&gt;&lt;!--end ads--&gt;
+
+
+		&lt;/aside&gt;&lt;!--end aside five--&gt;
+
+
+	&lt;/div&gt;&lt;!--end container--&gt;
+	&lt;!-- end the main content area --&gt;
+
+{% endblock %}
+				
 </textarea></form>
 
     <script>

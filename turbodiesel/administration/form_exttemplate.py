@@ -26,6 +26,7 @@ class ExtTemplateCreate(TurboDieselCreateView):
         application = self.prepost(request, application_alias)
         form = ExtTemplateForm(request.POST, request.FILES)
         form.instance.application = application
+        form.instance.sites = application.site
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('..')
@@ -53,6 +54,7 @@ class ExtTemplateEdit(TurboDieselUpdateView):
             if request.POST.get('new'):
                 form = ExtTemplateForm(request.POST, request.FILES)
                 form.instance.application = application
+                form.instance.sites = application.site
 
             form.instance.creation_date = filter_instance[0].creation_date
             form.instance.last_changed = filter_instance[0].last_changed

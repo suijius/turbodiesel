@@ -141,7 +141,7 @@
         $(document).ready(function () {
             var editor_miracle = CodeMirror.fromTextArea(document.getElementById("editor_miracle"), {
                 lineNumbers: true,
-                mode: "python",
+                mode: {name: "python", version: 2,  singleLineStringErrors: false},
                 theme: "mdn-like",
                 extraKeys: {
                     "F11": function (cm) {
@@ -183,9 +183,12 @@
     <link rel="stylesheet" href="/media/codemirror/addon/display/fullscreen.css">
     <link rel="stylesheet" href="/media/codemirror/theme/mdn-like.css">
     <script src="/media/codemirror/lib/codemirror.js"></script>
-    <script src="/media/codemirror/mode/xml/xml.js"></script>
-    <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+    <script src="/media/codemirror/mode/django/django.js"></script>
     <script src="/media/codemirror/mode/python/python.js"></script>
+    <script src="/media/codemirror/mode/xml/xml.js"></script>
+    <script src="/media/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+    <script src="/media/codemirror/addon/mode/overlay.js"></script>
 {% endblock %}
 {% block left_footer %}
     <div class="btn-group pull-right">

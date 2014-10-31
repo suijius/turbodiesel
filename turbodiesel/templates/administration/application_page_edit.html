@@ -107,6 +107,7 @@
             var editor_miracle = CodeMirror.fromTextArea(document.getElementById("editor_miracle"), {
                 lineNumbers: true,
                 theme: "mdn-like",
+                mode: "django",
                 extraKeys: {
                     "F11": function (cm) {
                         cm.setOption("fullScreen", !cm.getOption("fullScreen"));
@@ -117,10 +118,10 @@
                 }
             });
             editor_miracle.setSize("100%", 559);
-
             var code_editor_miracle = CodeMirror.fromTextArea(document.getElementById("code_editor_miracle"), {
                 lineNumbers: true,
                 theme: "mdn-like",
+                mode: {name: "python", version: 2,  singleLineStringErrors: false},
                 extraKeys: {
                     "F11": function (cm) {
                         cm.setOption("fullScreen", !cm.getOption("fullScreen"));
@@ -140,8 +141,12 @@
     <link rel="stylesheet" href="/media/codemirror/addon/display/fullscreen.css">
     <link rel="stylesheet" href="/media/codemirror/theme/mdn-like.css">
     <script src="/media/codemirror/lib/codemirror.js"></script>
+    <script src="/media/codemirror/mode/django/django.js"></script>
+    <script src="/media/codemirror/mode/python/python.js"></script>
     <script src="/media/codemirror/mode/xml/xml.js"></script>
+    <script src="/media/codemirror/mode/htmlmixed/htmlmixed.js"></script>
     <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+    <script src="/media/codemirror/addon/mode/overlay.js"></script>
 
 {% endblock %}
 {% block left_footer %}

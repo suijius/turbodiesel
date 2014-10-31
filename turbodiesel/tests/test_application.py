@@ -104,7 +104,8 @@ class ApplicationTests(LiveServerTestCase):
         driver.find_element_by_id("submit").click()
         self.assertTrue(self.is_element_present(By.XPATH, "//div[@id='content']/div[3]/div/div/div[2]"))
         # Возвращаем в исходное состояние
-        driver.get(self.base_url + "/admin/application/" + self.guid + "/edit/")
+        driver.get(self.base_url + "/admin/application/" + self.guid + "3/edit/")
+        self.assertTrue(self.is_element_present(By.ID, "id_name"))
         driver.find_element_by_id("id_name").clear()
         driver.find_element_by_id("id_name").send_keys(self.guid)
         driver.find_element_by_id("id_title").clear()

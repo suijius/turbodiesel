@@ -7,6 +7,7 @@ from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.views.generic import DeleteView
+from dbtemplates import models as db_templates
 
 from turbodiesel.administration import data
 from turbodiesel.models import Application, get_application_instance, Page
@@ -72,6 +73,16 @@ class ApplicationCreate(TurboDieselCreateView):
         form.instance.site = site
         if form.is_valid():
             form.save()
+            dbt = db_templates.Template.objects.create(name="base",
+                                        content=u"""
+<html>
+<head>
+    <title>Новый сайт</title>
+</head>
+<body>
+</body>
+</html>""")
+            dbt.sites = (site,)
             return HttpResponseRedirect('..')
         else:
             return self.render_to_response(self.get_context_data(form=form, request=request))

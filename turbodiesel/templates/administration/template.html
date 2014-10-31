@@ -58,7 +58,7 @@
                                     class="k-icon k-warning"> </span> {{ form.visible_fields.1.errors.0 }} </span>
                         </div>
                     {% else %}
-                        <textarea id="code_editor_miracle" form="page" name="code-content">
+                        <textarea id="code_editor_miracle" form="page" name="content">
                             {{ form.visible_fields.1.value }}
                         </textarea>
                     {% endif %}
@@ -93,8 +93,12 @@
     <link rel="stylesheet" href="/media/codemirror/addon/display/fullscreen.css">
     <link rel="stylesheet" href="/media/codemirror/theme/mdn-like.css">
     <script src="/media/codemirror/lib/codemirror.js"></script>
+    <script src="/media/codemirror/mode/django/django.js"></script>
+    <script src="/media/codemirror/mode/python/python.js"></script>
     <script src="/media/codemirror/mode/xml/xml.js"></script>
+    <script src="/media/codemirror/mode/htmlmixed/htmlmixed.js"></script>
     <script src="/media/codemirror/addon/display/fullscreen.js"></script>
+    <script src="/media/codemirror/addon/mode/overlay.js"></script>
 
 
     <script type="text/javascript">
@@ -102,6 +106,7 @@
             var code_editor_miracle = CodeMirror.fromTextArea(document.getElementById("code_editor_miracle"), {
                 lineNumbers: true,
                 theme: "mdn-like",
+                mode: "django",
                 extraKeys: {
                     "F11": function (cm) {
                         cm.setOption("fullScreen", !cm.getOption("fullScreen"));

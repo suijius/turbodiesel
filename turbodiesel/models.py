@@ -167,9 +167,9 @@ class Application(models.Model):
     """
     Приложения
     """
-    name = models.CharField(max_length=255, verbose_name=u'Имя')
-    title = models.CharField(max_length=255, verbose_name=u'Заголовок')
-    alias = models.CharField(max_length=255, verbose_name=u'Псевдоним (eng)', unique=True)
+    name = models.CharField(max_length=255, verbose_name=u'Имя', blank=False, null=False)
+    title = models.CharField(max_length=255, verbose_name=u'Заголовок', blank=False, null=False)
+    alias = models.CharField(max_length=255, verbose_name=u'Псевдоним (eng)', unique=True, blank=False, null=False)
     logotype = models.ImageField(upload_to='turbodiesel/images/admin', verbose_name=u'Логотип', db_column='image')
     default = models.BooleanField(verbose_name=u'По умолчанию')
     site = models.OneToOneField(Site, primary_key=True)

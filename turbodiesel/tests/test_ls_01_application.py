@@ -8,37 +8,38 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 from django.test import LiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
+from turbodiesel.tests.base import LiveServerBaseTestCase
 
 
-class ApplicationTests(LiveServerTestCase):
+class ApplicationTests(LiveServerBaseTestCase):
     # fixtures = ['user-data.json']
-    guid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
-    guid.replace('=', '')
-
-    @classmethod
-    def setUpClass(cls):
-        cls.selenium = WebDriver()
-        super(ApplicationTests, cls).setUpClass()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.selenium.quit()
-        super(ApplicationTests, cls).tearDownClass()
-
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(30)
-        self.base_url = "http://127.0.0.1:8000"
-        self.verificationErrors = []
-        self.accept_next_alert = True
-
-    def login(self):
-        if self.is_element_present(By.ID, "id_username"):
-            self.driver.find_element_by_id("id_username").clear()
-            self.driver.find_element_by_id("id_username").send_keys("root")
-            self.driver.find_element_by_id("id_password").clear()
-            self.driver.find_element_by_id("id_password").send_keys("irdecntyu")
-            self.driver.find_element_by_css_selector("input.btn.btn-large").click()
+    # guid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
+    # guid.replace('=', '')
+    #
+    # @classmethod
+    # def setUpClass(cls):
+    #     cls.selenium = WebDriver()
+    #     super(ApplicationTests, cls).setUpClass()
+    #
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.selenium.quit()
+    #     super(ApplicationTests, cls).tearDownClass()
+    #
+    # def setUp(self):
+    #     self.driver = webdriver.Firefox()
+    #     self.driver.implicitly_wait(30)
+    #     self.base_url = "http://127.0.0.1:8000"
+    #     self.verificationErrors = []
+    #     self.accept_next_alert = True
+    #
+    # def login(self):
+    #     if self.is_element_present(By.ID, "id_username"):
+    #         self.driver.find_element_by_id("id_username").clear()
+    #         self.driver.find_element_by_id("id_username").send_keys("root")
+    #         self.driver.find_element_by_id("id_password").clear()
+    #         self.driver.find_element_by_id("id_password").send_keys("irdecntyu")
+    #         self.driver.find_element_by_css_selector("input.btn.btn-large").click()
 
     def test_01_create_app(self):
         """

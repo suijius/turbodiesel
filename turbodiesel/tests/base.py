@@ -90,7 +90,9 @@ class BaseTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.user = User.objects.create_superuser(username='root', email='jacob@mail.ru', password='irdecntyu')
+        user_list = User.objects.filter(username='root')
+        if user_list.count() == 0:
+            cls.user = User.objects.create_superuser(username='root', email='jacob@mail.ru', password='irdecntyu')
         super(TestCase, cls).setUpClass()
 
     @classmethod

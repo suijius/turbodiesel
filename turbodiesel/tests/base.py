@@ -83,9 +83,9 @@ class LiveServerBaseTestCase(LiveServerTestCase):
 
 
 class BaseTestCase(TestCase):
-    # fixtures = ['user-data.json']
     guid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
     guid.replace('=', '')
+    # fixtures = ['user-data.json']
     client = Client(HTTP_USER_AGENT='Mozilla/5.0')
 
     @classmethod

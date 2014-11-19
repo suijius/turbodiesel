@@ -72,7 +72,7 @@ class ApplicationCreate(TurboDieselCreateView):
         site = Site.objects.create(name=form.instance.title, domain=form.instance.alias)
         form.instance.site = site
         if form.is_valid():
-            a = form.save()
+            form.save()
             dbt = db_templates.Template.objects.create(name="base",
                                         content=u"""
 <html>

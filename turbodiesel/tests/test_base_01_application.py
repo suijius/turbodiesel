@@ -1,21 +1,16 @@
 # coding=utf-8
-import uuid
-import base64
-
-from django.contrib.auth.models import AnonymousUser, User
-from django.test import TestCase, RequestFactory
 from turbodiesel.tests.base import BaseTestCase
 
 
-class SimpleTest(BaseTestCase):
-    guid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
-    guid.replace('=', '')
+class ApplicationTest(BaseTestCase):
+    def setUp(self):
+        self.login()
+        super(ApplicationTest, self).setUp()
 
     def test_01_create_app(self):
         """
         Создание приложения без имени
         """
-        self.login()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/create/', {
             'name': '',
@@ -30,7 +25,6 @@ class SimpleTest(BaseTestCase):
         """
         Создание приложения без заголовка
         """
-        self.login()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/create/', {
             'name': self.guid,
@@ -45,7 +39,6 @@ class SimpleTest(BaseTestCase):
         """
         Создание приложения без псевдонима
         """
-        self.login()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/create/', {
             'name': self.guid,
@@ -60,7 +53,6 @@ class SimpleTest(BaseTestCase):
         """
         Создание приложения без логотипа
         """
-        self.login()
         response = self.client.post('/admin/application/create/', {
             'name': self.guid,
             'title': self.guid,
@@ -73,14 +65,12 @@ class SimpleTest(BaseTestCase):
         """
         Корректное создание приложения
         """
-        self.login()
         self.create_app()
 
     def test_06_create_app(self):
         """
         Открытие формы для создания приложения
         """
-        self.login()
         response = self.client.get('/admin/application/create/')
         self.assertEqual(response.status_code, 200)
 
@@ -88,7 +78,6 @@ class SimpleTest(BaseTestCase):
         """
         Открытие созданного приложения
         """
-        self.login()
         self.create_app()
         response = self.client.get('/admin/application/'+self.guid+'/edit/')
         self.assertEqual(response.status_code, 200)
@@ -97,7 +86,6 @@ class SimpleTest(BaseTestCase):
         """
         Изменение приложения без имени
         """
-        self.login()
         self.create_app()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/'+self.guid+'/edit/', {
@@ -113,7 +101,6 @@ class SimpleTest(BaseTestCase):
         """
         Изменение приложения без заголовка
         """
-        self.login()
         self.create_app()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/'+self.guid+'/edit/', {
@@ -129,7 +116,6 @@ class SimpleTest(BaseTestCase):
         """
         Изменение приложения без псевдонима
         """
-        self.login()
         self.create_app()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/'+self.guid+'/edit/', {
@@ -145,7 +131,6 @@ class SimpleTest(BaseTestCase):
         """
         Изменение приложения без логотипа
         """
-        self.login()
         self.create_app()
         response = self.client.post('/admin/application/'+self.guid+'/edit/', {
             'name': self.guid,
@@ -159,7 +144,6 @@ class SimpleTest(BaseTestCase):
         """
         Изменение приложения с существующим псевдонимом
         """
-        self.login()
         self.create_app()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/'+self.guid+'/edit/', {
@@ -175,7 +159,6 @@ class SimpleTest(BaseTestCase):
         """
         Изменение приложения без ошибок
         """
-        self.login()
         self.create_app()
         fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/'+self.guid+'/edit/', {
@@ -191,7 +174,6 @@ class SimpleTest(BaseTestCase):
         """
         Удаление приложения
         """
-        self.login()
         self.create_app()
         response = self.client.get('/admin/application/'+self.guid+'/delete/')
         self.assertEqual(response.status_code, 200)
@@ -200,7 +182,6 @@ class SimpleTest(BaseTestCase):
         """
         Удаление приложения
         """
-        self.login()
         self.create_app()
         response = self.client.post('/admin/application/'+self.guid+'/delete/')
         self.assertEqual(response.status_code, 302)

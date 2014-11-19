@@ -37,7 +37,7 @@ class ApplicationPageCreate(TurboDieselCreateView):
     def post(self, request, application_alias):
         application = self.prepost(request, application_alias)
         form = ApplicationPageForm(request.POST, request.FILES)
-        form.instance.application = application
+        form.instance.site = application.site
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('../../edit')
@@ -80,9 +80,9 @@ class ApplicationPageEdit(TurboDieselUpdateView):
             # pages = Page.objects.filter(application=page_instance[0].application)
             change_template = False
             change_code = False
-            if request.POST['template'] != '' and page_instance[0].template_id == int(request.POST['template']):
+            if request.POST.get('template') != '' and request.POST.get('template') is not None and page_instance[0].template_id == int(request.POST['template']):
                 change_template = True
-            if request.POST['code'] != '' and page_instance[0].code_id == int(request.POST['code']):
+            if request.POST.get('code') != '' and request.POST.get('code') is not None and page_instance[0].code_id == int(request.POST['code']):
                 change_code = True
             for item in request.POST:
                 while request.POST[item].__contains__('&lt') or request.POST[item].__contains__('&gt') or request.POST[item].__contains__('&amp'):
@@ -90,7 +90,7 @@ class ApplicationPageEdit(TurboDieselUpdateView):
             form = ApplicationPageForm(request.POST, request.FILES, instance=page_instance[0])
             if request.POST.get('new'):
                 form = ApplicationPageForm(request.POST, request.FILES)
-                form.instance.application = application
+                form.instance.site = application.site
             if form.is_valid():
                 form.save()
                 if change_template and page_instance[0].template is not None:
@@ -108,6 +108,8 @@ class ApplicationPageEdit(TurboDieselUpdateView):
                     return HttpResponseRedirect('../../../edit')
             else:
                 return self.render_to_response(self.get_context_data(form=form, request=request, application_alias=application_alias))
+        else:
+            return HttpResponse('', status=500)
 
     def get(self, request, application_alias, page_alias):
         application = self.preget(request, application_alias)
@@ -118,3 +120,5 @@ class ApplicationPageEdit(TurboDieselUpdateView):
             form.fields['template'].queryset = templates
             return self.render_to_response(
                 self.get_context_data(form=form, request=request, page=page_instance[0], application=application, application_alias=application_alias))
+        else:
+            return HttpResponse('', status=404)

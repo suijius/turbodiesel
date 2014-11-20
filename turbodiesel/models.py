@@ -250,8 +250,8 @@ class Entity(models.Model):
     description = models.TextField(verbose_name=u'Описание', blank=True)
     editor = models.ForeignKey(User, db_column='editor', null=True, blank=True)
     date_change = models.DateTimeField(verbose_name=u'Дата изменения', null=True, blank=True)
-    image = models.ImageField(upload_to='turbodiesel/images/admin')
-    service = models.BooleanField(verbose_name=u'Серсисная сущность')
+    image = models.ImageField(upload_to='turbodiesel/images/admin', null=True, blank=True)
+    service = models.BooleanField(verbose_name=u'Серсисная сущность', default=False)
     site = models.ForeignKey(Site)
 
     class Meta:
@@ -592,7 +592,8 @@ def clear_cache(model):
     Очистка кэша
     :param model: модель
     """
-    cached_models = cache.app_models.get('nature')
+    # cached_models = cache.app_models.get('nature')
+    cached_models = cache.all_models
     # if cached_models.has_key(model.lower()):
     #     del cached_models[model.lower()]
 

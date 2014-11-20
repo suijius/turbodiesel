@@ -11,7 +11,7 @@ from turbodiesel.administration.metamodel_view import TurboDieselUpdateView, Tur
 class ExtFilterForm(ModelForm):
     class Meta:
         model = ExtFilter
-        exclude = ('application', 'date_change')
+        exclude = ('application', 'date_change', 'site')
 
 
 class ExtFilterCreate(TurboDieselCreateView):
@@ -37,7 +37,7 @@ class ExtFilterCreate(TurboDieselCreateView):
     def post(self, request, application_alias):
         application = self.prepost(request, application_alias)
         form = ExtFilterForm(request.POST, request.FILES)
-        form.instance.application = application
+        form.instance.site = application.site
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('..')
@@ -58,7 +58,7 @@ class ExtFilterEdit(TurboDieselUpdateView):
 
     def get(self, request, application_alias, filter_id):
         application = self.preget(request, application_alias)
-        filter_instance = ExtFilter.objects.filter(filter_id=filter_id, site=application.site)
+        filter_instance = ExtFilter.objects.filter(id=filter_id, site=application.site)
         form = None
         if len(filter_instance) > 0:
             form = ExtFilterForm(instance=filter_instance[0])
@@ -69,10 +69,10 @@ class ExtFilterEdit(TurboDieselUpdateView):
 
     def post(self, request, application_alias, filter_id):
         application = self.prepost(request, application_alias)
-        filter_instance = ExtFilter.objects.filter(filter_id=filter_id, site=application.site)
+        filter_instance = ExtFilter.objects.filter(id=filter_id, site=application.site)
         if len(filter_instance) > 0:
             form = ExtFilterForm(request.POST, request.FILES, instance=filter_instance[0])
-            form.instance.application = application
+            form.instance.site = application.site
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect('../..')

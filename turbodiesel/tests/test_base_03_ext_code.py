@@ -7,7 +7,7 @@ import uuid
 import base64
 
 
-class ApplicationPageTest(BaseTestCase):
+class ApplicationExtCodeTest(BaseTestCase):
     application = None
 
     def setUp(self):
@@ -18,7 +18,7 @@ class ApplicationPageTest(BaseTestCase):
         self.create_app()
         self.application = Application.objects.get(alias=self.guid)
         settings.SITE_ID = self.application.site_id
-        super(ApplicationPageTest, self).setUp()
+        super(ApplicationExtCodeTest, self).setUp()
 
     def test_01_get_create_code(self):
         """

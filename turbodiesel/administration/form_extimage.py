@@ -10,7 +10,7 @@ from turbodiesel.administration.metamodel_view import TurboDieselCreateView
 class ExtImageForm(ModelForm):
     class Meta:
         model = ExtImage
-        exclude = ('application', 'date_change')
+        exclude = ('application', 'date_change', 'site')
 
 
 class ExtImageCreate(TurboDieselCreateView):
@@ -24,10 +24,10 @@ class ExtImageCreate(TurboDieselCreateView):
 
     def post(self, request, application_alias):
         application = self.prepost(request, application_alias)
-        if len(request.FILES) > 0:
+        if len(request.FILES) > 0 and request.POST.get('alias') is not None:
             request.FILES['image'].name = request.POST.get('alias') + '.' + request.FILES['image'].name.split('.')[-1]
         form = ExtImageForm(request.POST, request.FILES)
-        form.instance.application = application
+        form.instance.site = application.site
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('..')

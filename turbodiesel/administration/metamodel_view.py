@@ -132,7 +132,7 @@ class TurboDieselCreateView(CreateView):
 
     def prepost_raw(self, request):
         self.preget_raw(request)
-        if len(request.FILES) > 0 and request.FILES.get('image') is not None:
+        if len(request.FILES) > 0 and request.FILES.get('image') is not None and request.FILES.get('alias') is not None:
             request.FILES['image'].name = request.POST.get('alias') + '.png'
         if len(request.FILES) > 0 and request.FILES.get('logotype') is not None:
             request.FILES['logotype'].name = request.POST.get('alias') + '.png'

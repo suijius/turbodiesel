@@ -604,7 +604,7 @@ def clear_cache(model):
 def pre_save_model(sender, **kwargs):
     if kwargs['instance']._meta.object_name == 'ExtImage':
         kwargs['instance'].image.field.upload_to = 'turbodiesel/images/application/%s/' % kwargs[
-            'instance'].application.alias
+            'instance'].site.application.alias
 
 
 def post_save_model(sender, **kwargs):

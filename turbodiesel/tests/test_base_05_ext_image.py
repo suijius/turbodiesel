@@ -24,7 +24,6 @@ class ApplicationExtImageTest(BaseTestCase):
         """
         Открытие формы для создания фильтра
         """
-        Entity.objects.create(name='entity1', alias='alias', site=self.application.site)
         response = self.client.get('/admin/application/' + self.guid + '/extension/extimage/create/')
         self.assertEqual(response.status_code, 200)
 
@@ -38,6 +37,7 @@ class ApplicationExtImageTest(BaseTestCase):
             'alias': 'alias',
             'image': fp
         })
+        fp.close()
         self.assertEqual(response.status_code, 302)
 
     def test_03_post_create_image(self):
@@ -50,6 +50,7 @@ class ApplicationExtImageTest(BaseTestCase):
             'alias': 'alias',
             'image': fp
         })
+        fp.close()
         self.assertEqual(response.status_code, 200)
 
     def test_04_post_create_image(self):
@@ -62,16 +63,15 @@ class ApplicationExtImageTest(BaseTestCase):
             # 'alias': 'alias',
             'image': fp
         })
+        fp.close()
         self.assertEqual(response.status_code, 200)
 
     def test_05_post_create_image(self):
         """
         Cоздание фильтра без файла
         """
-        fp = open('C:/Users/Public/Pictures/Sample Pictures/Chrysanthemum.jpg', 'rb')
         response = self.client.post('/admin/application/' + self.guid + '/extension/extimage/create/', {
             'name': 'filtername',
-            'alias': 'alias',
-            # 'image': fp
+            'alias': 'alias'
         })
         self.assertEqual(response.status_code, 200)

@@ -19,8 +19,7 @@ class ExtImageCreate(TurboDieselCreateView):
     def get(self, request, application_alias):
         application = self.preget(request, application_alias)
         form = ExtImageForm()
-        return self.render_to_response(
-            context=self.get_context_data(form=form, request=request, application=application))
+        return self.render_to_response(context=self.get_context_data(form=form, request=request, application=application))
 
     def post(self, request, application_alias):
         application = self.prepost(request, application_alias)

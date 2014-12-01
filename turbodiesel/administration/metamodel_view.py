@@ -220,7 +220,7 @@ class CustomEntityUnitCreate(CreateView):
 
     def create_form(self, model, exclude=()):
         properties = {'Meta': type('Meta', (), {'model': model, 'exclude': exclude})}
-        return type(entity.alias.encode('cp1251'), (ModelForm,), properties)
+        return type(model._meta.object_name, (ModelForm,), properties)
 
     def get(self, request, application_alias, extension_alias, parent_alias=None, parent_id=None):
         if not request.user.is_superuser:
@@ -232,7 +232,7 @@ class CustomEntityUnitCreate(CreateView):
         if parent_alias is not None:
             parent = self.get_parent(request, parent_alias, parent_id, application_alias, extension_alias)
             exclude = (parent['parent_field'],)
-        form = self.create_form(application_alias, model, exclude)()
+        form = self.create_form(model, exclude)()
         return self.render_to_response(
             context=self.get_context_data(form=form, request=request, application=application))
 
@@ -242,7 +242,8 @@ class CustomEntityUnitCreate(CreateView):
 
         model = get_model(request, extension_alias, application_alias)
         application = get_application_instance(application_alias, request)
-        form = self.create_form(application_alias, model)(request.POST, request.FILES)
+        exclude = ()
+        form = self.create_form(model, exclude)(request.POST, request.FILES)
         if parent_alias is not None:
             post = request.POST
             parent = self.get_parent(request, parent_alias, parent_id, application_alias, extension_alias)

@@ -234,6 +234,7 @@ EXTENSIONS = [
     {'Name': u'Рабочие потоки', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extworkflow', 'ClassName': 'ExtWorkflow', 'Type': 1},
     {'Name': u'Статусы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extstatus', 'ClassName': 'ExtStatus', 'Type': 1},
     {'Name': u'Переходы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extedge', 'ClassName': 'ExtEdge', 'Type': 1},
+    {'Name': u'Рабочие процессы', 'Image': 'turbodiesel/images/admin/workflow.png', 'TableName': 'extbpmprocess', 'ClassName': 'ExtBPMProcess', 'Type': 1},
 ]
 
 EMAIL_HOST = 'smtp.gmail.com'

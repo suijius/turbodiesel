@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db import models
 
-from turbodiesel.models import Entity, Property, Application, Page, get_application_instance, get_entity_instance, get_model, ExtWorkflow
+from turbodiesel.models import Entity, Property, Application, Page, get_application_instance, get_entity_instance, get_model#, ExtWorkflow
 
 # import reversion
 
@@ -166,11 +166,11 @@ def extension(request, application_alias, extension_alias):
                 data_array = model.objects.filter(sites=application.site)
             elif extension_alias == 'extimage' or extension_alias == 'extfilter' or extension_alias == 'extcode' or extension_alias == 'extworkflow':
                 data_array = model.objects.filter(site=application.site)
-            elif extension_alias == 'extstatus' or extension_alias == 'extedge':
-                workflow_id = request.GET.get('workflow')
-                wf_list = ExtWorkflow.objects.filter(workflow_id=workflow_id)
-                if len(wf_list):
-                    data_array = model.objects.filter(workflow=wf_list[0])
+            # elif extension_alias == 'extstatus' or extension_alias == 'extedge':
+            #     workflow_id = request.GET.get('workflow')
+            #     wf_list = ExtWorkflow.objects.filter(workflow_id=workflow_id)
+            #     if len(wf_list):
+            #         data_array = model.objects.filter(workflow=wf_list[0])
             else:
                 data_array = model.objects.all()
 

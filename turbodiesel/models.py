@@ -383,58 +383,198 @@ class FilterOnPage(models.Model):
         return '%s - %s' % (self.page.name, self.filter.name)
 
 
-class ExtWorkflow(models.Model):
-    id = models.AutoField(db_column='workflow_id', primary_key=True, verbose_name=u'ID')
+class ExtBPMProcess(models.Model):
+    id = models.AutoField(db_column='process_id', primary_key=True, verbose_name=u'ID')
+    nature_key = models.CharField(max_length=255, verbose_name=u'Натуральный ключ', unique=True)
     name = models.CharField(max_length=255, verbose_name=u'Имя')
     description = models.CharField(max_length=1000, verbose_name=u'Описание')
     site = models.ForeignKey(Site)
 
     class Meta:
-        db_table = u'ext_workflow'
+        db_table = u'ext_bpm_process'
         verbose_name = u'Рабочий процесс'
         verbose_name_plural = u'Рабочие процессы'
 
 
-class ExtStatus(models.Model):
-    id = models.AutoField(db_column='status_id', primary_key=True, verbose_name=u'ID')
+class ExtBPMActivity(models.Model):
+    CLASS = (
+        ('TASK', 'TASK'),
+        ('EVENT', 'EVENT'),
+        ('GATEWAY', 'GATEWAY'),
+    )
+    TYPE = (
+        ('TASKBASIC', 'TASKBASIC'),
+        ('TASKSUBPROCESS', 'TASKSUBPROCESS'),
+        ('TASKCALLACTIVITY', 'TASKCALLACTIVITY'),
+        ('EVENTSTART', 'EVENTSTART'),
+        ('EVENTINTERMEDIATE', 'EVENTINTERMEDIATE'),
+        ('EVENTEND', 'EVENTEND'),
+    )
+    TASK = (
+        ('NONE', 'NONE'),
+        ('SEND', 'SEND'),
+        ('SERVICE', 'SERVICE'),
+        ('MANUAL', 'MANUAL'),
+        ('BUSINESSRULE', 'BUSINESSRULE'),
+        ('RECEIVE', 'RECEIVE'),
+        ('USER', 'USER'),
+        ('SCRIPT', 'SCRIPT'),
+        ('SEND', 'SEND'),
+    )
+    SUBPROCESS = (
+        ('NONE', 'NONE'),
+        ('BASIC', 'BASIC'),
+        ('ADHOC', 'ADHOC'),
+        ('TRANSACTION', 'TRANSACTION'),
+        ('EVENT', 'EVENT'),
+    )
+    EVENT = (
+        ('NONE', 'NONE'),
+        ('MESSAGE', 'MESSAGE'),
+        ('TIMER', 'TIMER'),
+        ('CONDITIONAL', 'CONDITIONAL'),
+        ('SIGNAL', 'SIGNAL'),
+        ('MULTIPLE', 'MULTIPLE'),
+        ('PARALLELMULTIPLE', 'PARALLELMULTIPLE'),
+        ('ESCALATION', 'ESCALATION'),
+        ('ERROR', 'ERROR'),
+        ('COMPENSATION', 'COMPENSATION'),
+        ('LINK', 'LINK'),
+        ('CANCEL', 'CANCEL'),
+        ('TERMINATE', 'TERMINATE'),
+    )
+    EVENTCLASS = (
+        ('NONE', 'NONE'),
+        ('INTERRUPTING', 'INTERRUPTING'),
+        ('NONINTERRUPTING', 'NONINTERRUPTING'),
+        ('THROW', 'THROW'),
+    )
+    GATEWAY = (
+        ('NONE', 'NONE'),
+        ('EXCLUSIVE', 'EXCLUSIVE'),
+        ('INCLUSIVE', 'INCLUSIVE'),
+        ('PARALLEL', 'PARALLEL'),
+        ('COMPLEX', 'COMPLEX'),
+        ('EVENTBASED', 'EVENTBASED'),
+        ('EVENTBASEDTOSTART', 'EVENTBASEDTOSTART'),
+        ('PARALLELEVENTBASEDTOSTART', 'PARALLELEVENTBASEDTOSTART'),
+    )
+
+    id = models.AutoField(db_column='activity_id', primary_key=True, verbose_name=u'ID')
+    nature_key = models.CharField(max_length=255, verbose_name=u'Натуральный ключ')
     name = models.CharField(max_length=255, verbose_name=u'Имя')
-    workflow = models.ForeignKey(ExtWorkflow, db_column='workflow_id', verbose_name=u'Рабочий процесс', blank=False,
-                                 null=False, related_name='workflow')
+    activity_class = models.CharField(choices=CLASS, max_length=50, verbose_name=u'Тип задачи', db_column='class')
+    type = models.CharField(choices=TYPE, max_length=50, verbose_name=u'Тип активности')
+    task = models.CharField(choices=TASK, max_length=50, verbose_name=u'Тип задачи')
+    subprocess = models.CharField(choices=SUBPROCESS, max_length=50, verbose_name=u'Тип подпроцесса')
+    event = models.CharField(choices=EVENT, max_length=50, verbose_name=u'Тип события')
+    event_class = models.CharField(choices=EVENTCLASS, max_length=50, verbose_name=u'Класс события')
+    gateway = models.CharField(choices=GATEWAY, max_length=50, verbose_name=u'Тип шлюза')
+    process = models.ForeignKey(ExtBPMProcess, db_column='process_id', verbose_name=u'Рабочий процесс', blank=False, null=False, related_name='process')
+    subprocess_id = models.ForeignKey(ExtBPMProcess, db_column='subprocess_id', verbose_name=u'Подпроцесс', blank=True, null=True, related_name='subprocess')
+    xml = models.FilePathField(verbose_name=u'Путь к файлу *.bpmn', match='*.bpmn')
 
     class Meta:
-        db_table = u'ext_status'
-        verbose_name = u'Состояние'
-        verbose_name_plural = u'Состояния'
+        db_table = u'ext_bpm_activity'
+        verbose_name = u'Действие'
+        verbose_name_plural = u'Действия'
 
 
-class ExtEdge(models.Model):
-    id = models.AutoField(db_column='edge_id', primary_key=True, verbose_name=u'ID')
+class ExtBPMFlow(models.Model):
+    TYPE = (
+        ('SEQUENCE', 'SEQUENCE'),
+        ('MESSAGE', 'MESSAGE'),
+        ('ASSOCIATION', 'ASSOCIATION'),
+        ('DATAASSOCIATION', 'DATAASSOCIATION'),
+    )
+    FLOW = (
+        ('NONE', 'NONE'),
+        ('CONDITIONAL', ''),
+        ('DEFAULT', ''),
+        ('DIRECTIONAL', ''),
+        ('BIDIRECTIONAL', ''),
+        ('INITIATING', ''),
+        ('NONINITIATING', ''),
+    )
+
+    id = models.AutoField(db_column='gateway_id', primary_key=True, verbose_name='ID')
+    nature_key = models.CharField(max_length=255, verbose_name=u'Натуральный ключ')
     name = models.CharField(max_length=255, verbose_name=u'Имя')
-    previous = models.ManyToManyField(ExtStatus, verbose_name=u'Предыдущий статус')  # , through='PreviousStatus')
-    action = models.ManyToManyField(ExtCode, verbose_name=u'Выполняемые действия')  # , through='EdgeCode')
-    target = models.ForeignKey(ExtStatus, db_column='target_id', verbose_name=u'Следующий статус', blank=False,
-                               null=False, related_name='target')
+    type = models.CharField(choices=TYPE, max_length=50, verbose_name=u'Вид потока')
+    flow = models.CharField(choices=FLOW, max_length=50, verbose_name=u'Тип потока')
+    source = models.ForeignKey(ExtBPMActivity, db_column='source_activity_id', verbose_name=u'Предыдущая активность', blank=False, null=False, related_name='source_activity')
+    target = models.ForeignKey(ExtBPMActivity, db_column='target_activity_id', verbose_name=u'Последующая активность', blank=False, null=False, related_name='target_activity')
 
     class Meta:
-        db_table = u'ext_edge'
-        verbose_name = u'Переход'
-        verbose_name_plural = u'Переходы'
+        db_table = u'ext_bpm_event'
+        verbose_name = u'Поток'
+        verbose_name_plural = u'Потоки'
 
 
-class PreviousStatus(models.Model):
-    edge = models.ForeignKey(ExtEdge, db_column='edge_id', verbose_name=u'Переход')
-    status = models.ForeignKey(ExtStatus, db_column='status_id', verbose_name=u'Переходы')
-
-    class Meta:
-        db_table = u'previous_status'
-
-
-class EdgeCode(models.Model):
-    edge = models.ForeignKey(ExtEdge, db_column='edge_id', verbose_name=u'Переход')
-    code = models.ForeignKey(ExtCode, db_column='code_id', verbose_name=u'Коды')
+class ExtBPMProcessInstance(models.Model):
+    id = models.AutoField(db_column='instance_id', primary_key=True, verbose_name=u'ID')
+    process = models.ForeignKey(ExtBPMProcess, db_column='process_id', verbose_name=u'Рабочий процесс', blank=False, null=False, related_name='template_process')
+    state = models.ForeignKey(ExtBPMActivity, db_column='state_id', verbose_name=u'Текущая активность', blank=False, null=False, related_name='state_activity')
+    site = models.ForeignKey(Site)
 
     class Meta:
-        db_table = u'edge_code'
+        db_table = u'ext_bpm_process_instance'
+        verbose_name = u'Экземпляр рабочего процесса'
+        verbose_name_plural = u'Экземпляры рабочих процессов'
+
+
+# class ExtWorkflow(models.Model):
+#     id = models.AutoField(db_column='workflow_id', primary_key=True, verbose_name=u'ID')
+#     name = models.CharField(max_length=255, verbose_name=u'Имя')
+#     description = models.CharField(max_length=1000, verbose_name=u'Описание')
+#     site = models.ForeignKey(Site)
+#
+#     class Meta:
+#         db_table = u'ext_workflow'
+#         verbose_name = u'Рабочий процесс'
+#         verbose_name_plural = u'Рабочие процессы'
+#
+#
+# class ExtStatus(models.Model):
+#     id = models.AutoField(db_column='status_id', primary_key=True, verbose_name=u'ID')
+#     name = models.CharField(max_length=255, verbose_name=u'Имя')
+#     workflow = models.ForeignKey(ExtWorkflow, db_column='workflow_id', verbose_name=u'Рабочий процесс', blank=False,
+#                                  null=False, related_name='workflow')
+#
+#     class Meta:
+#         db_table = u'ext_status'
+#         verbose_name = u'Состояние'
+#         verbose_name_plural = u'Состояния'
+#
+#
+# class ExtEdge(models.Model):
+#     id = models.AutoField(db_column='edge_id', primary_key=True, verbose_name=u'ID')
+#     name = models.CharField(max_length=255, verbose_name=u'Имя')
+#     previous = models.ManyToManyField(ExtStatus, verbose_name=u'Предыдущий статус')  # , through='PreviousStatus')
+#     action = models.ManyToManyField(ExtCode, verbose_name=u'Выполняемые действия')  # , through='EdgeCode')
+#     target = models.ForeignKey(ExtStatus, db_column='target_id', verbose_name=u'Следующий статус', blank=False,
+#                                null=False, related_name='target')
+#
+#     class Meta:
+#         db_table = u'ext_edge'
+#         verbose_name = u'Переход'
+#         verbose_name_plural = u'Переходы'
+
+
+# class PreviousStatus(models.Model):
+#     edge = models.ForeignKey(ExtEdge, db_column='edge_id', verbose_name=u'Переход')
+#     status = models.ForeignKey(ExtStatus, db_column='status_id', verbose_name=u'Переходы')
+#
+#     class Meta:
+#         db_table = u'previous_status'
+#
+#
+# class EdgeCode(models.Model):
+#     edge = models.ForeignKey(ExtEdge, db_column='edge_id', verbose_name=u'Переход')
+#     code = models.ForeignKey(ExtCode, db_column='code_id', verbose_name=u'Коды')
+#
+#     class Meta:
+#         db_table = u'edge_code'
 
 
 class PropertyInline(admin.TabularInline):

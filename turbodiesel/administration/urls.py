@@ -10,8 +10,8 @@ from turbodiesel.administration.form_extimage import ExtImageCreate
 from form_extfilter import ExtFilterCreate, ExtFilterEdit
 from form_extcode import ExtCodeCreate, ExtCodeEdit
 from form_exttemplate import ExtTemplateCreate, ExtTemplateEdit
-from form_extworkflow import ExtWorkflowCreate, ExtWorkflowEdit
-from form_extstatus import ExtStatusCreate, ExtStatusEdit
+# from form_extworkflow import ExtWorkflowCreate, ExtWorkflowEdit
+# from form_extstatus import ExtStatusCreate, ExtStatusEdit
 from form_extuser import ExtUserEdit, ExtUserCreate
 
 
@@ -42,8 +42,8 @@ urlpatterns = patterns('',
                        (r'^application/(.*)/extension/extcode/(.*)/edit/$', login_required(ExtCodeEdit.as_view())),
                        (r'^application/(.*)/extension/extuser/(.*)/edit/$', login_required(ExtUserEdit.as_view())),
                        (r'^application/(.*)/extension/template/(.*)/edit/$', login_required(ExtTemplateEdit.as_view())),
-                       (r'^application/(.*)/extension/extworkflow/(.*)/edit/$', login_required(ExtWorkflowEdit.as_view())),
-                       (r'^application/(.*)/extension/extstatus/(.*)/edit/$', login_required(ExtStatusEdit.as_view())),
+                       # (r'^application/(.*)/extension/extworkflow/(.*)/edit/$', login_required(ExtWorkflowEdit.as_view())),
+                       # (r'^application/(.*)/extension/extstatus/(.*)/edit/$', login_required(ExtStatusEdit.as_view())),
                        (
                        r'^application/(.*)/extension/(.*)/(.*)/edit/$', login_required(CustomEntityUnitEdit.as_view())),
                        (r'^application/create/$', login_required(ApplicationCreate.as_view())),
@@ -58,8 +58,8 @@ urlpatterns = patterns('',
                        (r'^application/(.*)/extension/extcode/create/$', login_required(ExtCodeCreate.as_view())),
                        (r'^application/(.*)/extension/extuser/create/$', login_required(ExtUserCreate.as_view())),
                        (r'^application/(.*)/extension/template/create/$', login_required(ExtTemplateCreate.as_view())),
-                       (r'^application/(.*)/extension/extworkflow/create/$', login_required(ExtWorkflowCreate.as_view())),
-                       (r'^application/(.*)/extension/extstatus/(.*)/create/$', login_required(ExtStatusCreate.as_view())),
+                       # (r'^application/(.*)/extension/extworkflow/create/$', login_required(ExtWorkflowCreate.as_view())),
+                       # (r'^application/(.*)/extension/extstatus/(.*)/create/$', login_required(ExtStatusCreate.as_view())),
                        (r'^application/(.*)/extension/(.*)/create/(.*)/(.*)/$', login_required(CustomEntityUnitCreate.as_view())),
                        (r'^application/(.*)/extension/(.*)/create/$', login_required(CustomEntityUnitCreate.as_view())),
                        (r'^application/(.*)/extension/(.*)/$', 'turbodiesel.administration.metamodel_view.extension'),
